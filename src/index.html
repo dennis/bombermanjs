@@ -1,0 +1,125 @@
+<html>
+<head>
+	<title>Bomberman JS</title>
+	<script src="/socket.io/socket.io.js"></script>
+	<style>
+		canvas {
+			xposition: absolute;
+			xtop: 0px;
+			xleft: 0px;
+			background: transparent;
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+<h1>Bomberman JS</h1>
+<div id="gamearea">
+<canvas id="background">
+Your browser does not support canvas
+</canvas>
+</div>
+<script>
+    // Utilities
+    /*
+    function clone(object) {
+        function OneShotConstructor(){}
+        OneShotConstructor.prototype = object;
+        return new OneShotConstructor();
+    }
+
+    Object.prototype.inherit = function(baseConstructor) {
+        this.prototype = clone(baseConstructor);
+        this.prototype.constructor = this;
+    }
+    */
+
+    // Drawable
+    function Drawable() {};
+    Drawable.prototype.canvasWidth = null;
+    Drawable.prototype.canvasHeight = null;
+    Drawable.prototype.context = null;
+    Drawable.prototype.init = function(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+    Drawable.prototype.draw = function() {
+        console.log("Drawable.prototype");
+    }
+
+    // Background extends Drawable
+    function Background() {};
+    Background.prototype = new Drawable();
+    Background.prototype.draw = function() {
+        this.context.rect(0,0,this.canvasWidth,this.canvasHeight);
+        this.context.fillStyle="red";
+        this.context.fill();
+    }
+
+    // Level
+    function Level(levelMap) {
+        this.backgroundCanvas = document.getElementById('background');
+        if(this.backgroundCanvas.getContext) {
+           this.backgroundContext = this.backgroundCanvas.getContext('2d');
+
+           Background.prototype.context = this.backgroundContext;
+           Background.prototype.canvasWidth = this.backgroundCanvas.width;
+           Background.prototype.canvasHeight = this.backgroundCanvas.height;
+
+           this.background = new Background();
+           this.background.init(0,0);
+        }
+        else {
+            throw new "No canvas support";
+        }
+
+        console.log("Loading map");
+
+        for(var i = levelMap.layers.length-1; i >= 0; i--) {
+           if(levelMap.layers[i].name == "background" && levelMap.layers[i].type == "tileLayer") {
+            console.log("Found background");
+           }
+        }
+    };
+    Level.prototype.draw = function() {
+        this.background.draw();
+    }
+
+    // main
+
+    var levelMap = null;
+    var mapWidth = null;
+    var mapHeight = null;
+    var socket = io.connect(document.location.origin);
+    var level = null;
+
+    socket.on('new-level', function (data) {
+        levelMap = data;
+        // calculate width and height
+        mapWidth = levelMap.width*levelMap.tilewidth;
+        mapHeight = levelMap.height*levelMap.tileheight;
+        document.getElementById('background').width=mapWidth
+        document.getElementById('background').height=mapHeight
+        level = new Level(levelMap);
+        console.log("ready");
+        animate();
+    });
+
+    function animate() {
+        requestAnimFrame( animate );
+        level.background.draw();
+    }
+
+    window.requestAnimFrame = (function(){
+        return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(/* function */ callback, /* DOMElement */ element){
+            window.setTimeout(callback, 1000 / 60);
+        };
+    })();
+</script>
+</body>
+</html>
