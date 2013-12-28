@@ -34,9 +34,9 @@ Your browser does not support canvas
     }
 
     // Background extends Drawable
-    function Background(canvasId, tiles) {
+    function Background(canvasId, tileSet) {
 		this.layers = [];
-		this.tiles = tiles;
+		this.tileSet = tileSet;
 		this.dirty = false;
 
         this.backgroundCanvas = document.getElementById('background');
@@ -62,15 +62,15 @@ Your browser does not support canvas
 
 		for(var i = 0; i < this.layers.length; i++) {
 			for(var pos = 0; pos < this.layers[i].data.length; pos++) {
-				this.tiles.draw(this.context,pos,this.layers[i].data[pos]-1);
+				this.tileSet.draw(this.context,pos,this.layers[i].data[pos]-1);
 			}
 		}
 
 		this.dirty = false;
     }
 
-	// Tiles
-	function Tiles(tileWidth, tileHeight, sprite) {
+	// TileSet
+	function TileSet(tileWidth, tileHeight, sprite) {
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.sprite = sprite;
@@ -78,7 +78,7 @@ Your browser does not support canvas
 		this.rows = sprite.height / tileHeight;
 	};
 
-	Tiles.prototype.draw = function(context, pos, tileNum) {
+	TileSet.prototype.draw = function(context, pos, tileNum) {
 		var tileX = tileNum % this.cols;
 		var tileY = (tileNum - tileX) / this.cols;
 
@@ -90,19 +90,19 @@ Your browser does not support canvas
 			posX * this.tileWidth, posY * this.tileHeight, this.tileWidth, this.tileHeight);
 	}
 	
-	Tiles.prototype.getTileWidth = function() {
+	TileSet.prototype.getTileWidth = function() {
 		return this.tileWidth;
 	}
 
-	Tiles.prototype.getTileHeight = function() {
+	TileSet.prototype.getTileHeight = function() {
 		return this.tileHeight;
 	}
 
 
     // Level
-    function Level(levelMap, tiles) {
-		this.tiles = tiles;
-        this.background = new Background('background', tiles);
+    function Level(levelMap, tileSet) {
+		this.tileSet = tileSet;
+        this.background = new Background('background', tileSet);
 
 		console.log("Loading map");
 
@@ -116,7 +116,7 @@ Your browser does not support canvas
     };
 
     Level.prototype.draw = function() {
-        this.background.draw(this.tiles);
+        this.background.draw(this.tileSet);
     }
 
     // main
@@ -138,8 +138,8 @@ Your browser does not support canvas
 		tilesImg.src = "/bomb_party_v4.png";
 		tilesImg.onload = function() {
 			console.log("Graphics loaded: ", tilesImg);
-			var tiles = new Tiles(levelMap.tilewidth, levelMap.tileheight, tilesImg);
-			level = new Level(levelMap, tiles);
+			var tileSet = new TileSet(levelMap.tilewidth, levelMap.tileheight, tilesImg);
+			level = new Level(levelMap, tileSet);
 			console.log("ready");
 			animate();
 		}
