@@ -18,7 +18,7 @@ function handler(request, response) {
 	case '/favicon.ico':
 		response.writeHead(404);
 		break;
-	case '/bomb_party_v4.png':
+	case '/img/bomb_party_v4.png':
 		serveFile(response, __dirname + '/../assets/img/bomb_party_v4.png');
 		break;
 	}

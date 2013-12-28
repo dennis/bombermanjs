@@ -70,12 +70,14 @@ Your browser does not support canvas
     }
 
 	// TileSet
-	function TileSet(tileWidth, tileHeight, sprite) {
-		this.tileWidth = tileWidth;
-		this.tileHeight = tileHeight;
+	function TileSet(tileSetData, sprite) {
 		this.sprite = sprite;
-		this.cols = sprite.width / tileWidth;
-		this.rows = sprite.height / tileHeight;
+
+		this.tileWidth = tileSetData.tilewidth;
+		this.tileHeight = tileSetData.tileheight;
+
+		this.cols = tileSetData.imagewidth / this.tileWidth;
+		this.rows = tileSetData.imageheight / this.tileHeight;
 	};
 
 	TileSet.prototype.draw = function(context, pos, tileNum) {
@@ -135,10 +137,10 @@ Your browser does not support canvas
 
 		// load asset
 		var tilesImg = new Image();
-		tilesImg.src = "/bomb_party_v4.png";
+		tilesImg.src = levelMap.tilesets[0].image; //"/bomb_party_v4.png";
 		tilesImg.onload = function() {
 			console.log("Graphics loaded: ", tilesImg);
-			var tileSet = new TileSet(levelMap.tilewidth, levelMap.tileheight, tilesImg);
+			var tileSet = new TileSet(levelMap.tilesets[0], tilesImg);
 			level = new Level(levelMap, tileSet);
 			console.log("ready");
 			animate();
