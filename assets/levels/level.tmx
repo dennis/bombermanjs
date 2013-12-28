@@ -4,6 +4,9 @@
   <image source="../img/bomb_party_v4.png" width="240" height="304"/>
  </tileset>
  <layer name="background" width="15" height="15">
+  <properties>
+   <property name="type" value="background"/>
+  </properties>
   <data encoding="csv">
 197,197,197,197,197,197,197,197,197,197,197,197,197,197,197,
 197,197,197,197,197,197,197,197,197,197,197,197,197,197,197,
@@ -23,6 +26,9 @@
 </data>
  </layer>
  <layer name="blocking" width="15" height="15">
+  <properties>
+   <property name="type" value="blocking"/>
+  </properties>
   <data encoding="csv">
 266,266,266,266,266,266,266,266,266,266,266,266,266,266,266,
 266,0,0,0,0,0,0,0,0,0,0,0,0,0,266,

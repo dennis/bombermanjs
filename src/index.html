@@ -109,8 +109,9 @@ Your browser does not support canvas
 		console.log("Loading map");
 
         for(var i = 0; i < levelMap.layers.length; i++) {
-			if(levelMap.layers[i].type == "tilelayer") {
-				if(levelMap.layers[i].name == "background" || levelMap.layers[i].name == "blocking") {
+			if(levelMap.layers[i].type == "tilelayer" && levelMap.layers[i].properties) {
+ 				if(levelMap.layers[i].properties.type == "background" || levelMap.layers[i].properties.type == "blocking") {
+					console.log("Loaded layer #" + i + " " + levelMap.layers[i].name + " (" + levelMap.layers[i].properties.type + ")");
 					this.background.populate(levelMap.layers[i]);
 				}
 			}

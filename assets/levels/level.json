@@ -5,6 +5,10 @@
          "height":15,
          "name":"background",
          "opacity":1,
+         "properties":
+            {
+             "type":"background"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":15,
@@ -16,6 +20,10 @@
          "height":15,
          "name":"blocking",
          "opacity":1,
+         "properties":
+            {
+             "type":"blocking"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":15,
