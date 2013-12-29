@@ -3,8 +3,11 @@
 	<title>Bomberman JS</title>
 	<script src="/socket.io/socket.io.js"></script>
 	<style>
+		#gamearea {
+			position: relative;
+		}
 		canvas {
-			xposition: absolute;
+			position: absolute;
 			top: 0px;
 			left: 0px;
 			background: transparent;
@@ -18,39 +21,68 @@
 <canvas id="background">
 Your browser does not support canvas
 </canvas>
+<canvas id="actors">
+</canvas>
 </div>
 <script>
-    // Drawable
-    function Drawable() {};
-    Drawable.prototype.canvasWidth = null;
-    Drawable.prototype.canvasHeight = null;
-    Drawable.prototype.context = null;
-    Drawable.prototype.init = function(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-    Drawable.prototype.draw = function() {
-        console.log("Drawable.prototype");
-    }
+	// Utilities TODO: Extends Array with these
+	function eachPair(array, action) {
+		for(var i = 0; i < array.length; i++) {
+			action(i, array[i]);
+		}
+	}
+	function each(array, action) {
+		eachPair(array, function(idx, element) {
+			action(element);
+		});
+	}
+	function NOT_USED_map(array, action) {
+		var result = [];
+
+		each(array, function (element) {
+			var a = action(element);
+			if(a != undefined)
+				result.push(a);
+		});
+
+		return result;
+	}
+	function select(array, action) {
+		var result = [];
+
+		each(array, function(element) {
+			if(action(element))
+				result.push(element);
+		});
+
+		return result;
+	}
+
+	// CanvasManager
+	function CanvasManager() {};
+	CanvasManager.prototype.init = function(canvasId, mapWidth, mapHeight) {
+        this.canvas = document.getElementById(canvasId);
+
+        if(this.canvas.getContext) {
+           this.context = this.canvas.getContext('2d');
+
+		   this.canvas.width = mapWidth;
+		   this.canvas.height = mapHeight;
+        }
+        else {
+            throw new "No canvas support for element " + canvasId;
+        }
+	}
 
     // Background extends Drawable
-    function Background(canvasId, tileSet) {
+    function Background(canvasId, mapWidth, mapHeight, tileSet) {
 		this.layers = [];
 		this.tileSet = tileSet;
 		this.dirty = false;
 
-        this.backgroundCanvas = document.getElementById('background');
-        if(this.backgroundCanvas.getContext) {
-           this.context = this.backgroundCanvas.getContext('2d');
-
-           this.init(0,0);
-        }
-        else {
-            throw new "No canvas support";
-        }
+		this.init(canvasId, mapWidth, mapHeight);
 	}
-
-    Background.prototype = new Drawable();
+    Background.prototype = new CanvasManager();
 	Background.prototype.populate = function(layer) {
 		this.layers.push(layer);
 		this.dirty = true;
@@ -69,6 +101,40 @@ Your browser does not support canvas
 		this.dirty = false;
     }
 
+	// Actors
+	function Actors(canvasId, mapWidth, mapHeight, tileSet) {
+		this.actors = [];
+		this.tileSet = tileSet;
+
+		this.init(canvasId, mapWidth, mapHeight);
+	}
+	Actors.prototype = new CanvasManager();
+	Actors.prototype.populate = function(layer) {
+		for(var pos = 0; pos < layer.data.length; pos++) {
+			if(layer.data[pos] != 0) {
+				var xy = this.tileSet.toXY(pos);
+				this.actors.push(new Actor(xy.x, xy.y, layer.data[pos]));
+				console.log("  Found actor at " + xy + " using tile-" + layer.data[pos]);
+			}
+		}
+	}
+	Actors.prototype.draw = function(tileSet) {
+		var that = this;
+		each(this.actors, function(actor) {
+			actor.draw(that.context, tileSet);
+		});
+	}
+
+	// Actor
+	function Actor(x,y,tileNum) {
+		this.x = x;
+		this.y = y;
+		this.tileNum = tileNum;
+	};
+	Actor.prototype.draw = function(context, tileSet) {
+		tileSet.draw(context, tileSet.fromXY({x: this.x, y: this.y}), this.tileNum);
+	}
+
 	// TileSet
 	function TileSet(tileSetData, sprite) {
 		this.sprite = sprite;
@@ -81,15 +147,26 @@ Your browser does not support canvas
 	};
 
 	TileSet.prototype.draw = function(context, pos, tileNum) {
-		var tileX = tileNum % this.cols;
-		var tileY = (tileNum - tileX) / this.cols;
-
-		var posX = pos % this.cols;
-		var posY = (pos - posX) / this.cols;
+		var tileXY = this.toXY(tileNum);
+		var posXY = this.toXY(pos);
 
 		context.drawImage(this.sprite, 
-			tileX * this.tileWidth, tileY * this.tileHeight, this.tileWidth, this.tileHeight, 
-			posX * this.tileWidth, posY * this.tileHeight, this.tileWidth, this.tileHeight);
+			tileXY.x * this.tileWidth, tileXY.y * this.tileHeight, this.tileWidth, this.tileHeight, 
+			posXY.x * this.tileWidth, posXY.y * this.tileHeight, this.tileWidth, this.tileHeight);
+	}
+	TileSet.prototype.toXY = function(pos) {
+		var x = pos % this.cols;
+		var y = (pos - x)/ this.cols;
+		return {
+			x: x,
+			y: y,
+			toString: function() {
+				return "(" + x + "," + y + ")";
+			}
+		}
+	}
+	TileSet.prototype.fromXY = function(pos) {
+		return pos.y * this.cols + pos.x;
 	}
 	
 	TileSet.prototype.getTileWidth = function() {
@@ -100,26 +177,41 @@ Your browser does not support canvas
 		return this.tileHeight;
 	}
 
-
     // Level
     function Level(levelMap, tileSet) {
+        var mapWidth = levelMap.width*levelMap.tilewidth;
+        var mapHeight = levelMap.height*levelMap.tileheight;
+
 		this.tileSet = tileSet;
-        this.background = new Background('background', tileSet);
+        this.background = new Background('background', mapWidth, mapHeight, tileSet);
+		this.actors = new Actors('actors', mapWidth, mapHeight, tileSet);
 
 		console.log("Loading map");
 
-        for(var i = 0; i < levelMap.layers.length; i++) {
-			if(levelMap.layers[i].type == "tilelayer" && levelMap.layers[i].visible && levelMap.layers[i].properties) {
- 				if(levelMap.layers[i].properties.type == "background" || levelMap.layers[i].properties.type == "blocking") {
-					console.log("Loaded layer #" + i + " " + levelMap.layers[i].name + " (" + levelMap.layers[i].properties.type + ")");
-					this.background.populate(levelMap.layers[i]);
-				}
+		var that = this;
+
+		var visibleLayers = select(levelMap.layers, function(layer) {
+			return (layer.type == "tilelayer" && layer.visible && layer.properties);
+		});
+
+		eachPair(visibleLayers, function(i, layer) {
+			if(layer.properties.type == "background" || layer.properties.type == "blocking") {
+				console.log("Loaded layer #" + i + " " + layer.name + " (" + layer.properties.type + ")");
+				that.background.populate(layer);
 			}
-        }
+			else if(levelMap.layers[i].properties.type == "spawn") {
+				console.log("Loaded layer #" + i + " " + layer.name + " (" + layer.properties.type + ")");
+				that.actors.populate(layer);
+			}
+			else {
+				console.error("Ignored layer #" + i + " " + layer.name + " (" + layer.properties.type + ")");
+			}
+		});
     };
 
     Level.prototype.draw = function() {
         this.background.draw(this.tileSet);
+		this.actors.draw(this.tileSet);
     }
 
     // main
@@ -130,15 +222,10 @@ Your browser does not support canvas
     socket.on('new-level', function (data) {
 		levelMap = data;
 		console.log("EVENT: new-level");
-        // calculate width and height
-        var mapWidth = levelMap.width*levelMap.tilewidth;
-        var mapHeight = levelMap.height*levelMap.tileheight;
-        document.getElementById('background').width=mapWidth
-        document.getElementById('background').height=mapHeight
 
 		// load asset
 		var tilesImg = new Image();
-		tilesImg.src = levelMap.tilesets[0].image; //"/bomb_party_v4.png";
+		tilesImg.src = levelMap.tilesets[0].image;
 		tilesImg.onload = function() {
 			console.log("Graphics loaded: ", tilesImg);
 			var tileSet = new TileSet(levelMap.tilesets[0], tilesImg);
