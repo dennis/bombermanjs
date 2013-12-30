@@ -1,26 +1,3 @@
-
-	// Utilities TODO: Extends Array with these
-	function eachPair(array, action) {
-		for(var i = 0; i < array.length; i++) {
-			action(i, array[i]);
-		}
-	}
-	function each(array, action) {
-		eachPair(array, function(idx, element) {
-			action(element);
-		});
-	}
-	function select(array, action) {
-		var result = [];
-
-		each(array, function(element) {
-			if(action(element))
-				result.push(element);
-		});
-
-		return result;
-	}
-
 	// CanvasManager
 	function CanvasManager() {};
 	CanvasManager.prototype.init = function(canvasId, mapWidth, mapHeight) {
@@ -85,16 +62,16 @@
 	}
 	Actors.prototype.draw = function(tileSet) {
 		var that = this;
-		each(this.actors, function(actor) {
+		this.actors.forEach(function(actor) {
 			actor.draw(that.context, tileSet);
 		});
 	}
-	Actors.prototype.update = function(data) {
+	Actors.prototype.update = function(newStateSet) {
 		var that = this;
 
 		// FIXME - if two actors is at the same spot - the non-moving actor is not redrawn
 		
-		each(data, function (newState) {
+		newStateSet.forEach(function (newState) {
 			var actor = that.actors[that.actorIdx[newState.actor]];
 			actor.update(newState);
 		});
@@ -199,16 +176,14 @@
 
 		var that = this;
 
-		var visibleLayers = select(levelMap.layers, function(layer) {
+		levelMap.layers.filter(function(layer) {
 			return (layer.type == "tilelayer" && layer.visible && layer.properties);
-		});
-
-		eachPair(visibleLayers, function(i, layer) {
+		}).forEach(function(layer, i) {
 			if(layer.properties.type == "background" || layer.properties.type == "blocking") {
 				console.log("Loaded layer #" + i + " " + layer.name + " (" + layer.properties.type + ")");
 				that.background.populate(layer);
 			}
-			else if(levelMap.layers[i].properties.type == "spawn") {
+			else if(layer.properties.type == "spawn") {
 				console.log("Loaded layer #" + i + " " + layer.name + " (" + layer.properties.type + ")");
 				that.actors.populate(layer, levelMap);
 			}
