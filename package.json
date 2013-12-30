@@ -5,6 +5,7 @@
 	"url": "https://github.com/dennis/bombermanjs",
 	"email": "dennis@moellegaard.dk",
 	"license": "MIT",
+	"private": true,
 	"repository" : { 
 		"type" : "git",
 		"url" : "https://github.com/dennis/bombermanjs.git"
