@@ -1,0 +1,16 @@
+#gamearea {
+	position: relative;
+}
+canvas {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background: transparent;
+	border: 1px solid black;
+}
+#background { 
+	z-index: -2;
+}
+#actors {
+	z-index: -1;
+}
