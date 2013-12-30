@@ -66,32 +66,16 @@
 			actor.draw(that.context, tileSet);
 		});
 	}
-	Actors.prototype.update = function(newStateSet) {
+	Actors.prototype.update = function(dataSet) {
 		var that = this;
 
 		// FIXME - if two actors is at the same spot - the non-moving actor is not redrawn
 		
-		newStateSet.forEach(function (newState) {
-			var actor = that.actors[that.actorIdx[newState.actor]];
-			actor.update(newState);
+		dataSet.forEach(function (data) {
+			var actor = that.actors[that.actorIdx[data.actor]];
+			actor.update(data);
 		});
 	}
-
-	// ActorState
-	function ActorState() { 
-		this.visible = false;
-		this.x = 0;
-		this.y = 0;
-	};
-	ActorState.prototype.update = function(newState) {
-		this.visible = newState.visible;
-		this.x = newState.x;
-		this.y = newState.y;
-	}
-	ActorState.prototype.differentTo = function(otherState) {
-		return !(this.visible == otherState.visible && this.x == otherState.x && this.y == otherState.y);
-	}
-
 
 	// Actor
 	function Actor(name, tileNum) {
@@ -113,8 +97,8 @@
 			tileSet.draw(context, tileSet.fromXY({x: this.newState.x, y: this.newState.y}), this.tileNum);
 		}
 	}
-	Actor.prototype.update = function(newState) {
-		this.newState.update(newState);
+	Actor.prototype.update = function(data) {
+		this.newState = data.state;
 	}
 
 	// TileSet

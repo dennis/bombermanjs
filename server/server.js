@@ -5,6 +5,8 @@ var express = require('express')
 	, io = require('socket.io').listen(server)
 	, fs = require('fs')
 
+ActorState = require(__dirname + '/../public/js/actor_state.js');
+
 server.listen(server_port);
 app.use(express.static(__dirname + '/../public'));
 app.use(express.logger());
@@ -45,7 +47,16 @@ for(var i = 0; i < level.layers.length; i++) {
 				var x = j % level.width;
 				var y = (j-x) / level.width;
 
-				players[type] = {connected: false, x: x, y: y, visible: false, move: null};
+				var state = new ActorState();
+				state.x = x;
+				state.y = y;
+
+				players[type] = {
+					connected: false, 
+					requestedAction: null,
+					socketId: null,
+					state: state
+				};
 			}
 		}
 	}
@@ -71,8 +82,8 @@ io.sockets.on('connection', function (socket) {
 		var player = players[actorName];
 		if(!player.connected) {
 			player.connected = true;
-			player.move = 'noop';
-			player.visible = true;
+			player.requestedAction = 'noop';
+			player.state.visible = true;
 			player.socketId = socket.id;
 			playerIdx[socket.id] = actorName;
 			console.log(actorName + " is " + socket.id);
@@ -89,13 +100,13 @@ io.sockets.on('connection', function (socket) {
 		var update = [];
 		Object.keys(players).forEach(function(actorName) {
 			var player = players[actorName];
-			if(player.connected) {
-				player.visible = true;
+			if(player.connected && player.requestedAction) {
+				player.state.visible = true;
 
-				var x = player.x;
-				var y = player.y;
+				var x = player.state.x;
+				var y = player.state.y;
 
-				switch(player.move) {
+				switch(player.requestedAction) {
 					case 'up': y--; break;
 					case 'down': y++; break;
 					case 'left': x--; break;
@@ -112,20 +123,19 @@ io.sockets.on('connection', function (socket) {
 				if(y > level.height-1)
 					y = 0;
 
-				player.move = null;
+				player.requestedAction = null;
 
 				if(blockedTiles[x][y]) {
+					console.log("blocked");
 					return;
 				}
 
-				player.x = x;
-				player.y = y;
+				player.state.x = x;
+				player.state.y = y;
 
 				update.push({
 					actor: actorName,
-					visible: player.visible,
-					x: player.x,
-					y: player.y
+					state: player.state
 				});
 			}
 		});
@@ -140,7 +150,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('actor-action', function (direction) {
 		var player = players[playerIdx[socket.store.id]];
 		if(player) {
-			player.move = direction;
+			player.requestedAction = direction;
 		}
 		else {
 			console.log("Can't find player!", socket.store.id);
