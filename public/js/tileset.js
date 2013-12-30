@@ -9,17 +9,17 @@ function TileSet(tileSetData, sprite) {
 	this.rows = tileSetData.imageheight / this.tileHeight;
 };
 
-TileSet.prototype.draw = function(context, pos, tileNum) {
+TileSet.prototype.draw = function(context, x, y, tileNum) {
 	var tileXY = this.toXY(tileNum);
-	var posXY = this.toXY(pos);
 
-	context.drawImage(this.sprite, 
-		tileXY.x * this.tileWidth, tileXY.y * this.tileHeight, this.tileWidth, this.tileHeight, 
-		posXY.x * this.tileWidth, posXY.y * this.tileHeight, this.tileWidth, this.tileHeight);
+	context.drawImage(
+		this.sprite, 
+		tileXY.x * this.tileWidth, tileXY.y * this.tileHeight, this.tileWidth, this.tileHeight,
+		x, y, this.tileWidth, this.tileHeight
+		);
 }
-TileSet.prototype.clear = function(context, pos) {
-	var posXY = this.toXY(pos);
-	context.clearRect(posXY.x * this.tileWidth, posXY.y * this.tileHeight, this.tileWidth, this.tileHeight);
+TileSet.prototype.clear = function(context, x, y) {
+	context.clearRect(x, y, this.tileWidth, this.tileHeight);
 }
 TileSet.prototype.toXY = function(pos) {
 	var x = pos % this.cols;

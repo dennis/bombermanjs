@@ -16,8 +16,10 @@ Background.prototype.draw = function() {
 	}
 
 	for(var i = 0; i < this.layers.length; i++) {
-		for(var pos = 0; pos < this.layers[i].data.length; pos++) {
-			this.tileSet.draw(this.context,pos,this.layers[i].data[pos]-1);
+		var layer = this.layers[i];
+		for(var pos = 0; pos < layer.data.length; pos++) {
+			var xy = this.tileSet.toXY(pos);
+			this.tileSet.draw(this.context, xy.x * this.tileSet.getTileWidth(), xy.y * this.tileSet.getTileHeight(), layer.data[pos]-1);
 		}
 	}
 

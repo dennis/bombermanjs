@@ -9,12 +9,12 @@ Actor.prototype.draw = function(context, tileSet) {
 		return;
 
 	if(this.state.visible)
-		tileSet.clear(context, tileSet.fromXY({x: this.state.x, y: this.state.y}));
+		tileSet.clear(context, this.state.x, this.state.y);
 
 	this.state.update(this.newState);
 
 	if(this.newState.visible) {
-		tileSet.draw(context, tileSet.fromXY({x: this.newState.x, y: this.newState.y}), this.tileNum);
+		tileSet.draw(context, this.newState.x, this.newState.y, this.tileNum);
 	}
 }
 Actor.prototype.update = function(data) {

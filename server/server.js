@@ -48,8 +48,8 @@ for(var i = 0; i < level.layers.length; i++) {
 				var y = (j-x) / level.width;
 
 				var state = new ActorState();
-				state.x = x;
-				state.y = y;
+				state.x = x * level.tilewidth;
+				state.y = y * level.tileheight;
 
 				players[type] = {
 					connected: false, 
@@ -105,30 +105,44 @@ io.sockets.on('connection', function (socket) {
 
 				var x = player.state.x;
 				var y = player.state.y;
+				var step = 8;
 
 				switch(player.requestedAction) {
-					case 'up': y--; break;
-					case 'down': y++; break;
-					case 'left': x--; break;
-					case 'right': x++; break;
+					case 'up': y -= step; break;
+					case 'down': y += step; break;
+					case 'left': x -= step; break;
+					case 'right': x += step; break;
 				}
 				
 				// boundary check
 				if(x < 0)
-					x = level.width-1;
-				if(x > level.width-1)
+					x = (level.width-1)*level.tilewidth;
+				if(x > (level.width-1)*level.tilewidth)
 					x = 0;
 				if(y < 0)
-					y = level.height-1;
-				if(y > level.height-1)
+					y = (level.height-1)*level.tileheight;
+				if(y > (level.height-1)*level.tileheight)
 					y = 0;
 
 				player.requestedAction = null;
 
-				if(blockedTiles[x][y]) {
-					console.log("blocked");
+				var lowX = Math.floor(x / level.tilewidth);
+				var lowY = Math.floor(y / level.tileheight);
+				var highX = Math.ceil(x / level.tilewidth);
+				var highY = Math.ceil(y / level.tileheight);
+				
+				// very very crude collision detection - needs work
+				var collision = false;
+				[lowX,highX].forEach(function(x) {
+					[lowY, highY].forEach(function(y) {
+						if(blockedTiles[x][y]) {
+							collision = true;
+						}
+					});
+				});
+
+				if(collision)
 					return;
-				}
 
 				player.state.x = x;
 				player.state.y = y;
