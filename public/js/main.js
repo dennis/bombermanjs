@@ -1,53 +1,10 @@
 // main
 var socket = io.connect(document.location.origin);
 var level = null;
-var levelMap = null; // only made public for debuggin
+var input = new InputManager();
+input.attach();
 
-// keyboard handling
-KEY_CODES = {
-	32: 'space',
-	37: 'left', 
-	38: 'up',
-	39: 'right',
-	40: 'down',
-}
-
-KEY_STATUS = {};
-resetKeys();
-function resetKeys() {
-	for(code in KEY_CODES) {
-		KEY_STATUS[KEY_CODES[code]] = false;
-	}
-}
-
-document.onkeydown = function(e) {
-	var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
-	if(KEY_CODES[keyCode]) {
-		e.preventDefault();
-		KEY_STATUS[KEY_CODES[keyCode]] = true;
-	}
-}
-document.onkeyup = function(e) {
-	var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
-	if(KEY_CODES[keyCode]) {
-		e.preventDefault();
-		KEY_STATUS[KEY_CODES[keyCode]] = false;
-	}
-}
-
-function actionsToServer() {
-	for(code in KEY_CODES) {
-		if(KEY_STATUS[KEY_CODES[code]]) {
-			socket.emit('actor-action', KEY_CODES[code]);
-			return;
-		}
-	}
-}
-
-var keyboardAnnoucer = setInterval(actionsToServer, 1000/3);
-
-socket.on('new-level', function (data) {
-	levelMap = data;
+socket.on('new-level', function (levelMap) {
 	console.log("EVENT: new-level");
 
 	// load asset
@@ -61,15 +18,25 @@ socket.on('new-level', function (data) {
 		renderer();
 	}
 });
+
 socket.on('actor-update', function(state) {
-	level.actorUpdate(state);
+	if(level)
+		level.actorUpdate(state);
 });
 socket.on('message', function(text) {
 	console.error(text);
 });
 
+function sendActions() {
+	var key = input.getKey();
+	if(key) {
+		socket.emit('actor-action', key);
+	}
+}
 
-var game = new Game();
+var game = new Game(input);
+game.addRender(function() { level.render(); });
+game.addLogic(function() { sendActions(); });
 
 function renderer() {
 	requestAnimFrame(renderer);
