@@ -1,21 +1,21 @@
 var server_port = 8888;
-var app = require('express')()
+var express = require('express')
+	, app = express()
 	, server = require('http').createServer(app)
 	, io = require('socket.io').listen(server)
 	, fs = require('fs')
 
 server.listen(server_port);
+app.use(express.static(__dirname + '/../public'));
+app.use(express.logger());
 
 console.log("Server running on port " + server_port);
+console.log("Serving " + __dirname + '/../public');
 
-var level = require(__dirname + '/../assets/levels/level.json');
+var level = require(__dirname + '/../levels/level.json');
 
-app.get('/', function(req, res) {
-	res.sendfile(__dirname + '/index.html');
-});
-app.get('/img/bomb_party_v4.png', function(req, res) {
-	res.sendfile(__dirname + '/img/bomb_party_v4.png');
-});
+// fix image
+level.tilesets[0].image = level.tilesets[0].image.substring(9); // strip "../public/
 
 var players = {};
 var playerKeys = [];
