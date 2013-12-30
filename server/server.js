@@ -18,7 +18,6 @@ var level = require(__dirname + '/../levels/level.json');
 level.tilesets[0].image = level.tilesets[0].image.substring(9); // strip "../public/
 
 var players = {};
-var playerKeys = [];
 var playerIdx = {};
 var blockedTiles = [];
 
@@ -47,7 +46,6 @@ for(var i = 0; i < level.layers.length; i++) {
 				var y = (j-x) / level.width;
 
 				players[type] = {connected: false, x: x, y: y, visible: false, move: null};
-				playerKeys.push(type);
 			}
 		}
 	}
@@ -65,28 +63,32 @@ for(var i = 0; i < level.layers.length; i++) {
 	}
 }
 
-console.log("Map got room for " + playerKeys.length + " players");
+console.log("Map got room for " + Object.keys(players).length + " players");
 
 io.sockets.on('connection', function (socket) {
 	// find available player
-	for(var i = 0; i < playerKeys.length; i++) {
-		var player = players[playerKeys[i]];
+	Object.keys(players).some(function(actorName) {
+		var player = players[actorName];
 		if(!player.connected) {
 			player.connected = true;
 			player.move = 'noop';
 			player.visible = true;
 			player.socketId = socket.id;
-			playerIdx[socket.id] = playerKeys[i];
-			console.log(playerKeys[i] + " is " + socket.id);
-			socket.emit("message", "you are " + playerKeys[i]);
-			break;
+			playerIdx[socket.id] = actorName;
+			console.log(actorName + " is " + socket.id);
+			socket.emit("message", "you are " + actorName);
+			return true;
 		}
-	}
+		else {
+			console.log(actorName + " is in use");
+			return false;
+		}
+	});
 
-	var actorActions = setInterval(function() {
+	var actorActions = function() {
 		var update = [];
-		for(var i = 0; i < playerKeys.length; i++) {
-			var player = players[playerKeys[i]];
+		Object.keys(players).forEach(function(actorName) {
+			var player = players[actorName];
 			if(player.connected) {
 				player.visible = true;
 
@@ -120,16 +122,19 @@ io.sockets.on('connection', function (socket) {
 				player.y = y;
 
 				update.push({
-					actor: playerKeys[i],
+					actor: actorName,
 					visible: player.visible,
 					x: player.x,
 					y: player.y
 				});
 			}
-		}
+		});
 
-		io.sockets.emit('actor-update', update);
-	}, 1000/3);
+		if(update.length)
+			io.sockets.emit('actor-update', update);
+	};
+
+	var actorActionsInterval = setInterval(actorActions, 1000/3);
 
 	socket.emit('new-level', level );
 	socket.on('actor-action', function (direction) {
@@ -146,8 +151,10 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 	socket.on('disconnect', function() {
-		players[playerIdx[socket.store.id]].connected = false;
-		delete playerIdx[socket.store.id];
+		if(playerIdx[socket.store.id]) {
+			players[playerIdx[socket.store.id]].connected = false;
+			delete playerIdx[socket.store.id];
+		}
 	});
 });
 
