@@ -13,6 +13,12 @@
 			background: transparent;
 			border: 1px solid black;
 		}
+		#background { 
+			z-index: -2;
+		}
+		#actors {
+			z-index: -1;
+		}
 	</style>
 </head>
 <body>
@@ -35,17 +41,6 @@ Your browser does not support canvas
 		eachPair(array, function(idx, element) {
 			action(element);
 		});
-	}
-	function NOT_USED_map(array, action) {
-		var result = [];
-
-		each(array, function (element) {
-			var a = action(element);
-			if(a != undefined)
-				result.push(a);
-		});
-
-		return result;
 	}
 	function select(array, action) {
 		var result = [];
@@ -104,17 +99,20 @@ Your browser does not support canvas
 	// Actors
 	function Actors(canvasId, mapWidth, mapHeight, tileSet) {
 		this.actors = [];
+		this.actorIdx = {};
 		this.tileSet = tileSet;
 
 		this.init(canvasId, mapWidth, mapHeight);
 	}
 	Actors.prototype = new CanvasManager();
-	Actors.prototype.populate = function(layer) {
+	Actors.prototype.populate = function(layer, levelMap) {
 		for(var pos = 0; pos < layer.data.length; pos++) {
 			if(layer.data[pos] != 0) {
 				var xy = this.tileSet.toXY(pos);
-				this.actors.push(new Actor(xy.x, xy.y, layer.data[pos]));
-				console.log("  Found actor at " + xy + " using tile-" + layer.data[pos]);
+				var name = levelMap.tilesets[0].tileproperties[layer.data[pos]-1].type;
+				this.actors.push(new Actor(name, layer.data[pos]));
+				this.actorIdx[name] = this.actors.length-1;
+				console.log("  Found actor "+name+" at " + xy + " using tile-" + layer.data[pos]);
 			}
 		}
 	}
@@ -124,15 +122,55 @@ Your browser does not support canvas
 			actor.draw(that.context, tileSet);
 		});
 	}
+	Actors.prototype.update = function(data) {
+		var that = this;
+
+		// FIXME - if two actors is at the same spot - the non-moving actor is not redrawn
+		
+		each(data, function (newState) {
+			var actor = that.actors[that.actorIdx[newState.actor]];
+			actor.update(newState);
+		});
+	}
+
+	// ActorState
+	function ActorState() { 
+		this.visible = false;
+		this.x = 0;
+		this.y = 0;
+	};
+	ActorState.prototype.update = function(newState) {
+		this.visible = newState.visible;
+		this.x = newState.x;
+		this.y = newState.y;
+	}
+	ActorState.prototype.differentTo = function(otherState) {
+		return !(this.visible == otherState.visible && this.x == otherState.x && this.y == otherState.y);
+	}
+
 
 	// Actor
-	function Actor(x,y,tileNum) {
-		this.x = x;
-		this.y = y;
+	function Actor(name, tileNum) {
+		this.name = name;
 		this.tileNum = tileNum;
+		this.state = new ActorState();
+		this.newState = new ActorState();
 	};
 	Actor.prototype.draw = function(context, tileSet) {
-		tileSet.draw(context, tileSet.fromXY({x: this.x, y: this.y}), this.tileNum);
+		if(!this.state.differentTo(this.newState))
+			return;
+
+		if(this.state.visible)
+			tileSet.clear(context, tileSet.fromXY({x: this.state.x, y: this.state.y}));
+
+		this.state.update(this.newState);
+
+		if(this.newState.visible) {
+			tileSet.draw(context, tileSet.fromXY({x: this.newState.x, y: this.newState.y}), this.tileNum);
+		}
+	}
+	Actor.prototype.update = function(newState) {
+		this.newState.update(newState);
 	}
 
 	// TileSet
@@ -153,6 +191,10 @@ Your browser does not support canvas
 		context.drawImage(this.sprite, 
 			tileXY.x * this.tileWidth, tileXY.y * this.tileHeight, this.tileWidth, this.tileHeight, 
 			posXY.x * this.tileWidth, posXY.y * this.tileHeight, this.tileWidth, this.tileHeight);
+	}
+	TileSet.prototype.clear = function(context, pos) {
+		var posXY = this.toXY(pos);
+		context.clearRect(posXY.x * this.tileWidth, posXY.y * this.tileHeight, this.tileWidth, this.tileHeight);
 	}
 	TileSet.prototype.toXY = function(pos) {
 		var x = pos % this.cols;
@@ -201,23 +243,68 @@ Your browser does not support canvas
 			}
 			else if(levelMap.layers[i].properties.type == "spawn") {
 				console.log("Loaded layer #" + i + " " + layer.name + " (" + layer.properties.type + ")");
-				that.actors.populate(layer);
+				that.actors.populate(layer, levelMap);
 			}
 			else {
 				console.error("Ignored layer #" + i + " " + layer.name + " (" + layer.properties.type + ")");
 			}
 		});
     };
-
     Level.prototype.draw = function() {
         this.background.draw(this.tileSet);
 		this.actors.draw(this.tileSet);
     }
+	Level.prototype.actorUpdate = function(data) {
+		this.actors.update(data);
+	}
 
     // main
     var socket = io.connect(document.location.origin);
     var level = null;
 	var levelMap = null;
+
+	// keyboard handling
+	KEY_CODES = {
+		32: 'space',
+		37: 'left', 
+		38: 'up',
+		39: 'right',
+		40: 'down',
+	}
+
+	KEY_STATUS = {};
+	resetKeys();
+	function resetKeys() {
+		for(code in KEY_CODES) {
+			KEY_STATUS[KEY_CODES[code]] = false;
+		}
+	}
+
+	document.onkeydown = function(e) {
+		var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
+		if(KEY_CODES[keyCode]) {
+			e.preventDefault();
+			KEY_STATUS[KEY_CODES[keyCode]] = true;
+		}
+	}
+	document.onkeyup = function(e) {
+		var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
+		if(KEY_CODES[keyCode]) {
+			e.preventDefault();
+			KEY_STATUS[KEY_CODES[keyCode]] = false;
+		}
+	}
+
+	function actionsToServer() {
+		for(code in KEY_CODES) {
+			if(KEY_STATUS[KEY_CODES[code]]) {
+				socket.emit('actor-action', KEY_CODES[code]);
+				return;
+			}
+		}
+	}
+
+	var keyboardAnnoucer = setInterval(actionsToServer, 1000/3);
 
     socket.on('new-level', function (data) {
 		levelMap = data;
@@ -234,6 +321,12 @@ Your browser does not support canvas
 			animate();
 		}
     });
+	socket.on('actor-update', function(state) {
+		level.actorUpdate(state);
+	});
+	socket.on('message', function(text) {
+		console.error(text);
+	});
 
     function animate() {
         requestAnimFrame(animate);

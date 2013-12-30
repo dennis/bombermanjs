@@ -2,6 +2,16 @@
 <map version="1.0" orientation="orthogonal" width="15" height="15" tilewidth="16" tileheight="16">
  <tileset firstgid="1" name="bomb_party_v4" tilewidth="16" tileheight="16">
   <image source="../img/bomb_party_v4.png" width="240" height="304"/>
+  <tile id="210">
+   <properties>
+    <property name="type" value="player0"/>
+   </properties>
+  </tile>
+  <tile id="255">
+   <properties>
+    <property name="type" value="player1"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="background" width="15" height="15">
   <properties>
@@ -24,7 +34,7 @@
    <property name="type" value="spawn"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NgoAxcpVD/KBgFQxn8oIIZAHMTuxqEAwAA
+   H4sIAAAAAAAAA2NgoAxcplD/KBgFQxowUm4EAOxaQTCEAwAA
   </data>
  </layer>
 </map>
