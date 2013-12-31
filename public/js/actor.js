@@ -15,6 +15,9 @@ Actor.prototype.draw = function(context, tileSet, interpolation) {
 		this.realY = this.state.y;
 	}
 
+	if(!this.newState.visible)
+		return;
+
 	this.realX = this.newState.x - Math.floor((this.newState.x - this.state.x) * interpolation);
 	this.realY = this.newState.y - Math.floor((this.newState.y - this.state.y) * interpolation);
 
