@@ -22,7 +22,6 @@ Game.prototype.render = function(interpolation) {
 }
 
 Game.prototype.logic = function() {
-	console.log("logic");
 	this.logic_hooks.forEach(function(logic) {
 		logic();
 	})
@@ -32,7 +31,6 @@ Game.prototype.run = function() {
 	var now = (new Date()).getTime();
 
 	if(this.lastGameTick == 0) {
-		console.log("reseT");
 		this.lastGameTick = now-this.skipTicks;
 	}
 
