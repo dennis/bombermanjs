@@ -5,7 +5,7 @@ function Game() {
 	this.lastGameTick = 0;
 }
 
-Game.logic_rate = 1; // per second
+Game.logic_rate = 20; // per second
 
 Game.prototype.addLogic = function(logic) {
 	this.logic_hooks.push(logic);

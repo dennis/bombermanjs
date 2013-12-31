@@ -3,19 +3,28 @@ function Actor(name, tileNum) {
 	this.tileNum = tileNum;
 	this.state = new ActorState();
 	this.newState = new ActorState();
+	this.realX = null;
+	this.realY = null;
 };
-Actor.prototype.draw = function(context, tileSet) {
-	if(!this.state.differentTo(this.newState))
-		return;
-
-	if(this.state.visible)
-		tileSet.clear(context, this.state.x, this.state.y);
-
-	this.state.update(this.newState);
-
-	if(this.newState.visible) {
-		tileSet.draw(context, this.newState.x, this.newState.y, this.tileNum);
+Actor.prototype.draw = function(context, tileSet, interpolation) {
+	if(this.realX != null && this.realY != null) {
+		tileSet.clear(context, this.realX, this.realY);
 	}
+	else {
+		this.realX = this.state.x;
+		this.realY = this.state.y;
+	}
+
+	this.realX = this.newState.x - Math.floor((this.newState.x - this.state.x) * interpolation);
+	this.realY = this.newState.y - Math.floor((this.newState.y - this.state.y) * interpolation);
+
+	tileSet.draw(context, this.realX, this.realY, this.tileNum);
+}
+
+Actor.prototype.logic = function() {
+	this.realX = this.state.x;
+	this.realY = this.state.y;
+	this.state.update(this.newState);
 }
 Actor.prototype.update = function(data) {
 	this.newState = data.state;

@@ -34,6 +34,7 @@ function sendActions() {
 }
 
 var game = new Game(input);
-game.addRender(function() { level.render(); });
+game.addRender(function(i) { level.render(i); });
+game.addLogic(function() { level.logic(); });
 game.addLogic(function() { sendActions(); });
 renderer();

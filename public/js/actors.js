@@ -20,18 +20,22 @@ Actors.prototype.populate = function(layer, levelMap) {
 	}
 }
 
-Actors.prototype.draw = function(tileSet) {
+Actors.prototype.draw = function(tileSet, interpolation) {
 	var that = this;
 	this.actors.forEach(function(actor) {
-		actor.draw(that.context, tileSet);
+		actor.draw(that.context, tileSet, interpolation);
+	});
+}
+Actors.prototype.logic = function() {
+	var that = this;
+	this.actors.forEach(function(actor) {
+		actor.logic();
 	});
 }
 
 Actors.prototype.update = function(dataSet) {
 	var that = this;
 
-	// FIXME - if two actors is at the same spot - the non-moving actor is not redrawn
-	
 	dataSet.forEach(function (data) {
 		var actor = that.actors[that.actorIdx[data.actor]];
 		actor.update(data);

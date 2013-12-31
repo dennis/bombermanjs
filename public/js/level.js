@@ -26,13 +26,13 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId) {
 		}
 	});
 };
-Level.prototype.render = function() {
+Level.prototype.render = function(interpolation) {
 	this.background.draw(this.tileSet);
-	this.actors.draw(this.tileSet);
+	this.actors.draw(this.tileSet, interpolation);
 }
 
 Level.prototype.logic = function() {
-	
+	this.actors.logic();
 }
 
 Level.prototype.actorUpdate = function(data) {

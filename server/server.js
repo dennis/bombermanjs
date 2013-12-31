@@ -158,7 +158,7 @@ io.sockets.on('connection', function (socket) {
 			io.sockets.emit('actor-update', update);
 	};
 
-	var actorActionsInterval = setInterval(actorActions, 1000/3);
+	var actorActionsInterval = setInterval(actorActions, 1000/20);
 
 	socket.emit('new-level', level );
 	socket.on('actor-action', function (direction) {
