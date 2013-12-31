@@ -15,7 +15,6 @@ socket.on('new-level', function (levelMap) {
 		var tileSet = new TileSet(levelMap.tilesets[0], tilesImg);
 		level = new Level(levelMap, tileSet, 'background', 'actors');
 		console.log("ready");
-		renderer();
 	}
 });
 
@@ -37,3 +36,4 @@ function sendActions() {
 var game = new Game(input);
 game.addRender(function() { level.render(); });
 game.addLogic(function() { sendActions(); });
+renderer();
