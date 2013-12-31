@@ -142,8 +142,9 @@ io.sockets.on('connection', function (socket) {
 					});
 				});
 
-				if(collision)
+				if(collision) {
 					return;
+				}
 
 				player.state.x = x;
 				player.state.y = y;

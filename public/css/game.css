@@ -14,3 +14,11 @@ canvas {
 #actors {
 	z-index: -1;
 }
+#messages {
+	height: 2em;
+	overflow: hidden;
+	margin: 1em;
+	font-size: x-small;
+	font-family: courier;
+	color: green;
+}

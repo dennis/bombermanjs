@@ -2,6 +2,7 @@
 var socket = io.connect(document.location.origin);
 var level = null;
 var input = new InputManager();
+var message = document.getElementById('messages');
 input.attach();
 
 socket.on('new-level', function (levelMap) {
@@ -23,7 +24,7 @@ socket.on('actor-update', function(state) {
 		level.actorUpdate(state);
 });
 socket.on('message', function(text) {
-	console.error(text);
+	message.innerHTML = text + "<br />" + message.innerHTML;
 });
 
 function sendActions() {
