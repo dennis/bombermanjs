@@ -112,6 +112,7 @@ io.sockets.on('connection', function (socket) {
 					case 'down': y += step; break;
 					case 'left': x -= step; break;
 					case 'right': x += step; break;
+					case 'space': console.log("NOT SUPPORTED"); break;
 				}
 				
 				// boundary check
