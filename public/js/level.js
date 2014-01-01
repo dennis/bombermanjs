@@ -38,3 +38,6 @@ Level.prototype.logic = function() {
 Level.prototype.actorUpdate = function(data) {
 	this.actors.update(data);
 }
+Level.prototype.newActor = function(data) {
+	this.actors.spawn(data);
+}

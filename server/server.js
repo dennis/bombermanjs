@@ -114,6 +114,9 @@ io.sockets.on('connection', function (socket) {
 					case 'right': x += step; break;
 					case 'space': console.log("NOT SUPPORTED"); break;
 				}
+
+				if(player.requestedAction != 'space' && player.requestedAction != 'noop') 
+					player.state.direction = player.requestedAction;
 				
 				// boundary check
 				if(x < 0)
@@ -175,6 +178,11 @@ io.sockets.on('connection', function (socket) {
 			console.log(" playerIdx", playerIdx);
 			console.log("-------------------------------");
 		}
+	});
+	socket.on('ready', function() {
+		socket.emit("message", "Starting..");
+		socket.emit('new-actor', { id: 'player0', actor: 'player0' });
+		socket.emit('new-actor', { id: 'player1', actor: 'player1' });
 	});
 	socket.on('disconnect', function() {
 		if(playerIdx[socket.store.id]) {

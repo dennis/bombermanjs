@@ -55,7 +55,7 @@
         {
          "firstgid":1,
          "image":"..\/public\/img\/bomb_party_v4.png",
-         "imageheight":304,
+         "imageheight":320,
          "imagewidth":240,
          "margin":0,
          "name":"bomb_party_v4",
@@ -67,13 +67,185 @@
          "tileheight":16,
          "tileproperties":
             {
+             "199":
+                {
+                 "subtype":"walk-left",
+                 "type":"player1"
+                },
+             "200":
+                {
+                 "subtype":"walk-left",
+                 "type":"player1"
+                },
+             "201":
+                {
+                 "subtype":"walk-left",
+                 "type":"player1"
+                },
+             "202":
+                {
+                 "subtype":"left",
+                 "type":"player1"
+                },
              "210":
                 {
+                 "subtype":"up",
+                 "type":"player0"
+                },
+             "211":
+                {
+                 "subtype":"down",
+                 "type":"player0"
+                },
+             "212":
+                {
+                 "subtype":"walk-down",
+                 "type":"player0"
+                },
+             "213":
+                {
+                 "subtype":"walk-down",
+                 "type":"player0"
+                },
+             "214":
+                {
+                 "subtype":"right",
+                 "type":"player0"
+                },
+             "215":
+                {
+                 "subtype":"walk-right",
+                 "type":"player0"
+                },
+             "216":
+                {
+                 "subtype":"walk-right",
+                 "type":"player0"
+                },
+             "217":
+                {
+                 "subtype":"walk-right",
+                 "type":"player0"
+                },
+             "218":
+                {
+                 "subtype":"walk-up",
+                 "type":"player0"
+                },
+             "219":
+                {
+                 "subtype":"walk-up",
                  "type":"player0"
                 },
              "255":
                 {
+                 "subtype":"up",
                  "type":"player1"
+                },
+             "256":
+                {
+                 "subtype":"down",
+                 "type":"player1"
+                },
+             "257":
+                {
+                 "subtype":"walk-down",
+                 "type":"player1"
+                },
+             "258":
+                {
+                 "subtype":"walk-down",
+                 "type":"player1"
+                },
+             "259":
+                {
+                 "subtype":"right",
+                 "type":"player1"
+                },
+             "260":
+                {
+                 "subtype":"walk-right",
+                 "type":"player1"
+                },
+             "261":
+                {
+                 "subtype":"walk-right",
+                 "type":"player1"
+                },
+             "262":
+                {
+                 "subtype":"walk-right",
+                 "type":"player1"
+                },
+             "263":
+                {
+                 "subtype":"walk-up",
+                 "type":"player1"
+                },
+             "264":
+                {
+                 "subtype":"walk-up",
+                 "type":"player1"
+                },
+             "285":
+                {
+                 "subtype":"walk-left",
+                 "type":"player0"
+                },
+             "286":
+                {
+                 "subtype":"walk-left",
+                 "type":"player0"
+                },
+             "287":
+                {
+                 "subtype":"walk-left",
+                 "type":"player0"
+                },
+             "288":
+                {
+                 "subtype":"walk-left",
+                 "type":"player"
+                },
+             "289":
+                {
+                 "subtype":"walk-left",
+                 "type":"player2"
+                },
+             "290":
+                {
+                 "subtype":"walk-left",
+                 "type":"player2"
+                },
+             "291":
+                {
+                 "subtype":"walk-left",
+                 "type":"player2"
+                },
+             "292":
+                {
+                 "subtype":"left",
+                 "type":"player2"
+                },
+             "293":
+                {
+                 "subtype":"walk-left",
+                 "type":"player3"
+                },
+             "294":
+                {
+                 "subtype":"walk-left",
+                 "type":"player3"
+                },
+             "295":
+                {
+                 "subtype":"walk-left",
+                 "type":"player3"
+                },
+             "296":
+                {
+                 "subtype":"left",
+                 "type":"player3"
                 }
             },
          "tilewidth":16

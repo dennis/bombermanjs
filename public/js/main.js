@@ -15,13 +15,18 @@ socket.on('new-level', function (levelMap) {
 		console.log("Graphics loaded: ", tilesImg);
 		var tileSet = new TileSet(levelMap.tilesets[0], tilesImg);
 		level = new Level(levelMap, tileSet, 'background', 'actors');
-		console.log("ready");
+		socket.emit('ready');
 	}
 });
 
 socket.on('actor-update', function(state) {
+	console.log("EVENT: actor-update");
 	if(level)
 		level.actorUpdate(state);
+});
+socket.on('new-actor', function(data) {
+	console.log("EVENT: new-actor");
+	level.newActor(data);
 });
 socket.on('message', function(text) {
 	message.innerHTML = text + "<br />" + message.innerHTML;
