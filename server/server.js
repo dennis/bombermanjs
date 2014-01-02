@@ -4,6 +4,8 @@ var express = require('express')
 	, server = require('http').createServer(app)
 	, io = require('socket.io').listen(server)
 	, fs = require('fs')
+	, Stately = require('stately.js')
+	, Player = require('./player.js');
 
 ActorState = require(__dirname + '/../public/js/actor_state.js');
 
@@ -19,10 +21,7 @@ var level = require(__dirname + '/../levels/level.json');
 // fix image
 level.tilesets[0].image = level.tilesets[0].image.substring(9); // strip "../public/
 
-var players = {};
-var playerIdx = {};
 var blockedTiles = [];
-
 // initialize blockedTiles
 for(var x = 0; x < level.width; x++) {
 	blockedTiles.push([]);
@@ -36,6 +35,8 @@ for(var x = 0; x < level.width; x++) {
 	}
 }
 
+var players = {};
+var playerIdx = {};
 // looking through map - find players
 for(var i = 0; i < level.layers.length; i++) {
 	var layer = level.layers[i];
@@ -51,12 +52,7 @@ for(var i = 0; i < level.layers.length; i++) {
 				state.x = x * level.tilewidth;
 				state.y = y * level.tileheight;
 
-				players[type] = {
-					connected: false, 
-					requestedAction: null,
-					socketId: null,
-					state: state
-				};
+				players[type] = new Player(type, state.x, state.y);
 			}
 		}
 	}
@@ -76,119 +72,201 @@ for(var i = 0; i < level.layers.length; i++) {
 
 console.log("Map got room for " + Object.keys(players).length + " players");
 
-io.sockets.on('connection', function (socket) {
-	// find available player
-	Object.keys(players).some(function(actorName) {
+
+function Client(socket) {
+	this.player = null;
+	this.socket = socket;
+
+	this.state = Stately.machine(
+		{	
+			'PRECONNECT': {
+				'connecting': function(client) {
+						client.socket.emit('new-level', level );
+					return this.CONNECTED;
+				}
+			},
+			'CONNECTED': {
+				'doneLoadingLevel': function(client) {
+					client.socket.emit('new-actor', { id: 'player0', actor: 'player0' });
+					client.socket.emit('new-actor', { id: 'player1', actor: 'player1' });
+					client.socket.emit('observing' );
+					return this.OBSERVING;
+				}
+			},
+			'OBSERVING': {
+				'join': function(client) {
+					var foundFreePlayer = false;
+
+					// find available player
+					Object.keys(players).some(function(actorName) {
+						var player = players[actorName];
+
+						if(!player.isOccupied()) {
+							player.occupy();
+							client.player = player;
+							client.socket.emit("message", "you are " + actorName);
+							foundFreePlayer = true;
+							return true;
+						}
+						else {
+							console.log(actorName + " is in use");
+							return false;
+						}
+					});
+
+					if(foundFreePlayer)
+						return this.PLAYING;
+					else
+						return this.OBSERVING;
+				}
+			},
+			'PLAYING': {
+				'leave': function(client) {
+					client.socket.emit('del-actor', { id: client.player.name });
+					client.observe();				
+					client.socket.emit("message", "you are now an observer");
+					return this.OBSERVING;
+				}
+			}
+		}, 
+		'PRECONNECT'
+	);
+	this.state.bind(function(event, oldState, newState) {
+		console.log("State change: ", event, oldState, newState);
+	});
+
+	//this.state = clone(ClientState);
+}
+Client.prototype.isObserver = function() {
+	this.observer == null;
+}
+Client.prototype.isPlayer = function() {
+	this.observer != null;
+}
+Client.prototype.observe = function() {
+	this.player.reset();
+	this.player = null;
+}
+
+function ClientManager() {
+	this.clients = {};
+};
+ClientManager.prototype.newClient = function(socket) {
+	return this.clients[socket.id] = new Client(socket);
+}
+ClientManager.prototype.removeClient = function(socket) {
+	if(this.clients[socket.id].player)
+		this.clients[socket.id].player.reset();
+	delete this.clients[socket.id];
+}
+ClientManager.prototype.getClient = function(socket) {
+	return this.clients[socket.id];
+}
+
+var clientManager = new ClientManager();
+
+var actorActions = function() {
+	var update = [];
+	Object.keys(players).forEach(function(actorName) {
 		var player = players[actorName];
-		if(!player.connected) {
-			player.connected = true;
-			player.requestedAction = 'noop';
+		if(player.isDirty()) {
 			player.state.visible = true;
-			player.socketId = socket.id;
-			playerIdx[socket.id] = actorName;
-			console.log(actorName + " is " + socket.id);
-			socket.emit("message", "you are " + actorName);
-			return true;
-		}
-		else {
-			console.log(actorName + " is in use");
-			return false;
+
+			var x = player.state.x;
+			var y = player.state.y;
+			var step = 8;
+
+			switch(player.requestedAction) {
+				case 'up': y -= step; break;
+				case 'down': y += step; break;
+				case 'left': x -= step; break;
+				case 'right': x += step; break;
+				case 'space': console.log("NOT SUPPORTED"); break;
+			}
+
+			if(player.requestedAction != 'space' && player.requestedAction != 'noop') 
+				player.state.direction = player.requestedAction;
+			
+			// boundary check
+			if(x < 0)
+				x = (level.width-1)*level.tilewidth;
+			if(x > (level.width-1)*level.tilewidth)
+				x = 0;
+			if(y < 0)
+				y = (level.height-1)*level.tileheight;
+			if(y > (level.height-1)*level.tileheight)
+				y = 0;
+
+			player.requestedAction = null;
+
+
+			var lowX = Math.floor(x / level.tilewidth);
+			var lowY = Math.floor(y / level.tileheight);
+			var highX = Math.ceil(x / level.tilewidth);
+			var highY = Math.ceil(y / level.tileheight);
+
+			// very very crude collision detection - needs work
+			var collision = false;
+			[lowX,highX].forEach(function(x) {
+				[lowY, highY].forEach(function(y) {
+					if(blockedTiles[x][y]) {
+						collision = true;
+					}
+				});
+			});
+
+			if(collision) {
+				console.log("Collision!");
+				return;
+			}
+
+			player.state.x = x;
+			player.state.y = y;
+
+			update.push({
+				actor: actorName,
+				state: player.state
+			});
 		}
 	});
 
-	var actorActions = function() {
-		var update = [];
-		Object.keys(players).forEach(function(actorName) {
-			var player = players[actorName];
-			if(player.connected && player.requestedAction) {
-				player.state.visible = true;
+	if(update.length) {
+		io.sockets.emit('actor-update', update);
+	}
+};
 
-				var x = player.state.x;
-				var y = player.state.y;
-				var step = 8;
+var actorActionsInterval = setInterval(actorActions, 1000/20);
 
-				switch(player.requestedAction) {
-					case 'up': y -= step; break;
-					case 'down': y += step; break;
-					case 'left': x -= step; break;
-					case 'right': x += step; break;
-					case 'space': console.log("NOT SUPPORTED"); break;
-				}
+io.sockets.on('connection', function(socket) {
+	var client = clientManager.newClient(socket);
 
-				if(player.requestedAction != 'space' && player.requestedAction != 'noop') 
-					player.state.direction = player.requestedAction;
-				
-				// boundary check
-				if(x < 0)
-					x = (level.width-1)*level.tilewidth;
-				if(x > (level.width-1)*level.tilewidth)
-					x = 0;
-				if(y < 0)
-					y = (level.height-1)*level.tileheight;
-				if(y > (level.height-1)*level.tileheight)
-					y = 0;
+	client.state.connecting(client);
 
-				player.requestedAction = null;
+	socket.on('new-level-done', function() {
+		client.state.doneLoadingLevel(client);
+	});
 
-				var lowX = Math.floor(x / level.tilewidth);
-				var lowY = Math.floor(y / level.tileheight);
-				var highX = Math.ceil(x / level.tilewidth);
-				var highY = Math.ceil(y / level.tileheight);
-				
-				// very very crude collision detection - needs work
-				var collision = false;
-				[lowX,highX].forEach(function(x) {
-					[lowY, highY].forEach(function(y) {
-						if(blockedTiles[x][y]) {
-							collision = true;
-						}
-					});
-				});
+	socket.on('join', function() {
+		client.state.join(client);
+	});
+	socket.on('leave', function() {
+		console.log("leavnig");
+		client.state.leave(client);
+	});
 
-				if(collision) {
-					return;
-				}
-
-				player.state.x = x;
-				player.state.y = y;
-
-				update.push({
-					actor: actorName,
-					state: player.state
-				});
-			}
-		});
-
-		if(update.length)
-			io.sockets.emit('actor-update', update);
-	};
-
-	var actorActionsInterval = setInterval(actorActions, 1000/20);
-
-	socket.emit('new-level', level );
 	socket.on('actor-action', function (direction) {
-		var player = players[playerIdx[socket.store.id]];
-		if(player) {
-			player.requestedAction = direction;
+		console.log("actor-action", direction);
+		var client = clientManager.getClient(socket);
+		if(client && client.player) {
+			client.player.requestedAction = direction;
 		}
 		else {
 			console.log("Can't find player!", socket.store.id);
-			console.log("-------------------------------");
-			console.log(" players", players);
-			console.log(" playerIdx", playerIdx);
-			console.log("-------------------------------");
 		}
 	});
-	socket.on('ready', function() {
-		socket.emit("message", "Starting..");
-		socket.emit('new-actor', { id: 'player0', actor: 'player0' });
-		socket.emit('new-actor', { id: 'player1', actor: 'player1' });
-	});
+
 	socket.on('disconnect', function() {
-		if(playerIdx[socket.store.id]) {
-			players[playerIdx[socket.store.id]].connected = false;
-			delete playerIdx[socket.store.id];
-		}
+		clientManager.removeClient(socket);
 	});
 });
 
