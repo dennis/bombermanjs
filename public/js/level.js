@@ -41,3 +41,6 @@ Level.prototype.actorUpdate = function(data) {
 Level.prototype.newActor = function(data) {
 	this.actors.spawn(data);
 }
+Level.prototype.delActor = function(data) {
+	this.actors.despawn(data);
+}

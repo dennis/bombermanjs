@@ -87,8 +87,10 @@ function Client(socket) {
 			},
 			'CONNECTED': {
 				'doneLoadingLevel': function(client) {
-					client.socket.emit('new-actor', { id: 'player0', actor: 'player0' });
-					client.socket.emit('new-actor', { id: 'player1', actor: 'player1' });
+					Object.keys(players).forEach(function(actorName) {
+						var player = players[actorName];
+						client.socket.emit('new-actor', { id: player.name, actor: player.name });
+					});
 					client.socket.emit('observing' );
 					return this.OBSERVING;
 				}
@@ -105,6 +107,7 @@ function Client(socket) {
 							player.occupy();
 							client.player = player;
 							client.socket.emit("message", "you are " + actorName);
+							io.sockets.emit('new-actor', { id: player.name, actor: player.name });
 							foundFreePlayer = true;
 							return true;
 						}
@@ -122,7 +125,7 @@ function Client(socket) {
 			},
 			'PLAYING': {
 				'leave': function(client) {
-					client.socket.emit('del-actor', { id: client.player.name });
+					io.sockets.emit('del-actor', { id: client.player.name });
 					client.observe();				
 					client.socket.emit("message", "you are now an observer");
 					return this.OBSERVING;
@@ -250,18 +253,13 @@ io.sockets.on('connection', function(socket) {
 		client.state.join(client);
 	});
 	socket.on('leave', function() {
-		console.log("leavnig");
 		client.state.leave(client);
 	});
 
 	socket.on('actor-action', function (direction) {
-		console.log("actor-action", direction);
 		var client = clientManager.getClient(socket);
 		if(client && client.player) {
 			client.player.requestedAction = direction;
-		}
-		else {
-			console.log("Can't find player!", socket.store.id);
 		}
 	});
 

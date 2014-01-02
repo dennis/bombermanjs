@@ -5,6 +5,7 @@ var input = new InputManager();
 var message = document.getElementById('messages');
 input.attach();
 
+console.log("Setting up events");
 socket.on('new-level', function (levelMap) {
 	console.log("EVENT: new-level");
 
@@ -15,7 +16,7 @@ socket.on('new-level', function (levelMap) {
 		console.log("Graphics loaded: ", tilesImg);
 		var tileSet = new TileSet(levelMap.tilesets[0], tilesImg);
 		level = new Level(levelMap, tileSet, 'background', 'actors');
-		socket.emit('ready');
+		socket.emit('new-level-done');
 	}
 });
 
@@ -28,8 +29,16 @@ socket.on('new-actor', function(data) {
 	console.log("EVENT: new-actor");
 	level.newActor(data);
 });
+socket.on('del-actor', function(data) {
+	console.log("EVENT: del-actor");
+	level.delActor(data);
+});
 socket.on('message', function(text) {
 	message.innerHTML = text + "<br />" + message.innerHTML;
+});
+socket.on('observing', function(data) {
+	console.log("EVENT: observing");
+	message.innerHTML = "We're observing" + "<br />" + message.innerHTML;
 });
 
 function sendActions() {
@@ -40,7 +49,7 @@ function sendActions() {
 }
 
 var game = new Game(input);
-game.addRender(function(i) { level.render(i); });
-game.addLogic(function() { level.logic(); });
+game.addRender(function(i) { if(level) level.render(i); });
+game.addLogic(function() { if(level) level.logic(); });
 game.addLogic(function() { sendActions(); });
 renderer();
