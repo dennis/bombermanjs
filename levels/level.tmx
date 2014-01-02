@@ -166,8 +166,8 @@
   </tile>
   <tile id="288">
    <properties>
-    <property name="subtype" value="walk-left"/>
-    <property name="type" value="player"/>
+    <property name="subtype" value="left"/>
+    <property name="type" value="player0"/>
    </properties>
   </tile>
   <tile id="289">

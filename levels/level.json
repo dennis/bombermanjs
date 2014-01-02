@@ -204,8 +204,8 @@
                 },
              "288":
                 {
-                 "subtype":"walk-left",
-                 "type":"player"
+                 "subtype":"left",
+                 "type":"player0"
                 },
              "289":
                 {
