@@ -9,6 +9,9 @@ function InputManager() {
 
 	this.KEY_STATUS = {};
 	this.resetKeys();
+
+	this.oldonkeydown = null;
+	this.oldonkeyup = null;
 }
 InputManager.prototype.resetKeys = function() {
 	for(code in this.KEY_CODES) {
@@ -36,9 +39,21 @@ InputManager.prototype.onkeyup = function(e) {
 	}
 }
 InputManager.prototype.attach = function() {
+	this.oldonkeydown = document.onkeydown;
+	this.oldonkeyup = document.onkeyup;
+
 	document.onkeydown = this.onkeydown();
 	document.onkeyup = this.onkeyup();
 }
+
+InputManager.prototype.detach = function() {
+	document.onkeydown = this.oldonkeydown;
+	document.onkeyup = this.oldonkeyup;
+
+	this.oldonkeyup = null;
+	this.oldonkeydown = null;
+}
+
 InputManager.prototype.getKey = function() {
 	for(code in this.KEY_CODES) {
 		if(this.KEY_STATUS[this.KEY_CODES[code]]) {
