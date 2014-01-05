@@ -12,7 +12,6 @@ function InputManager() {
 
 	this.oldonkeydown = null;
 	this.oldonkeyup = null;
-	this.ignoreRepeats = false;
 }
 InputManager.prototype.resetKeys = function() {
 	for(code in this.KEY_CODES) {
@@ -22,9 +21,6 @@ InputManager.prototype.resetKeys = function() {
 InputManager.prototype.onkeydown = function(e) {
 	var self = this;
 	return function(e) {
-		if(self.ignoreRepeats)
-			return;
-		self.ignoreRepeats=true;
 		var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
 		if(self.KEY_CODES[keyCode]) {
 			e.preventDefault();
@@ -35,7 +31,6 @@ InputManager.prototype.onkeydown = function(e) {
 InputManager.prototype.onkeyup = function(e) {
 	var self = this;
 	return function(e) {
-		self.ignoreRepeats=false;
 		var keyCode = (e.keyCode) ? e.keyCode : e.charCode;
 		if(self.KEY_CODES[keyCode]) {
 			e.preventDefault();
