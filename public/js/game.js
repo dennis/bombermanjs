@@ -3,6 +3,7 @@ function Game() {
 	this.render_hooks = [];
 	this.skipTicks = 1000 / Game.logic_rate,
 	this.lastGameTick = 0;
+	this.firstGameTick = 0;
 }
 
 Game.logic_rate = 20; // per second
@@ -15,9 +16,9 @@ Game.prototype.addRender = function(render) {
 	this.render_hooks.push(render);
 }
 
-Game.prototype.render = function(interpolation) {
+Game.prototype.render = function(interpolation, ticks) {
 	this.render_hooks.forEach(function(render) {
-		render(interpolation);
+		render(interpolation, ticks);
 	})
 }
 
@@ -32,6 +33,7 @@ Game.prototype.run = function() {
 
 	if(this.lastGameTick == 0) {
 		this.lastGameTick = now-this.skipTicks;
+		this.firstGameTick = now;
 	}
 
 	while(now > this.lastGameTick) {
@@ -41,7 +43,7 @@ Game.prototype.run = function() {
 
 	var interpolation = (this.lastGameTick-now)/this.skipTicks;
 
-	this.render(interpolation);
+	this.render(interpolation, now - this.firstGameTick);
 }
 
 function renderer() {

@@ -49,7 +49,7 @@ function sendActions() {
 }
 
 var game = new Game(input);
-game.addRender(function(i) { if(level) level.render(i); });
+game.addRender(function(i,t) { if(level) level.render(i,t); });
 game.addLogic(function() { if(level) level.logic(); });
 game.addLogic(function() { sendActions(); });
 renderer();

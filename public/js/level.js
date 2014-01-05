@@ -26,9 +26,9 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId) {
 		}
 	});
 };
-Level.prototype.render = function(interpolation) {
+Level.prototype.render = function(interpolation, ticks) {
 	this.background.draw(this.tileSet);
-	this.actors.draw(this.tileSet, interpolation);
+	this.actors.draw(this.tileSet, interpolation, ticks);
 }
 
 Level.prototype.logic = function() {
