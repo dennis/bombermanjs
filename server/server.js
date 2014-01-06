@@ -72,7 +72,6 @@ for(var i = 0; i < level.layers.length; i++) {
 
 console.log("Map got room for " + Object.keys(players).length + " players");
 
-
 function Client(socket) {
 	this.player = null;
 	this.socket = socket;
@@ -167,6 +166,23 @@ ClientManager.prototype.getClient = function(socket) {
 }
 
 var clientManager = new ClientManager();
+var bombs = {};
+var lastBombId = 1;
+
+function Bomb(id, x, y) {
+	this.id = id;
+	this.x = x;
+	this.y = y;
+}
+Bomb.prototype.getId = function() {
+	return this.id;
+}
+Bomb.prototype.getX = function() {
+	return this.x;
+}
+Bomb.prototype.getY = function() {
+	return this.y;
+}
 
 var actorActions = function() {
 	var update = [];
@@ -185,7 +201,14 @@ var actorActions = function() {
 				case 'left': x -= step; break;
 				case 'right': x += step; break;
 				case 'space': 
-					io.sockets.emit('new-actor', { id: '42', actor: 'bomb', x: player.state.x, y: player.state.y });
+					var bomb = new Bomb(lastBombId++, player.state.x, player.state.y);
+					bombs[bomb.getId()] = bomb;
+
+					io.sockets.emit('new-actor', { 
+						id: bomb.getId(), 
+						actor: 'bomb', 
+						x: bomb.getX(), 
+						y: bomb.getY() });
 				break;
 			}
 
