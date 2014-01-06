@@ -146,6 +146,36 @@
     <property name="type" value="player1"/>
    </properties>
   </tile>
+  <tile id="274">
+   <properties>
+    <property name="type" value="bomb"/>
+   </properties>
+  </tile>
+  <tile id="275">
+   <properties>
+    <property name="type" value="bomb"/>
+   </properties>
+  </tile>
+  <tile id="276">
+   <properties>
+    <property name="type" value="bomb"/>
+   </properties>
+  </tile>
+  <tile id="277">
+   <properties>
+    <property name="type" value="bomb"/>
+   </properties>
+  </tile>
+  <tile id="278">
+   <properties>
+    <property name="type" value="bomb"/>
+   </properties>
+  </tile>
+  <tile id="279">
+   <properties>
+    <property name="type" value="bomb"/>
+   </properties>
+  </tile>
   <tile id="285">
    <properties>
     <property name="subtype" value="walk-left"/>

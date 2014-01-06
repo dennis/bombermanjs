@@ -187,6 +187,30 @@
                  "subtype":"walk-up",
                  "type":"player1"
                 },
+             "274":
+                {
+                 "type":"bomb"
+                },
+             "275":
+                {
+                 "type":"bomb"
+                },
+             "276":
+                {
+                 "type":"bomb"
+                },
+             "277":
+                {
+                 "type":"bomb"
+                },
+             "278":
+                {
+                 "type":"bomb"
+                },
+             "279":
+                {
+                 "type":"bomb"
+                },
              "285":
                 {
                  "subtype":"walk-left",

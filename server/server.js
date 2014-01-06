@@ -107,7 +107,7 @@ function Client(socket) {
 							player.occupy();
 							client.player = player;
 							client.socket.emit("message", "you are " + actorName);
-							io.sockets.emit('new-actor', { id: player.name, actor: player.name });
+							io.sockets.emit('new-actor', { id: player.name, actor: player.name, x: player.state.x, y: player.state.y });
 							foundFreePlayer = true;
 							return true;
 						}
@@ -184,7 +184,9 @@ var actorActions = function() {
 				case 'down': y += step; break;
 				case 'left': x -= step; break;
 				case 'right': x += step; break;
-				case 'space': console.log("NOT SUPPORTED"); break;
+				case 'space': 
+					io.sockets.emit('new-actor', { id: '42', actor: 'bomb', x: player.state.x, y: player.state.y });
+				break;
 			}
 
 			if(player.requestedAction != 'space' && player.requestedAction != 'noop') 

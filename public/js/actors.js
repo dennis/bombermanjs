@@ -53,7 +53,24 @@ Actors.prototype.update = function(dataSet) {
 Actors.prototype.spawn = function(data) {
 	console.log("need to spawn actor", data);
 
-	this.actors.push(new Player(data.id, this.actorKind[data.actor]));
+	var actorConstructor = null;
+
+	switch(data.actor) {
+		case 'player0':
+		case 'player1':
+		case 'player2':
+		case 'player3':
+			actorConstructor = Player;
+			break;
+		case 'bomb':
+			actorConstructor = Bomb;
+			break;
+		default:
+			throw new String(data.actor + " unsupported");
+	}
+
+	actor = new actorConstructor(data.id, this.actorKind[data.actor], data);
+	this.actors.push(actor);
 	this.actorIdx[data.id] = this.actors.length-1;
 };
 
