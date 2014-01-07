@@ -46,7 +46,6 @@ Level.prototype.populateCollisionEngine = function(collisionEngine) {
 	for(var i = 0; i < this.levelMap.layers.length; i++) {
 		var layer = this.levelMap.layers[i];
 
-		// Populate CollisionEngine
 		if(layer.type == "tilelayer" && layer.properties && layer.properties.type == "blocking") {
 			for(var j = 0; j < layer.data.length; j++) {
 				if(layer.data[j] != 0) { 
@@ -58,6 +57,19 @@ Level.prototype.populateCollisionEngine = function(collisionEngine) {
 			}
 		}
 	}
+}
+Level.prototype.placeBomb = function(x, y) {
+	console.log("ERROR: Not implemented");
+/*
+	var bomb = new Bomb(lastBombId++, player.state.x, player.state.y);
+	bombs[bomb.getId()] = bomb;
+
+	io.sockets.emit('new-actor', { 
+		id: bomb.getId(), 
+		actor: 'bomb', 
+		x: bomb.getX(), 
+		y: bomb.getY() });
+*/
 }
 
 module.exports = Level;
