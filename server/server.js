@@ -11,7 +11,8 @@ var ActorState = require(__dirname + '/../public/js/actor_state.js')
 	, Bomb = require('./bomb.js')
 	, CollisionEngine = require('./collision_engine.js')
 	, Client = require('./client.js')
-	, ClientManager = require('./client_manager.js');
+	, ClientManager = require('./client_manager.js')
+	, Level = require('./level.js');
 
 server.listen(server_port);
 app.use(express.static(__dirname + '/../public'));
@@ -20,47 +21,13 @@ app.use(express.logger());
 console.log("Server running on port " + server_port);
 console.log("Serving " + __dirname + '/../public');
 
-var level = require(__dirname + '/../levels/level.json');
+var levelMap = require(__dirname + '/../levels/level.json');
+var level = new Level(levelMap);
+var collisionEngine = new CollisionEngine(level.getWidth(), level.getHeight());
+var players = level.findPlayers();
+level.populateCollisionEngine(collisionEngine);
 
-// fix image
-level.tilesets[0].image = level.tilesets[0].image.substring(9); // strip "../public/
-
-var collisionEngine = new CollisionEngine(level.width, level.height);
-var players = {};
-var playerIdx = {};
 // looking through map - find players
-for(var i = 0; i < level.layers.length; i++) {
-	var layer = level.layers[i];
-	if(layer.type == "tilelayer" && layer.properties && layer.properties.type == "spawn") {
-		for(var j = 0; j < layer.data.length; j++) {
-			if(layer.data[j] != "0") {
-				var type = level.tilesets[0].tileproperties[layer.data[j]-1].type;
-
-				var x = j % level.width;
-				var y = (j-x) / level.width;
-
-				var state = new ActorState();
-				state.x = x * level.tilewidth;
-				state.y = y * level.tileheight;
-
-				players[type] = new Player(type, state.x, state.y);
-			}
-		}
-	}
-
-	// Populate CollisionEngine
-	if(layer.type == "tilelayer" && layer.properties && layer.properties.type == "blocking") {
-		for(var j = 0; j < layer.data.length; j++) {
-			if(layer.data[j] != 0) { 
-				var x = j % level.width;
-				var y = (j-x) / level.width;
-
-				collisionEngine.setXY(x, y);
-			}
-		}
-	}
-}
-
 console.log("Map got room for " + Object.keys(players).length + " players");
 
 var clientManager = new ClientManager();
@@ -100,21 +67,21 @@ var actorActions = function() {
 			
 			// boundary check
 			if(x < 0)
-				x = (level.width-1)*level.tilewidth;
-			if(x > (level.width-1)*level.tilewidth)
+				x = (level.getWidth()-1)*level.getTileWidth();
+			if(x > (level.getWidth()-1)*level.getTileWidth())
 				x = 0;
 			if(y < 0)
-				y = (level.height-1)*level.tileheight;
-			if(y > (level.height-1)*level.tileheight)
+				y = (level.getHeight()-1)*level.getTileHeight();
+			if(y > (level.getHeight()-1)*level.getTileHeight())
 				y = 0;
 
 			player.requestedAction = null;
 
 
-			var lowX = Math.floor(x / level.tilewidth);
-			var lowY = Math.floor(y / level.tileheight);
-			var highX = Math.ceil(x / level.tilewidth);
-			var highY = Math.ceil(y / level.tileheight);
+			var lowX = Math.floor(x / level.getTileWidth());
+			var lowY = Math.floor(y / level.getTileHeight());
+			var highX = Math.ceil(x / level.getTileWidth());
+			var highY = Math.ceil(y / level.getTileHeight());
 
 			var collision = false;
 			[lowX,highX].forEach(function(x) {
@@ -149,7 +116,7 @@ var actorActionsInterval = setInterval(actorActions, 1000/20);
 
 io.sockets.on('connection', function(socket) {
 	// FIXME Client shouldnt require this knowledge
-	var client = clientManager.newClient(socket, level, players, io);
+	var client = clientManager.newClient(socket, levelMap, players, io);
 
 	client.state.connecting(client);
 
