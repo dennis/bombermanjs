@@ -4,10 +4,12 @@ var express = require('express')
 	, server = require('http').createServer(app)
 	, io = require('socket.io').listen(server)
 	, fs = require('fs')
-	, Stately = require('stately.js')
-	, Player = require('./player.js');
+	, Stately = require('stately.js');
 
-ActorState = require(__dirname + '/../public/js/actor_state.js');
+// Local requires
+var ActorState = require(__dirname + '/../public/js/actor_state.js')
+	, Player = require('./player.js')
+	, CollisionEngine = require('./collision_engine.js')
 
 server.listen(server_port);
 app.use(express.static(__dirname + '/../public'));
@@ -21,20 +23,7 @@ var level = require(__dirname + '/../levels/level.json');
 // fix image
 level.tilesets[0].image = level.tilesets[0].image.substring(9); // strip "../public/
 
-var blockedTiles = [];
-// initialize blockedTiles
-for(var x = 0; x < level.width; x++) {
-	blockedTiles.push([]);
-	for(var y = 0; y < level.height; y++) {
-		blockedTiles[x].push([]);
-	}
-}
-for(var x = 0; x < level.width; x++) {
-	for(var y = 0; y < level.height; y++) {
-		blockedTiles[x][y] = false;
-	}
-}
-
+var collisionEngine = new CollisionEngine(level.width, level.height);
 var players = {};
 var playerIdx = {};
 // looking through map - find players
@@ -57,14 +46,14 @@ for(var i = 0; i < level.layers.length; i++) {
 		}
 	}
 
-	// build blockedTiles map
+	// Populate CollisionEngine
 	if(layer.type == "tilelayer" && layer.properties && layer.properties.type == "blocking") {
 		for(var j = 0; j < layer.data.length; j++) {
 			if(layer.data[j] != 0) { 
 				var x = j % level.width;
 				var y = (j-x) / level.width;
 
-				blockedTiles[x][y] = true;
+				collisionEngine.setXY(x, y);
 			}
 		}
 	}
@@ -233,11 +222,10 @@ var actorActions = function() {
 			var highX = Math.ceil(x / level.tilewidth);
 			var highY = Math.ceil(y / level.tileheight);
 
-			// very very crude collision detection - needs work
 			var collision = false;
 			[lowX,highX].forEach(function(x) {
 				[lowY, highY].forEach(function(y) {
-					if(blockedTiles[x][y]) {
+					if(collisionEngine.isBlocked(x, y)) {
 						collision = true;
 					}
 				});

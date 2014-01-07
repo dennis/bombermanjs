@@ -1,4 +1,6 @@
-function Player(name, x, y) {
+var ActorState = require(__dirname + '/../public/js/actor_state.js')
+
+function Player(name, x, y) {;
 	this.name = name;
 	this.state = new ActorState();
 	this.requestedAction = null;
