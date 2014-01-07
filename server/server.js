@@ -9,6 +9,7 @@ var express = require('express')
 // Local requires
 var ActorState = require(__dirname + '/../public/js/actor_state.js')
 	, Player = require('./player.js')
+	, Bomb = require('./bomb.js')
 	, CollisionEngine = require('./collision_engine.js')
 
 server.listen(server_port);
