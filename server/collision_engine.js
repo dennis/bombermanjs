@@ -1,13 +1,15 @@
+var Point = require('./point.js');
+
 function CollisionEngine(width, height) {
 	this.width = width;
 	this.height = height;
 	this.cells = new Array(width*height);
 }
-CollisionEngine.prototype.setXY = function(x, y) {
-	this.cells[y*this.width + x] = true;
+CollisionEngine.prototype.set = function(point) {
+	this.cells[point.y*this.width + point.x] = true;
 };
-CollisionEngine.prototype.isBlocked = function(x, y) {
-	return this.cells[y*this.width + x];
+CollisionEngine.prototype.isBlocked = function(point) {
+	return this.cells[point.y*this.width + point.x];
 }
 
 module.exports = CollisionEngine;

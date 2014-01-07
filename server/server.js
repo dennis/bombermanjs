@@ -9,6 +9,7 @@ var express = require('express')
 var ActorState = require(__dirname + '/../public/js/actor_state.js')
 	, Player = require('./player.js')
 	, Bomb = require('./bomb.js')
+	, Point = require('./point.js')
 	, CollisionEngine = require('./collision_engine.js')
 	, Client = require('./client.js')
 	, ClientManager = require('./client_manager.js')
@@ -86,7 +87,7 @@ var actorActions = function() {
 			var collision = false;
 			[lowX,highX].forEach(function(x) {
 				[lowY, highY].forEach(function(y) {
-					if(collisionEngine.isBlocked(x, y)) {
+					if(collisionEngine.isBlocked(new Point(x, y))) {
 						collision = true;
 					}
 				});
