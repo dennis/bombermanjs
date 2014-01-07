@@ -10,7 +10,8 @@ var ActorState = require(__dirname + '/../public/js/actor_state.js')
 	, Player = require('./player.js')
 	, Bomb = require('./bomb.js')
 	, CollisionEngine = require('./collision_engine.js')
-	, Client = require('./client.js');
+	, Client = require('./client.js')
+	, ClientManager = require('./client_manager.js');
 
 server.listen(server_port);
 app.use(express.static(__dirname + '/../public'));
@@ -61,22 +62,6 @@ for(var i = 0; i < level.layers.length; i++) {
 }
 
 console.log("Map got room for " + Object.keys(players).length + " players");
-
-function ClientManager() {
-	this.clients = {};
-};
-ClientManager.prototype.newClient = function(socket) {
-	// FIXME Client shouldnt require this knowledge
-	return this.clients[socket.id] = new Client(socket, level, players, io);
-}
-ClientManager.prototype.removeClient = function(socket) {
-	if(this.clients[socket.id].player)
-		this.clients[socket.id].player.reset();
-	delete this.clients[socket.id];
-}
-ClientManager.prototype.getClient = function(socket) {
-	return this.clients[socket.id];
-}
 
 var clientManager = new ClientManager();
 var bombs = {};
@@ -163,7 +148,8 @@ var actorActions = function() {
 var actorActionsInterval = setInterval(actorActions, 1000/20);
 
 io.sockets.on('connection', function(socket) {
-	var client = clientManager.newClient(socket);
+	// FIXME Client shouldnt require this knowledge
+	var client = clientManager.newClient(socket, level, players, io);
 
 	client.state.connecting(client);
 
