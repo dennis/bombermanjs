@@ -1,6 +1,6 @@
 var Stately = require('stately.js');
 
-function Client(socket, level, players, io) {
+function Client(socket, level, players, broadcast, sendMessage) {
 	this.player = null;
 	this.socket = socket;
 
@@ -8,7 +8,7 @@ function Client(socket, level, players, io) {
 		{	
 			'PRECONNECT': {
 				'connecting': function(client) {
-						client.socket.emit('new-level', level );
+						sendMessage(client, 'new-level', level );
 					return this.CONNECTED;
 				}
 			},
@@ -16,9 +16,9 @@ function Client(socket, level, players, io) {
 				'doneLoadingLevel': function(client) {
 					Object.keys(players).forEach(function(actorName) {
 						var player = players[actorName];
-						client.socket.emit('new-actor', { id: player.name, actor: player.name });
+						sendMessage(client, 'new-actor', { id: player.name, actor: player.name });
 					});
-					client.socket.emit('observing' );
+					sendMessage(client, 'observing' );
 					return this.OBSERVING;
 				}
 			},
@@ -33,8 +33,8 @@ function Client(socket, level, players, io) {
 						if(!player.isOccupied()) {
 							player.occupy();
 							client.player = player;
-							client.socket.emit("message", "you are " + actorName);
-							io.sockets.emit('new-actor', { id: player.name, actor: player.name, x: player.state.x, y: player.state.y });
+							sendMessage(client, "message", "you are " + actorName);
+							broadcast('new-actor', { id: player.name, actor: player.name, x: player.state.x, y: player.state.y });
 							foundFreePlayer = true;
 							return true;
 						}
@@ -52,9 +52,9 @@ function Client(socket, level, players, io) {
 			},
 			'PLAYING': {
 				'leave': function(client) {
-					io.sockets.emit('del-actor', { id: client.player.name });
+					broadcast('del-actor', { id: client.player.name });
 					client.observe();				
-					client.socket.emit("message", "you are now an observer");
+					sendMessage(client, "message", "you are now an observer");
 					return this.OBSERVING;
 				}
 			}
