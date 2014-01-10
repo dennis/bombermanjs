@@ -45,7 +45,7 @@ function World(levelFile, broadcast, sendMessage) {
 };
 
 World.prototype.newClient = function(socket) {
-	var client = this.clientManager.newClient(socket, this.levelMap, this.players, this.broadcast, this.sendMessage);
+	var client = this.clientManager.newClient(socket, this);
 	client.state.connecting(client);
 
 	return client;

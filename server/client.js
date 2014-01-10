@@ -1,6 +1,6 @@
 var Stately = require('stately.js');
 
-function Client(socket, level, players, broadcast, sendMessage) {
+function Client(socket, world) {
 	this.player = null;
 	this.socket = socket;
 
@@ -8,17 +8,17 @@ function Client(socket, level, players, broadcast, sendMessage) {
 		{	
 			'PRECONNECT': {
 				'connecting': function(client) {
-						sendMessage(client, 'new-level', level );
+						world.sendMessage(client, 'new-level', world.levelMap );
 					return this.CONNECTED;
 				}
 			},
 			'CONNECTED': {
 				'doneLoadingLevel': function(client) {
-					Object.keys(players).forEach(function(actorName) {
-						var player = players[actorName];
-						sendMessage(client, 'new-actor', { id: player.name, actor: player.name });
+					Object.keys(world.players).forEach(function(actorName) {
+						var player = world.players[actorName];
+						world.sendMessage(client, 'new-actor', { id: player.name, actor: player.name });
 					});
-					sendMessage(client, 'observing' );
+					world.sendMessage(client, 'observing' );
 					return this.OBSERVING;
 				}
 			},
@@ -27,14 +27,14 @@ function Client(socket, level, players, broadcast, sendMessage) {
 					var foundFreePlayer = false;
 
 					// find available player
-					Object.keys(players).some(function(actorName) {
-						var player = players[actorName];
+					Object.keys(world.players).some(function(actorName) {
+						var player = world.players[actorName];
 
 						if(!player.isOccupied()) {
 							player.occupy();
 							client.player = player;
-							sendMessage(client, "message", "you are " + actorName);
-							broadcast('new-actor', { id: player.name, actor: player.name, x: player.state.x, y: player.state.y });
+							world.sendMessage(client, "message", "you are " + actorName);
+							world.broadcast('new-actor', { id: player.name, actor: player.name, x: player.state.x, y: player.state.y });
 							foundFreePlayer = true;
 							return true;
 						}
@@ -52,9 +52,9 @@ function Client(socket, level, players, broadcast, sendMessage) {
 			},
 			'PLAYING': {
 				'leave': function(client) {
-					broadcast('del-actor', { id: client.player.name });
+					world.broadcast('del-actor', { id: client.player.name });
 					client.observe();				
-					sendMessage(client, "message", "you are now an observer");
+					world.sendMessage(client, "message", "you are now an observer");
 					return this.OBSERVING;
 				}
 			}
