@@ -31,7 +31,7 @@ function World(levelFile, broadcast, sendMessage) {
 				action = player.act();
 
 				if(action) {
-					action.execute(player, self.level, self.collisionEngine, update);
+					action.execute(player, self, update);
 				}
 			}
 		});

@@ -58,19 +58,5 @@ Level.prototype.populateCollisionEngine = function(collisionEngine) {
 		}
 	}
 }
-Level.prototype.placeBomb = function(x, y) {
-	console.log("ERROR: Not implemented");
-/*
-	var bomb = new Bomb(lastBombId++, player.state.x, player.state.y);
-	bombs[bomb.getId()] = bomb;
-
-	io.sockets.emit('new-actor', { 
-		id: bomb.getId(), 
-		actor: 'bomb', 
-		x: bomb.getX(), 
-		y: bomb.getY() });
-*/
-}
 
 module.exports = Level;
-

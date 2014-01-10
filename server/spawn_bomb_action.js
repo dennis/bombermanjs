@@ -4,10 +4,8 @@ function SpawnBombAction(x, y) {
 	this.x = x;
 	this.y = y;
 }
-SpawnBombAction.prototype.execute = function(player, level, collisionEngine, update) {
+SpawnBombAction.prototype.execute = function(player, world, update) {
 	console.error("Spawn bomb here!");
-
-	level.placeBomb(this.x, this.y);
 }
 
 module.exports = SpawnBombAction;

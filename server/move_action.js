@@ -4,7 +4,7 @@ function MoveAction(direction) {
 	this.direction = direction;
 }
 
-MoveAction.prototype.execute = function(player, level, collisionEngine, update) {
+MoveAction.prototype.execute = function(player, world, update) {
 	var x = player.state.x;
 	var y = player.state.y;
 	var step = 8;
@@ -18,25 +18,25 @@ MoveAction.prototype.execute = function(player, level, collisionEngine, update) 
 	
 	// boundary check
 	if(x < 0)
-		x = (level.getWidth()-1)*level.getTileWidth();
-	if(x > (level.getWidth()-1)*level.getTileWidth())
+		x = (world.level.getWidth()-1)*world.level.getTileWidth();
+	if(x > (world.level.getWidth()-1)*world.level.getTileWidth())
 		x = 0;
 	if(y < 0)
-		y = (level.getHeight()-1)*level.getTileHeight();
-	if(y > (level.getHeight()-1)*level.getTileHeight())
+		y = (world.level.getHeight()-1)*world.level.getTileHeight();
+	if(y > (world.level.getHeight()-1)*world.level.getTileHeight())
 		y = 0;
 
 	player.requestedAction = null;
 
-	var lowX = Math.floor(x / level.getTileWidth());
-	var lowY = Math.floor(y / level.getTileHeight());
-	var highX = Math.ceil(x / level.getTileWidth());
-	var highY = Math.ceil(y / level.getTileHeight());
+	var lowX = Math.floor(x / world.level.getTileWidth());
+	var lowY = Math.floor(y / world.level.getTileHeight());
+	var highX = Math.ceil(x / world.level.getTileWidth());
+	var highY = Math.ceil(y / world.level.getTileHeight());
 
 	var collision = false;
 	[lowX,highX].forEach(function(x) {
 		[lowY, highY].forEach(function(y) {
-			if(collisionEngine.isBlocked(new Point(x, y))) {
+			if(world.collisionEngine.isBlocked(new Point(x, y))) {
 				collision = true;
 			}
 		});
