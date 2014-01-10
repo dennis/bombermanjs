@@ -6,8 +6,7 @@ var Level = require('./level.js')
 function World(levelFile, broadcast, sendMessage) {
 	this.broadcast = broadcast;
 	this.sendMessage = sendMessage;
-	this.levelMap = require(levelFile); // FIXME - should not be needed
-	this.level = new Level(this.levelMap);
+	this.level = new Level(require(levelFile));
 	this.collisionEngine = new CollisionEngine(this.level.getWidth(), this.level.getHeight());
 	this.players = this.level.findPlayers();
 	this.clientManager = new ClientManager();

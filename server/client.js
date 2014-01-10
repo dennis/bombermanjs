@@ -8,7 +8,7 @@ function Client(socket, world) {
 		{	
 			'PRECONNECT': {
 				'connecting': function(client) {
-						world.sendMessage(client, 'new-level', world.levelMap );
+						world.sendMessage(client, 'new-level', world.level.getJson() );
 					return this.CONNECTED;
 				}
 			},

@@ -6,18 +6,23 @@ function Level(levelMap) {
 	levelMap.tilesets[0].image = levelMap.tilesets[0].image.substring(9); // strip "../public/
 	this.levelMap = levelMap;
 };
+
 Level.prototype.getWidth = function() {
 	return this.levelMap.width;
 };
+
 Level.prototype.getHeight = function() {
 	return this.levelMap.height;
 };
+
 Level.prototype.getTileWidth = function() {
 	return this.levelMap.tilewidth;
 };
+
 Level.prototype.getTileHeight = function() {
 	return this.levelMap.tileheight;
 };
+
 Level.prototype.findPlayers = function() {
 	var players = {};
 	for(var i = 0; i < this.levelMap.layers.length; i++) {
@@ -41,7 +46,8 @@ Level.prototype.findPlayers = function() {
 	}
 
 	return players;
-}
+};
+
 Level.prototype.populateCollisionEngine = function(collisionEngine) {
 	for(var i = 0; i < this.levelMap.layers.length; i++) {
 		var layer = this.levelMap.layers[i];
@@ -57,6 +63,10 @@ Level.prototype.populateCollisionEngine = function(collisionEngine) {
 			}
 		}
 	}
-}
+};
+
+Level.prototype.getJson = function() {
+	return this.levelMap;
+};
 
 module.exports = Level;
