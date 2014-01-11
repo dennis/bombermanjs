@@ -19,8 +19,6 @@ Actors.prototype.populate = function(layer, levelMap) {
 	
 		self.actorKind[properties.type].addTileSubtype(tileNum, properties.subtype);
 	});
-
-	console.log(this.actorKind);
 }
 
 Actors.prototype.draw = function(tileSet, interpolation, ticks) {
@@ -51,8 +49,6 @@ Actors.prototype.update = function(dataSet) {
 }
 
 Actors.prototype.spawn = function(data) {
-	console.log("need to spawn actor", data);
-
 	var actorConstructor = null;
 
 	switch(data.actor) {

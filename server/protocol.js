@@ -12,10 +12,18 @@ Protocol.prototype.sendAllActors = function(client) {
 	var self = this;
 	Object.keys(this.world.players).forEach(function(actorName) {
 		var player = self.world.players[actorName];
-		self.world.sendMessage(client, 'new-actor', { id: player.name, actor: player.name });
+		self.world.sendMessage(client, 'new-actor', { 
+			id: player.name, 
+			actor: player.name, 
+			x: player.getX(), 
+			y: player.getY() });
 
 		player.getBombs().forEach(function(bomb) {
-			self.world.sendMessage(client, 'new-actor', { id: bomb.getId(), actor: 'bomb' });
+			self.world.sendMessage(client, 'new-actor', { 
+				id: bomb.getId(), 
+				actor: 'bomb', 
+				x: bomb.getX(), 
+				y: bomb.getY() });
 		});
 	});
 };
@@ -37,7 +45,11 @@ Protocol.prototype.join = function(client) {
 			player.occupy();
 			client.player = player;
 			self.world.sendMessage(client, "message", "you are " + actorName);
-			self.world.broadcast('new-actor', { id: player.name, actor: player.name, x: player.state.x, y: player.state.y });
+			self.world.broadcast('new-actor', { 
+				id: player.name, 
+				actor: player.name, 
+				x: player.state.x, 
+				y: player.state.y });
 			foundFreePlayer = true;
 			return true;
 		}

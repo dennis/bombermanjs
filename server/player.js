@@ -60,4 +60,12 @@ Player.prototype.canDropBomb = function() {
 	return this.bombs.length < 3;
 };
 
+Player.prototype.getX = function() {
+	return this.state.x;
+};
+
+Player.prototype.getY = function() {
+	return this.state.y;
+};
+
 module.exports = Player;

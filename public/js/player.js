@@ -1,4 +1,4 @@
-function Player(name, kind) {
+function Player(name, kind, data) {
 	this.name = name;
 	this.kind = kind;
 	this.state = new ActorState();
@@ -7,7 +7,15 @@ function Player(name, kind) {
 	this.realY = null;
 	this.lastSeenWalking = 0;
 
-	console.log("Created actor", name, kind);
+	if(data.x) {
+		this.state.x = data.x;
+		this.state.y = data.y;
+		this.newState.x = data.x;
+		this.newState.y = data.y;
+		this.state.visible = true;
+	}
+
+	console.log("Created actor", name, kind, this.state);
 };
 Player.prototype = new Actor();
 Player.prototype.draw = function(context, tileSet, interpolation, ticks) {
