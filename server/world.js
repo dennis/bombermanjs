@@ -45,21 +45,21 @@ function World(levelFile, broadcast, sendMessage) {
 
 World.prototype.newClient = function(socket) {
 	var client = this.clientManager.newClient(socket, this);
-	client.state.connecting(client);
+	client.state.connecting();
 
 	return client;
 }
 
 World.prototype.clientDoneLoadingLevel = function(client) {
-	client.state.doneLoadingLevel(client);
+	client.state.doneLoadingLevel();
 }
 
 World.prototype.clientJoin = function(client) {
-	client.state.join(client);
+	client.state.join();
 }
 
 World.prototype.clientLeave = function(client) {
-	client.state.leave(client);
+	client.state.leave();
 }
 
 World.prototype.clientActorAction = function(client, direction) {
