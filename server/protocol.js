@@ -13,6 +13,10 @@ Protocol.prototype.sendAllActors = function(client) {
 	Object.keys(this.world.players).forEach(function(actorName) {
 		var player = self.world.players[actorName];
 		self.world.sendMessage(client, 'new-actor', { id: player.name, actor: player.name });
+
+		player.getBombs().forEach(function(bomb) {
+			self.world.sendMessage(client, 'new-actor', { id: bomb.getId(), actor: 'bomb' });
+		});
 	});
 };
 

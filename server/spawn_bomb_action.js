@@ -5,6 +5,9 @@ function SpawnBombAction(x, y) {
 	this.y = y;
 }
 SpawnBombAction.prototype.execute = function(player, world, update) {
+	if(!player.canDropBomb())
+		return;
+
 	var lowX = Math.floor(this.x / world.level.getTileWidth());
 	var lowY = Math.floor(this.y / world.level.getTileHeight());
 	var highX = Math.ceil(this.x / world.level.getTileWidth());
@@ -21,7 +24,7 @@ SpawnBombAction.prototype.execute = function(player, world, update) {
 	x *= world.level.getTileWidth();
 	y *= world.level.getTileHeight();
 		
-	world.dropBombAt(x, y);
+	world.dropBombAt(player, x, y);
 }
 
 module.exports = SpawnBombAction;

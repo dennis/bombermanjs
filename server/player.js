@@ -10,6 +10,7 @@ function Player(name, x, y) {;
 	this.occupied = false;
 	this.initialX = x;
 	this.initialY = y;
+	this.bombs = [];
 };
 Player.prototype.reset = function() {
 	this.requestedAction = null;
@@ -45,6 +46,18 @@ Player.prototype.act = function() {
 	}
 
 	return action;
+};
+
+Player.prototype.addBomb = function(bomb) {
+	this.bombs.push(bomb);
+};
+
+Player.prototype.getBombs = function() {
+	return this.bombs;
+};
+
+Player.prototype.canDropBomb = function() {
+	return this.bombs.length < 3;
 };
 
 module.exports = Player;

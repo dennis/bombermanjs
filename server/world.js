@@ -13,17 +13,16 @@ function World(levelFile, broadcast, sendMessage) {
 	this.players = this.level.findPlayers();
 	this.clientManager = new ClientManager();
 	this.protocol = new Protocol(this);
+	this.lastBombId = 1;
+	this.bombs = [];
 
 	this.level.populateCollisionEngine(this.collisionEngine);
 
-	// looking through map - find players
 	console.log("Map got room for " + Object.keys(this.players).length + " players");
 
-	var bombs = {};
-	var lastBombId = 1;
-	
 	var self = this;
 
+	// looking through map - find players
 	var actorActions = function() {
 		var update = [];
 		Object.keys(self.players).forEach(function(actorName) {
@@ -75,10 +74,12 @@ World.prototype.removeClient = function(client) {
 	this.clientManager.removeClient(client);
 };
 
-World.prototype.dropBombAt = function(x, y) {
-	var bomb = new Bomb(42, x, y);
+World.prototype.dropBombAt = function(player, x, y) {
+	var bomb = new Bomb(this.lastBombId++, x, y);
 
-	// FIXME - implement me properly. We need to track bombs
+	player.addBomb(bomb);
+
+	this.bombs[bomb.getId()] = bomb;
 
 	this.protocol.dropBombAt(bomb);
 };
