@@ -1,3 +1,5 @@
+// FIXME Remove non-protocol code
+
 function Protocol(world) {
 	this.world = world;
 };
