@@ -5,7 +5,7 @@ function SpawnBombAction(x, y) {
 	this.y = y;
 }
 SpawnBombAction.prototype.execute = function(player, world, update) {
-	console.error("Spawn bomb here!");
+	world.dropBombAt(this.x, this.y);
 }
 
 module.exports = SpawnBombAction;

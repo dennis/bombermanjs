@@ -1,10 +1,8 @@
 var Stately = require('stately.js');
-var Protocol = require('./protocol.js');
 
 function Client(socket, world) {
 	this.player = null;
 	this.socket = socket;
-	this.protocol = new Protocol(this, world); 
 
 	var self = this;
 
@@ -12,28 +10,28 @@ function Client(socket, world) {
 		{	
 			'PRECONNECT': {
 				'connecting': function() {
-					self.protocol.sendLevel();
+					world.protocol.sendLevel(self);
 					return this.CONNECTED;
 				}
 			},
 			'CONNECTED': {
-				'doneLoadingLevel': function(client) {
-					self.protocol.sendAllActors();
-					self.protocol.sendMessage('observing');
+				'doneLoadingLevel': function() {
+					world.protocol.sendAllActors(self);
+					world.protocol.sendMessage(self, 'observing');
 					return this.OBSERVING;
 				}
 			},
 			'OBSERVING': {
 				'join': function() {
-					if(self.protocol.join())
+					if(world.protocol.join(self))
 						return this.PLAYING;
 					else
 						return this.OBSERVING;
 				}
 			},
 			'PLAYING': {
-				'leave': function(client) {
-					self.protocol.leave();
+				'leave': function() {
+					world.protocol.leave(self);
 					return this.OBSERVING;
 				}
 			}
