@@ -40,9 +40,13 @@ function World(levelFile, broadcast, sendMessage) {
 		if(update.length) {
 			self.broadcast('actor-update', update);
 		}
+
+		self.bombs.forEach(function(bomb) {
+			bomb.act();
+		});
 	};
 
-	var actorActionsInterval = setInterval(actorActions, 1000/20);
+	var actorActionsInterval = setInterval(actorActions, 1000/10);
 };
 
 World.prototype.newClient = function(socket) {
