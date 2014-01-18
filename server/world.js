@@ -39,7 +39,11 @@ function World(levelFile, broadcast, sendMessage) {
 		});
 
 		self.bombs.forEach(function(bomb) {
-			bomb.act();
+			action = bomb.act();
+
+			if(action) {
+				action.execute(bomb, self);
+			}
 		});
 
 		if(update.length) {
@@ -106,6 +110,18 @@ World.prototype.dropBombAt = function(player, x, y) {
 	this.bombs[bomb.getId()] = bomb;
 
 	this.protocol.dropBombAt(bomb);
+};
+
+World.prototype.removeBomb = function(bomb) {
+	this.bombs.splice(this.bombs.indexOf(bomb), 1);
+
+	var self = this;
+
+	Object.keys(this.players).forEach(function(actorName) {
+		self.players[actorName].removeBomb(bomb);
+	});
+
+	this.protocol.removeActor(bomb.getId());
 };
 
 module.exports = World;

@@ -1,3 +1,5 @@
+var ExplodeAction = require('./explode_action.js');
+
 function Bomb(id, x, y) {
 	this.id = id;
 	this.x = x;
@@ -20,8 +22,8 @@ Bomb.prototype.getY = function() {
 Bomb.prototype.act = function() {
 	this.age++;
 
-	if(this.age > 30) {
-		console.log("IMPLODE");
+	if(this.age > 10) {
+		return new ExplodeAction(this);
 	}
 };
 

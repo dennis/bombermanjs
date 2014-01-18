@@ -76,7 +76,7 @@ Protocol.prototype.join = function(client) {
 };
 
 Protocol.prototype.leave = function(client) {
-	this.broadcast('del-actor', { id: client.player.name });
+	this.removeActor(client.player.name);
 	client.observe();				
 	this.directMessage(client, "message", "you are now an observer");
 };
@@ -104,6 +104,10 @@ Protocol.prototype.getAndClearBroadcastQueue = function() {
 
 	return queue;
 }
+
+Protocol.prototype.removeActor = function(actorName) {
+	this.broadcast('del-actor', { id: actorName });
+};
 
 module.exports = Protocol;
 

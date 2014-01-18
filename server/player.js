@@ -52,6 +52,10 @@ Player.prototype.addBomb = function(bomb) {
 	this.bombs.push(bomb);
 };
 
+Player.prototype.removeBomb = function(bomb) {
+	this.bombs.splice(this.bombs.indexOf(bomb), 1);
+};
+
 Player.prototype.getBombs = function() {
 	return this.bombs;
 };
