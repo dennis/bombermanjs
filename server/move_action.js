@@ -4,7 +4,7 @@ function MoveAction(direction) {
 	this.direction = direction;
 }
 
-MoveAction.prototype.execute = function(player, world, update) {
+MoveAction.prototype.execute = function(player, world) {
 	var x = player.state.x;
 	var y = player.state.y;
 	var step = 8;
@@ -50,7 +50,7 @@ MoveAction.prototype.execute = function(player, world, update) {
 	player.state.x = x;
 	player.state.y = y;
 
-	update.push({
+	world.broadcast("actor-update", {
 		actor: player.name,
 		state: player.state
 	});

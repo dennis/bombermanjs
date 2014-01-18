@@ -6,7 +6,8 @@ var express = require('express')
 	, fs = require('fs');
 
 var Client = require('./client.js')
-	, World = require('./world.js');
+	, World = require('./world.js')
+	, Client = require('./client.js');
 
 server.listen(server_port);
 app.use(express.static(__dirname + '/../public'));
@@ -21,8 +22,10 @@ var world = new World(__dirname + '/../levels/level.json',
 		io.sockets.emit(name, payload);
 	},
 	// to single client
-	function(client, name, payload) {
-		client.socket.emit(name, payload);
+	function(socket, name, payload) {
+		console.log("direct message", socket, name, payload);
+		console.log(socket);
+		socket.emit(name, payload);
 	}
 );
 

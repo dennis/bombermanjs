@@ -15,6 +15,7 @@ function World(levelFile, broadcast, sendMessage) {
 	this.protocol = new Protocol(this);
 	this.lastBombId = 1;
 	this.bombs = [];
+	this.sockets = {};
 
 	this.level.populateCollisionEngine(this.collisionEngine);
 
@@ -32,17 +33,35 @@ function World(levelFile, broadcast, sendMessage) {
 				action = player.act();
 
 				if(action) {
-					action.execute(player, self, update);
+					action.execute(player, self);
 				}
 			}
+		});
+
+		self.bombs.forEach(function(bomb) {
+			bomb.act();
 		});
 
 		if(update.length) {
 			self.broadcast('actor-update', update);
 		}
 
-		self.bombs.forEach(function(bomb) {
-			bomb.act();
+		var protocol = self.protocol;
+
+		// Handle direct messages
+		var dmQueue = protocol.getAndClearDirectMessageQueue();
+		Object.keys(dmQueue).forEach(function(socketId) {
+			var v = dmQueue[socketId];
+
+			v.forEach(function(e) {
+				self.sendMessage(self.sockets[socketId], e.name, e.payload);
+			});
+		});
+
+		// handle broadcasts
+		var bQueue = protocol.getAndClearBroadcastQueue();
+		bQueue.forEach(function(e) {
+			self.broadcast(e.name, e.payload);
 		});
 	};
 
@@ -51,6 +70,7 @@ function World(levelFile, broadcast, sendMessage) {
 
 World.prototype.newClient = function(socket) {
 	var client = this.clientManager.newClient(socket, this);
+	this.sockets[client.socket.id] = socket;
 	client.state.connecting();
 
 	return client;

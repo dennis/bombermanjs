@@ -36,16 +36,12 @@ Actors.prototype.logic = function() {
 	});
 }
 
-Actors.prototype.update = function(dataSet) {
-	var that = this;
-
-	dataSet.forEach(function (data) {
-		var actor = that.actors[that.actorIdx[data.actor]];
-		if(actor)
-			actor.update(data);
-		else
-			console.error("Cannot find actor " +  data.actor);
-	});
+Actors.prototype.update = function(data) {
+	var actor = this.actors[this.actorIdx[data.actor]];
+	if(actor)
+		actor.update(data);
+	else
+		console.error("Cannot find actor " +  data.actor);
 }
 
 Actors.prototype.spawn = function(data) {

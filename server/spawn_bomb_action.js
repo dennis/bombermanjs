@@ -4,7 +4,7 @@ function SpawnBombAction(x, y) {
 	this.x = x;
 	this.y = y;
 }
-SpawnBombAction.prototype.execute = function(player, world, update) {
+SpawnBombAction.prototype.execute = function(player, world) {
 	if(!player.canDropBomb())
 		return;
 
