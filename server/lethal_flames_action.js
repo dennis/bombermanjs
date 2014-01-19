@@ -39,25 +39,26 @@ LethalFlamesAction.prototype.execute = function(actor, world) {
 		
 	Object.keys(world.actors).forEach(function(actorName) {
 		var otherActor = world.actors[actorName];
+		if(otherActor !== actor) {
+			var lowX = Math.floor(otherActor.getX() / world.level.getTileWidth());
+			var lowY = Math.floor(otherActor.getY() / world.level.getTileHeight());
+			var highX = Math.ceil(otherActor.getX() / world.level.getTileWidth());
+			var highY = Math.ceil(otherActor.getY() / world.level.getTileHeight());
 
-		var lowX = Math.floor(otherActor.getX() / world.level.getTileWidth());
-		var lowY = Math.floor(otherActor.getY() / world.level.getTileHeight());
-		var highX = Math.ceil(otherActor.getX() / world.level.getTileWidth());
-		var highY = Math.ceil(otherActor.getY() / world.level.getTileHeight());
+			// snap actor to grid (if he is partially in a tile that is lethal, he might get to live after all)
+			var x = highX;
+			var y = highY;
+			if(Math.abs(otherActor.getX() - lowX) < Math.abs(highX - otherActor.getX()))
+				x = lowX;
+			if(Math.abs(otherActor.getY() - lowY) < Math.abs(highY - otherActor.getY()))
+				y = lowY;
 
-		// snap actor to grid (if he is partially in a tile that is lethal, he might get to live after all)
-		var x = highX;
-		var y = highY;
-		if(Math.abs(otherActor.getX() - lowX) < Math.abs(highX - otherActor.getX()))
-			x = lowX;
-		if(Math.abs(otherActor.getY() - lowY) < Math.abs(highY - otherActor.getY()))
-			y = lowY;
-
-		if(self.lethalTiles[y*world.level.getHeight()+x]) {
-			// Do the kill, if possible
-			console.log(actorName + " got it by lethal flames from " + actor.getId());
-			if(world.actors[actorName].kill) { 
-				world.actors[actorName].kill(actor);
+			if(self.lethalTiles[y*world.level.getHeight()+x]) {
+				// Do the kill, if possible
+				console.log(actorName + " got it by lethal flames from " + actor.getId());
+				if(world.actors[actorName].kill) { 
+					world.actors[actorName].kill(actor);
+				}
 			}
 		}
 	});
