@@ -69,3 +69,4 @@ Actors.prototype.spawn = function(data) {
 Actors.prototype.despawn = function(data) {
 	delete this.actors[this.actorIdx[data.id]];
 };
+

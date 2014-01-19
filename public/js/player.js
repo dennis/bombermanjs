@@ -6,6 +6,9 @@ function Player(name, kind, data) {
 	this.realX = null;
 	this.realY = null;
 	this.lastSeenWalking = 0;
+	this.animationState = {};
+
+	this.kind.resetAll(this.animationState, 0);
 
 	if(data.x) {
 		this.state.x = data.x;
@@ -14,8 +17,6 @@ function Player(name, kind, data) {
 		this.newState.y = data.y;
 		this.state.visible = true;
 	}
-
-	console.log("Created actor", name, kind, this.state);
 };
 Player.prototype = new Actor();
 Player.prototype.draw = function(context, tileSet, interpolation, ticks) {
@@ -47,7 +48,7 @@ Player.prototype.draw = function(context, tileSet, interpolation, ticks) {
 
 	if(ticks - this.lastSeenWalking < 250)
 		direction = 'walk-' + direction;
-	tile = this.kind.get(direction, ticks);
+	tile = this.kind.get(this.animationState, direction, ticks);
 
 	tileSet.draw(context, this.realX, this.realY, tile);
 }

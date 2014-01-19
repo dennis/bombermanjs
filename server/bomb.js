@@ -22,7 +22,7 @@ Bomb.prototype.getY = function() {
 Bomb.prototype.act = function() {
 	this.age++;
 
-	if(this.age > 10) {
+	if(this.age > 12) {
 		return new ExplodeAction(this);
 	}
 };
