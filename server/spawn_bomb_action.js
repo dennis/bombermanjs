@@ -16,9 +16,9 @@ SpawnBombAction.prototype.execute = function(player, world) {
 	// Determine the best location for bomb (snap to a tile)
 	var x = highX;
 	var y = highY;
-	if(this.x - lowX < highX - this.x)
+	if(Math.abs(this.x - lowX) < Math.abs(highX - this.x))
 		x = lowX;
-	if(this.y - lowY < highY - this.y)
+	if(Math.abs(this.y - lowY) < Math.abs(highY - this.y))
 		y = lowY;
 
 	x *= world.level.getTileWidth();

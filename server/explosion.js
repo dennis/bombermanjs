@@ -1,4 +1,5 @@
 var RemoveActorAction = require('./remove_actor_action.js');
+var LethalFlamesAction = require('./lethal_flames_action.js');
 var idSequence = 0;
 
 function Explosion(bomb, up, right, down, left) {
@@ -42,6 +43,9 @@ Explosion.prototype.act = function() {
 
 	if(this.age > 5) {
 		return new RemoveActorAction(this);
+	}
+	else {
+		return new LethalFlamesAction(this);
 	}
 };
 
