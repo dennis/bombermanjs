@@ -26,6 +26,12 @@
     <property name="type" value="player1"/>
    </properties>
   </tile>
+  <tile id="209">
+   <properties>
+    <property name="subtype" value="up"/>
+    <property name="type" value="explosion"/>
+   </properties>
+  </tile>
   <tile id="210">
    <properties>
     <property name="subtype" value="up"/>
@@ -86,6 +92,18 @@
     <property name="type" value="player0"/>
    </properties>
   </tile>
+  <tile id="224">
+   <properties>
+    <property name="subtype" value="vertical"/>
+    <property name="type" value="explosion"/>
+   </properties>
+  </tile>
+  <tile id="239">
+   <properties>
+    <property name="subtype" value="down"/>
+    <property name="type" value="explosion"/>
+   </properties>
+  </tile>
   <tile id="255">
    <properties>
     <property name="subtype" value="up"/>
@@ -144,6 +162,30 @@
    <properties>
     <property name="subtype" value="walk-up"/>
     <property name="type" value="player1"/>
+   </properties>
+  </tile>
+  <tile id="270">
+   <properties>
+    <property name="subtype" value="left"/>
+    <property name="type" value="explosion"/>
+   </properties>
+  </tile>
+  <tile id="271">
+   <properties>
+    <property name="subtype" value="horizontal"/>
+    <property name="type" value="explosion"/>
+   </properties>
+  </tile>
+  <tile id="272">
+   <properties>
+    <property name="subtype" value="center"/>
+    <property name="type" value="explosion"/>
+   </properties>
+  </tile>
+  <tile id="273">
+   <properties>
+    <property name="subtype" value="right"/>
+    <property name="type" value="explosion"/>
    </properties>
   </tile>
   <tile id="274">

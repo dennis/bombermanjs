@@ -11,5 +11,13 @@ Point.prototype.isEqualTo = function(other) {
 	return this.x == other.x && this.y == other.y;
 }
 
-module.exports = Point;
+Point.DIRECTIONS = {
+	"up": new Point(0,-1),
+	"down": new Point(0,1),
+	"left": new Point(-1,0),
+	"right": new Point(1,0)
+};
 
+if(typeof module == "object") {
+	module.exports = Point;
+}

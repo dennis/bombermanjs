@@ -5,6 +5,8 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId) {
 	this.tileSet = tileSet;
 	this.background = new Background(backgroundCanvasId, mapWidth, mapHeight, tileSet);
 	this.actors = new Actors(actorsCanvasId, mapWidth, mapHeight, tileSet);
+	this.tileWidth = levelMap.tilewidth;
+	this.tileHeight = levelMap.tileheight;
 
 	console.log("Loading map");
 
@@ -26,21 +28,33 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId) {
 		}
 	});
 };
+
 Level.prototype.render = function(interpolation, ticks) {
 	this.background.draw(this.tileSet);
-	this.actors.draw(this.tileSet, interpolation, ticks);
-}
+	this.actors.draw(this.tileSet, interpolation, ticks, this);
+};
 
 Level.prototype.logic = function() {
 	this.actors.logic();
-}
+};
 
 Level.prototype.actorUpdate = function(data) {
 	this.actors.update(data);
-}
+};
+
 Level.prototype.newActor = function(data) {
 	this.actors.spawn(data);
-}
+};
+
 Level.prototype.delActor = function(data) {
 	this.actors.despawn(data);
-}
+};
+
+Level.prototype.getTileHeight = function() {
+	return this.tileHeight;
+};
+
+Level.prototype.getTileWidth = function() {
+	return this.tileWidth;
+};
+

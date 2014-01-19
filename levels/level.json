@@ -87,6 +87,11 @@
                  "subtype":"left",
                  "type":"player1"
                 },
+             "209":
+                {
+                 "subtype":"up",
+                 "type":"explosion"
+                },
              "210":
                 {
                  "subtype":"up",
@@ -137,6 +142,16 @@
                  "subtype":"walk-up",
                  "type":"player0"
                 },
+             "224":
+                {
+                 "subtype":"vertical",
+                 "type":"explosion"
+                },
+             "239":
+                {
+                 "subtype":"down",
+                 "type":"explosion"
+                },
              "255":
                 {
                  "subtype":"up",
@@ -186,6 +201,26 @@
                 {
                  "subtype":"walk-up",
                  "type":"player1"
+                },
+             "270":
+                {
+                 "subtype":"left",
+                 "type":"explosion"
+                },
+             "271":
+                {
+                 "subtype":"horizontal",
+                 "type":"explosion"
+                },
+             "272":
+                {
+                 "subtype":"center",
+                 "type":"explosion"
+                },
+             "273":
+                {
+                 "subtype":"right",
+                 "type":"explosion"
                 },
              "274":
                 {

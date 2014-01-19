@@ -21,11 +21,11 @@ Actors.prototype.populate = function(layer, levelMap) {
 	});
 }
 
-Actors.prototype.draw = function(tileSet, interpolation, ticks) {
+Actors.prototype.draw = function(tileSet, interpolation, ticks, level) {
 	this.context.clearRect(0, 0, this.mapWidth, this.mapHeight);
 	var that = this;
 	this.actors.forEach(function(actor) {
-		actor.draw(that.context, tileSet, interpolation, ticks);
+		actor.draw(that.context, tileSet, interpolation, ticks, level);
 	});
 }
 
@@ -56,6 +56,9 @@ Actors.prototype.spawn = function(data) {
 			break;
 		case 'bomb':
 			actorConstructor = Bomb;
+			break;
+		case 'explosion':
+			actorConstructor = Explosion;
 			break;
 		default:
 			throw new String(data.actor + " unsupported");

@@ -1,11 +1,15 @@
 var RemoveActorAction = require('./remove_actor_action.js');
 var idSequence = 0;
 
-function Explosion(bomb) {
+function Explosion(bomb, up, right, down, left) {
 	this.id = "explosion" + (++idSequence);
 	this.x = bomb.x;
 	this.y = bomb.y;
 	this.age = 0;
+	this.up = up;
+	this.right = right;
+	this.down = down;
+	this.left = left;
 };
 
 Explosion.prototype.getId = function() {
@@ -23,9 +27,13 @@ Explosion.prototype.getY = function() {
 Explosion.prototype.getCurrentState = function() {
 	return {
 		id: this.getId(),
-		type: 'explosion',
+		actor: 'explosion',
 		x: this.x,
-		y: this.y
+		y: this.y,
+		up: this.up,
+		right: this.right,
+		down: this.down,
+		left: this.left
 	};
 };
 

@@ -1,6 +1,6 @@
 var ActorState = require(__dirname + '/../public/js/actor_state.js')
 	, Player = require('./player.js')
-	, Point = require('./point.js');
+	, Point = require('./../public/js/point.js');
 
 function Level(levelMap) {
 	levelMap.tilesets[0].image = levelMap.tilesets[0].image.substring(9); // strip "../public/

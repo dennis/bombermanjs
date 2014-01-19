@@ -1,4 +1,4 @@
-var Point = require('./point.js');
+var Point = require('../public/js/point.js');
 
 function MoveAction(direction) {
 	this.direction = direction;
