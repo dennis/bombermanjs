@@ -53,7 +53,7 @@ Player.prototype.addBomb = function(bomb) {
 };
 
 Player.prototype.removeBomb = function(bomb) {
-	this.bombs.splice(this.bombs.indexOf(bomb), 1);
+	delete this.bombs[bomb.getId()];
 };
 
 Player.prototype.getBombs = function() {

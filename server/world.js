@@ -13,8 +13,7 @@ function World(levelFile, broadcast, sendMessage) {
 	this.players = this.level.findPlayers();
 	this.clientManager = new ClientManager();
 	this.protocol = new Protocol(this);
-	this.lastBombId = 1;
-	this.bombs = [];
+	this.bombs = {};
 	this.sockets = {};
 
 	this.level.populateCollisionEngine(this.collisionEngine);
@@ -38,7 +37,8 @@ function World(levelFile, broadcast, sendMessage) {
 			}
 		});
 
-		self.bombs.forEach(function(bomb) {
+		Object.keys(self.bombs).forEach(function(bombId) {
+			var bomb = self.bombs[bombId];
 			action = bomb.act();
 
 			if(action) {
@@ -103,7 +103,7 @@ World.prototype.removeClient = function(client) {
 };
 
 World.prototype.dropBombAt = function(player, x, y) {
-	var bomb = new Bomb(this.lastBombId++, x, y);
+	var bomb = new Bomb(x, y);
 
 	player.addBomb(bomb);
 
@@ -113,7 +113,7 @@ World.prototype.dropBombAt = function(player, x, y) {
 };
 
 World.prototype.removeBomb = function(bomb) {
-	this.bombs.splice(this.bombs.indexOf(bomb), 1);
+	delete this.bombs[bomb.getId()];
 
 	var self = this;
 

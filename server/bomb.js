@@ -1,10 +1,13 @@
 var ExplodeAction = require('./explode_action.js');
+var bombSequenceId = 0;
 
-function Bomb(id, x, y) {
-	this.id = id;
+function Bomb(x, y) {
+	this.id = "bomb" + (++bombSequenceId);
 	this.x = x;
 	this.y = y;
 	this.age = 0;
+
+	console.log("Bomb.id", this.id);
 };
 
 Bomb.prototype.getId = function() {
