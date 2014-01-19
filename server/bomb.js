@@ -1,8 +1,9 @@
 var ExplodeAction = require('./explode_action.js');
 var bombSequenceId = 0;
 
-function Bomb(x, y) {
+function Bomb(player, x, y) {
 	this.id = "bomb" + (++bombSequenceId);
+	this.owner = player;
 	this.x = x;
 	this.y = y;
 	this.age = 0;
@@ -32,6 +33,18 @@ Bomb.prototype.act = function() {
 
 Bomb.prototype.getAge = function() {
 	return this.age;
+}
+
+Bomb.prototype.getOwner = function() {
+	return this.owner;
+}
+
+Bomb.prototype.getCurrentState = function() {
+	return  {
+		id: this.getId(), 
+		actor: 'bomb', 
+		x: this.getX(), 
+		y: this.getY() };
 }
 
 module.exports = Bomb;

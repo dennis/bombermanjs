@@ -10,7 +10,7 @@ function Player(name, x, y) {;
 	this.occupied = false;
 	this.initialX = x;
 	this.initialY = y;
-	this.bombs = [];
+	this.bombCount = 0;
 };
 Player.prototype.reset = function() {
 	this.requestedAction = null;
@@ -33,7 +33,7 @@ Player.prototype.isDirty = function() {
 Player.prototype.act = function() {
 	var action = undefined;
 
-	if(this.isDirty()) {
+	if(this.isOccupied() && this.isDirty()) {
 		if(this.requestedAction == 'space') {
 			action = new SpawnBombAction(this.state.x, this.state.y);
 		}
@@ -49,19 +49,15 @@ Player.prototype.act = function() {
 };
 
 Player.prototype.addBomb = function(bomb) {
-	this.bombs.push(bomb);
+	this.bombCount++;
 };
 
 Player.prototype.removeBomb = function(bomb) {
-	delete this.bombs[bomb.getId()];
-};
-
-Player.prototype.getBombs = function() {
-	return this.bombs;
+	this.bombCount--;
 };
 
 Player.prototype.canDropBomb = function() {
-	return this.bombs.length < 3;
+	return this.bombCount < 3;
 };
 
 Player.prototype.getX = function() {
@@ -71,5 +67,13 @@ Player.prototype.getX = function() {
 Player.prototype.getY = function() {
 	return this.state.y;
 };
+
+Player.prototype.getCurrentState = function() {
+	return { 
+		id: this.name, 
+		actor: this.name, 
+		x: this.getX(), 
+		y: this.getY() };
+}
 
 module.exports = Player;

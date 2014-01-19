@@ -10,45 +10,27 @@ function World(levelFile, broadcast, sendMessage) {
 	this.sendMessage = sendMessage;
 	this.level = new Level(require(levelFile));
 	this.collisionEngine = new CollisionEngine(this.level.getWidth(), this.level.getHeight());
-	this.players = this.level.findPlayers();
+	this.actors = this.level.findPlayers();
 	this.clientManager = new ClientManager();
 	this.protocol = new Protocol(this);
-	this.bombs = {};
 	this.sockets = {};
 
 	this.level.populateCollisionEngine(this.collisionEngine);
 
-	console.log("Map got room for " + Object.keys(this.players).length + " players");
+	console.log("Map got room for " + Object.keys(this.actors).length + " players");
 
 	var self = this;
 
-	// looking through map - find players
 	var actorActions = function() {
-		var update = [];
-		Object.keys(self.players).forEach(function(actorName) {
-			var player = self.players[actorName];
+		Object.keys(self.actors).forEach(function(actorName) {
+			var actor = self.actors[actorName];
 			
-			if(player.isOccupied()) {
-				action = player.act();
-
-				if(action) {
-					action.execute(player, self);
-				}
-			}
-		});
-
-		Object.keys(self.bombs).forEach(function(bombId) {
-			var bomb = self.bombs[bombId];
-			action = bomb.act();
+			action = actor.act();
 
 			if(action) {
-				action.execute(bomb, self);
+				action.execute(actor, self);
 			}
 		});
-
-		if(update.length) {
-			self.broadcast('actor-update', update);
-		}
 
 		var protocol = self.protocol;
 
@@ -103,23 +85,19 @@ World.prototype.removeClient = function(client) {
 };
 
 World.prototype.dropBombAt = function(player, x, y) {
-	var bomb = new Bomb(x, y);
+	var bomb = new Bomb(player, x, y);
 
 	player.addBomb(bomb);
 
-	this.bombs[bomb.getId()] = bomb;
+	this.actors[bomb.getId()] = bomb;
 
 	this.protocol.dropBombAt(bomb);
 };
 
 World.prototype.removeBomb = function(bomb) {
-	delete this.bombs[bomb.getId()];
+	delete this.actors[bomb.getId()];
 
-	var self = this;
-
-	Object.keys(this.players).forEach(function(actorName) {
-		self.players[actorName].removeBomb(bomb);
-	});
+	bomb.getOwner().removeBomb(bomb);
 
 	this.protocol.removeActor(bomb.getId());
 };

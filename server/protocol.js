@@ -1,4 +1,5 @@
 // FIXME Remove non-protocol code
+var Player = require('./player.js');
 
 function Protocol(world) {
 	this.world = world;
@@ -23,21 +24,10 @@ Protocol.prototype.sendLevel = function(client) {
 
 Protocol.prototype.sendAllActors = function(client) {
 	var self = this;
-	Object.keys(this.world.players).forEach(function(actorName) {
-		var player = self.world.players[actorName];
-		self.directMessage(client, 'new-actor', { 
-			id: player.name, 
-			actor: player.name, 
-			x: player.getX(), 
-			y: player.getY() });
+	Object.keys(this.world.actors).forEach(function(actorName) {
+		var actor = self.world.actors[actorName];
 
-		player.getBombs().forEach(function(bomb) {
-			self.directMessage(client, 'new-actor', { 
-				id: bomb.getId(), 
-				actor: 'bomb', 
-				x: bomb.getX(), 
-				y: bomb.getY() });
-		});
+		self.directMessage(client, 'new-actor', actor.getCurrentState());
 	});
 };
 
@@ -51,24 +41,27 @@ Protocol.prototype.join = function(client) {
 	var self = this;
 
 	// find available player
-	Object.keys(this.world.players).some(function(actorName) {
-		var player = self.world.players[actorName];
+	Object.keys(this.world.actors).some(function(actorName) {
+		var actor = self.world.actors[actorName];
 
-		if(!player.isOccupied()) {
-			player.occupy();
-			client.player = player;
-			self.directMessage(client, "message", "you are " + actorName);
-			self.broadcast('new-actor', { 
-				id: player.name, 
-				actor: player.name, 
-				x: player.state.x, 
-				y: player.state.y });
-			foundFreePlayer = true;
-			return true;
-		}
-		else {
-			console.log(actorName + " is in use");
-			return false;
+		if(actor instanceof Player) {
+			var player = actor;
+			if(!player.isOccupied()) {
+				player.occupy();
+				client.player = player;
+				self.directMessage(client, "message", "you are " + actorName);
+				self.broadcast('new-actor', { 
+					id: player.name, 
+					actor: player.name, 
+					x: player.state.x, 
+					y: player.state.y });
+				foundFreePlayer = true;
+				return true;
+			}
+			else {
+				console.log(actorName + " is in use");
+				return false;
+			}
 		}
 	});
 
