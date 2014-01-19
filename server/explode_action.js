@@ -1,4 +1,5 @@
 var Bomb = require('./bomb.js');
+var Explosion = require('./explosion.js');
 
 
 function ExplodeAction(bomb) {
@@ -6,7 +7,8 @@ function ExplodeAction(bomb) {
 }
 
 ExplodeAction.prototype.execute = function(bomb, world) {
-	world.removeBomb(this.bomb);
+	world.removeActor(this.bomb);
+	world.addActor(new Explosion(this.bomb));
 }
 
 module.exports = ExplodeAction;

@@ -84,22 +84,21 @@ World.prototype.removeClient = function(client) {
 	this.clientManager.removeClient(client);
 };
 
-World.prototype.dropBombAt = function(player, x, y) {
-	var bomb = new Bomb(player, x, y);
+World.prototype.addActor = function(actor) {
+	if(actor.beforeAddActor)
+		actor.beforeAddActor(this);
 
-	player.addBomb(bomb);
-
-	this.actors[bomb.getId()] = bomb;
-
-	this.protocol.dropBombAt(bomb);
+	this.actors[actor.getId()] = actor;
+	this.protocol.addActor(actor);
 };
 
-World.prototype.removeBomb = function(bomb) {
-	delete this.actors[bomb.getId()];
+World.prototype.removeActor = function(actor) {
+	if(actor.beforeRemoveActor) 
+		actor.beforeRemoveActor(this);
 
-	bomb.getOwner().removeBomb(bomb);
+	delete this.actors[actor.getId()];
 
-	this.protocol.removeActor(bomb.getId());
+	this.protocol.removeActor(actor.getId());
 };
 
 module.exports = World;

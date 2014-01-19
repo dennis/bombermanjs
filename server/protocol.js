@@ -74,12 +74,8 @@ Protocol.prototype.leave = function(client) {
 	this.directMessage(client, "message", "you are now an observer");
 };
 
-Protocol.prototype.dropBombAt = function(bomb) {
-	this.world.broadcast('new-actor', { 
-		id: bomb.getId(), 
-		actor: 'bomb', 
-		x: bomb.getX(), 
-		y: bomb.getY() });
+Protocol.prototype.addActor = function(actor) {
+	this.world.broadcast('new-actor', actor.getCurrentState());
 }
 
 Protocol.prototype.getAndClearDirectMessageQueue = function() {

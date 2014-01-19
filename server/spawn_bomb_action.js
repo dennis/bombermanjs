@@ -24,7 +24,7 @@ SpawnBombAction.prototype.execute = function(player, world) {
 	x *= world.level.getTileWidth();
 	y *= world.level.getTileHeight();
 		
-	world.dropBombAt(player, x, y);
+	world.addActor(new Bomb(player, x, y));
 }
 
 module.exports = SpawnBombAction;

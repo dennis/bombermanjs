@@ -23,6 +23,14 @@ Bomb.prototype.getY = function() {
 	return this.y;
 };
 
+Bomb.prototype.beforeAddActor = function(world) {
+	this.getOwner().addBomb(this);
+};
+
+Bomb.prototype.beforeRemoveActor = function(world) {
+	this.getOwner().removeBomb(this);
+};
+
 Bomb.prototype.act = function() {
 	this.age++;
 
