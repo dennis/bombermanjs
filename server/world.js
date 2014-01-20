@@ -3,6 +3,7 @@ var Level = require('./level.js')
 	, ClientManager = require('./client_manager.js')
 	, Protocol = require('./protocol.js')
 	, Bomb = require('./bomb.js')
+	, Scoreboard = require('./scoreboard.js')
 	;
 
 function World(levelFile, broadcast, sendMessage) {
@@ -14,6 +15,7 @@ function World(levelFile, broadcast, sendMessage) {
 	this.clientManager = new ClientManager();
 	this.protocol = new Protocol(this);
 	this.sockets = {};
+	this.scoreboard = new Scoreboard();
 
 	this.level.populateCollisionEngine(this.collisionEngine);
 
@@ -46,6 +48,11 @@ function World(levelFile, broadcast, sendMessage) {
 		});
 
 		var protocol = self.protocol;
+
+		if(self.scoreboard.isDirty()) {
+			self.broadcast("scoreboard", self.scoreboard.getCurrentState());
+			self.scoreboard.cleanDirty();
+		}
 
 		// Handle direct messages
 		var dmQueue = protocol.getAndClearDirectMessageQueue();
@@ -81,9 +88,15 @@ World.prototype.clientDoneLoadingLevel = function(client) {
 
 World.prototype.clientJoin = function(client) {
 	client.state.join();
+	if(client.player && client.player.isOccupied()) {
+		this.scoreboard.enable(client.player.id);
+	}
 };
 
 World.prototype.clientLeave = function(client) {
+	if(client.player && client.player.isOccupied()) {
+		this.scoreboard.disable(client.player.id);
+	}
 	client.state.leave();
 };
 

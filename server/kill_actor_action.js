@@ -8,6 +8,7 @@ function KillActorAction(victimActor, perpetratorActor) {
 KillActorAction.prototype.execute = function(actor, world) {
 	if(this.victimActor.kill && this.victimActor.kill()) {
 		world.protocol.broadcastMessage(this.victimActor.id + " got killed");
+		world.scoreboard.died(this.victimActor.id);
 
 		world.broadcast("actor-update", {
 			actor: this.victimActor.name,

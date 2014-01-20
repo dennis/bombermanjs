@@ -42,6 +42,10 @@ socket.on('observing', function(data) {
 	console.log("EVENT: observing");
 	message.innerHTML = "We're observing" + "<br />" + message.innerHTML;
 });
+socket.on('scoreboard', function(data) {
+	console.log("EVENT: scoreboard", data);
+	level.statusbar.updateScoreboard(data);
+});
 
 function sendActions() {
 	var key = input.getKey();
