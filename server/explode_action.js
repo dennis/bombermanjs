@@ -5,9 +5,12 @@ var Point = require('../public/js/point.js');
 
 function ExplodeAction(bomb) {
 	this.bomb = bomb;
+	this.explosion = undefined;
 }
 
 ExplodeAction.prototype.execute = function(bomb, world) {
+	if(this.explosion != undefined)
+		return;
 	// calculate how many tiles the darting flame should be
 	var tileX = bomb.getX()/world.level.getTileWidth();
 	var tileY = bomb.getY()/world.level.getTileHeight();
@@ -35,8 +38,9 @@ ExplodeAction.prototype.execute = function(bomb, world) {
 		result[dir] = step;
 	});
 
+	this.explosion = new Explosion(this.bomb, result.up, result.right, result.down, result.left);
 	world.removeActor(this.bomb);
-	world.addActor(new Explosion(this.bomb, result.up, result.right, result.down, result.left));
+	world.addActor(this.explosion);
 }
 
 module.exports = ExplodeAction;

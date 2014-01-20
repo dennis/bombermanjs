@@ -3,10 +3,11 @@ var ActorState = require(__dirname + '/../public/js/actor_state.js'),
 	SpawnBombAction = require('./spawn_bomb_action.js');
 
 function Player(name, x, y) {;
+	this.id = name;
 	this.name = name;
 	this.state = new ActorState();
 	this.requestedAction = null;
-	this.state.visible = true;
+	this.state.alive = true;
 	this.occupied = false;
 	this.initialX = x;
 	this.initialY = y;
@@ -16,7 +17,7 @@ function Player(name, x, y) {;
 Player.prototype.reset = function() {
 	this.requestedAction = null;
 	this.state = new ActorState();
-	this.state.visible = true;
+	this.state.alive = true;
 	this.occupied = false;
 };
 
@@ -38,7 +39,13 @@ Player.prototype.isDirty = function() {
 Player.prototype.act = function() {
 	var action = undefined;
 
-	if(this.isOccupied() && this.isDirty()) {
+	if(this.action) {
+		action = this.action;
+		this.action = undefined;
+		return action;
+	}
+
+	if(this.isOccupied() && this.isDirty() && this.state.alive) {
 		if(this.requestedAction == 'space') {
 			action = new SpawnBombAction(this.state.x, this.state.y);
 		}
@@ -83,10 +90,30 @@ Player.prototype.getCurrentState = function() {
 		actor: this.name, 
 		x: this.getX(), 
 		y: this.getY() };
+};
+
+Player.prototype.kill = function() {
+	if(this.state.alive) {
+		this.state.alive = false;
+		return true;
+	}
+	else {
+		return false;
+	}
+};
+
+Player.prototype.awaken = function() {
+	if(this.state.alive)
+		return false;
+
+	this.state.alive = true;
+	this.state.x = this.initialX;
+	this.state.y = this.initialY;
+	return true;
 }
 
-Player.prototype.kill = function(byActor) {
-	console.log("Oh no. " + this.getId() + " got killed by " + byActor.getId());
+Player.prototype.setAction = function(action) {
+	this.action = action;
 }
 
 module.exports = Player;

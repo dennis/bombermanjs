@@ -15,7 +15,7 @@ function Player(name, kind, data) {
 		this.state.y = data.y;
 		this.newState.x = data.x;
 		this.newState.y = data.y;
-		this.state.visible = true;
+		this.state.alive = true;
 	}
 };
 Player.prototype = new Actor();
@@ -26,28 +26,35 @@ Player.prototype.draw = function(context, tileSet, interpolation, ticks) {
 		this.newState = this.state;
 	}
 
-	if(!this.newState.visible)
+	if(!this.newState.alive)
 		return;
+	
+	if(this.state.alive == this.newState.alive) {
 
-	var distX = this.newState.x - this.state.x;
-	var distY = this.newState.y - this.state.y;
+		var distX = this.newState.x - this.state.x;
+		var distY = this.newState.y - this.state.y;
 
-	this.realX = this.newState.x - Math.floor(distX * interpolation);
-	this.realY = this.newState.y - Math.floor(distY * interpolation);
+		this.realX = this.newState.x - Math.floor(distX * interpolation);
+		this.realY = this.newState.y - Math.floor(distY * interpolation);
 
-	var direction = this.newState.direction;
+		var direction = this.newState.direction;
 
-	if(distX == 0 && distY == 0) {
-		;
+		if(distX == 0 && distY == 0) {
+			;
+		}
+		else {
+			this.lastSeenWalking = ticks;
+		}
+
+		if(ticks - this.lastSeenWalking < 250)
+			direction = 'walk-' + direction;
 	}
 	else {
-		this.lastSeenWalking = ticks;
+		this.realX = this.newState.x;
+		this.realY = this.newState.y;
+		direction = "down";
 	}
-	//if(this.newState.x != this.state.x || this.newState.y != this.state.y)
-		//direction = 'walk-' + direction;
 
-	if(ticks - this.lastSeenWalking < 250)
-		direction = 'walk-' + direction;
 	tile = this.kind.get(this.animationState, direction, ticks);
 
 	tileSet.draw(context, this.realX, this.realY, tile);

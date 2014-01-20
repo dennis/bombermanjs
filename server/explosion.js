@@ -41,11 +41,11 @@ Explosion.prototype.getCurrentState = function() {
 Explosion.prototype.act = function() {
 	this.age++;
 
-	if(this.age > 5) {
-		return new RemoveActorAction(this);
-	}
-	else {
+	if(this.age == 1) {
 		return new LethalFlamesAction(this);
+	}
+	else if(this.age == 6) {
+		return new RemoveActorAction(this);
 	}
 };
 

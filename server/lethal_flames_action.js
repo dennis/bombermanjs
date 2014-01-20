@@ -1,4 +1,5 @@
 var Point = require('../public/js/point.js');
+var KillActorAction = require('./kill_actor_action.js');
 
 function LethalFlamesAction() {
 	this.lethalTiles = undefined;
@@ -7,6 +8,7 @@ function LethalFlamesAction() {
 LethalFlamesAction.prototype.execute = function(actor, world) {
 	// DOES NOT SUPPORT MOVING actors!
 	var self = this;
+	var result = [];
 	
 	if(this.lethalTiles == undefined) {
 		// build lethal tiles
@@ -54,14 +56,12 @@ LethalFlamesAction.prototype.execute = function(actor, world) {
 				y = lowY;
 
 			if(self.lethalTiles[y*world.level.getHeight()+x]) {
-				// Do the kill, if possible
-				console.log(actorName + " got it by lethal flames from " + actor.getId());
-				if(world.actors[actorName].kill) { 
-					world.actors[actorName].kill(actor);
-				}
+				result.push(new KillActorAction(world.actors[actorName], actor));
 			}
 		}
 	});
+
+	return result;
 };
 
 module.exports = LethalFlamesAction;

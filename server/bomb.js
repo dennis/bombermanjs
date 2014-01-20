@@ -34,7 +34,7 @@ Bomb.prototype.beforeRemoveActor = function(world) {
 Bomb.prototype.act = function() {
 	this.age++;
 
-	if(this.age > 12) {
+	if(this.age == 12) {
 		return new ExplodeAction(this);
 	}
 };

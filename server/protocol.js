@@ -35,6 +35,10 @@ Protocol.prototype.sendMessage = function(client, message) {
 	this.directMessage(client, 'message', message);
 };
 
+Protocol.prototype.broadcastMessage = function(message) {
+	this.broadcast('message', message);
+};
+
 Protocol.prototype.join = function(client) {
 	var foundFreePlayer = false;
 

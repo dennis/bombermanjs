@@ -21,15 +21,28 @@ function World(levelFile, broadcast, sendMessage) {
 
 	var self = this;
 
+	var actionExecutor = function(actor, action) {
+		if(action) {
+			if(action instanceof Array) {
+				action.forEach(function(a) {
+					actionExecutor(actor, a);
+				});
+			}
+			else {
+				var newAction = action.execute(actor, self);
+				if(newAction) 
+					actionExecutor(actor, newAction);
+			}
+		}
+	}
+
 	var actorActions = function() {
 		Object.keys(self.actors).forEach(function(actorName) {
 			var actor = self.actors[actorName];
 			
-			action = actor.act();
+			var action = actor.act();
 
-			if(action) {
-				action.execute(actor, self);
-			}
+			actionExecutor(actor, action);
 		});
 
 		var protocol = self.protocol;
