@@ -1,3 +1,5 @@
+"use strict";
+
 // main
 var socket = io.connect(document.location.origin);
 var level = null;

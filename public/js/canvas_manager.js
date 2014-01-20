@@ -1,3 +1,5 @@
+"use strict";
+
 function CanvasManager() {
 	this.mapWidth = 0;
 	this.mapHeight = 0;

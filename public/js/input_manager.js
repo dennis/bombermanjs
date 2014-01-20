@@ -1,3 +1,5 @@
+"use strict";
+
 function InputManager() {
 	this.KEY_CODES = {
 		32: 'space',
@@ -14,7 +16,7 @@ function InputManager() {
 	this.oldonkeyup = null;
 }
 InputManager.prototype.resetKeys = function() {
-	for(code in this.KEY_CODES) {
+	for(var code in this.KEY_CODES) {
 		this.KEY_STATUS[this.KEY_CODES[code]] = false;
 	}
 }
@@ -55,7 +57,7 @@ InputManager.prototype.detach = function() {
 }
 
 InputManager.prototype.getKey = function() {
-	for(code in this.KEY_CODES) {
+	for(var code in this.KEY_CODES) {
 		if(this.KEY_STATUS[this.KEY_CODES[code]]) {
 			this.KEY_STATUS[this.KEY_CODES[code]] = false;
 			return this.KEY_CODES[code];

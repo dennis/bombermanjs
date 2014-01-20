@@ -1,3 +1,5 @@
+"use strict";
+
 function Explosion(name, kind, data) {
 	this.name = name;
 	this.kind = kind;

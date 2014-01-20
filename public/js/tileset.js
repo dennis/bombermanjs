@@ -1,3 +1,5 @@
+"use strict";
+
 // TileSet
 function TileSet(tileSetData, sprite) {
 	this.sprite = sprite;

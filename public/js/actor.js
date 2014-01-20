@@ -1,3 +1,5 @@
+"use strict";
+
 function Actor(name, kind) {
 	this.name = name;
 	this.kind = kind;

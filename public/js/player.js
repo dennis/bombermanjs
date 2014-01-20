@@ -1,3 +1,5 @@
+"use strict";
+
 function Player(name, kind, data) {
 	this.name = name;
 	this.kind = kind;
@@ -55,7 +57,7 @@ Player.prototype.draw = function(context, tileSet, interpolation, ticks) {
 		direction = "down";
 	}
 
-	tile = this.kind.get(this.animationState, direction, ticks);
+	var tile = this.kind.get(this.animationState, direction, ticks);
 
 	tileSet.draw(context, this.realX, this.realY, tile);
 }

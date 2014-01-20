@@ -1,3 +1,5 @@
+"use strict";
+
 // ActorState
 function ActorState() { 
 	this.direction = 'down';

@@ -1,3 +1,5 @@
+"use strict";
+
 function Bomb(name, kind, data) {
 	this.name = name;
 	this.kind = kind;
@@ -13,7 +15,7 @@ Bomb.prototype.draw = function(context, tileSet, interpolation, ticks) {
 		this.animationState = {};
 		this.kind.resetAll(this.animationState, ticks);
 	}
-	tile = this.kind.get(this.animationState, undefined, ticks);
+	var tile = this.kind.get(this.animationState, undefined, ticks);
 
 	tileSet.draw(context, this.x, this.y, tile);
 };

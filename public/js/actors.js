@@ -1,3 +1,5 @@
+"use strict";
+
 function Actors(canvasId, mapWidth, mapHeight, tileSet) {
 	this.tileSet = tileSet;
 	this.actors = [];
@@ -64,7 +66,7 @@ Actors.prototype.spawn = function(data) {
 			throw new String(data.actor + " unsupported");
 	}
 
-	actor = new actorConstructor(data.id, this.actorKind[data.actor], data);
+	var actor = new actorConstructor(data.id, this.actorKind[data.actor], data);
 	this.actors.push(actor);
 	this.actorIdx[data.id] = this.actors.length-1;
 };

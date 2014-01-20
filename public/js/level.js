@@ -1,3 +1,5 @@
+"use strict";
+
 function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId) {
 	var mapWidth = levelMap.width*levelMap.tilewidth;
 	var mapHeight = levelMap.height*levelMap.tileheight;

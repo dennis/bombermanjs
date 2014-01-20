@@ -1,3 +1,5 @@
+"use strict";
+
 function Background(canvasId, mapWidth, mapHeight, tileSet) {
 	this.layers = [];
 	this.tileSet = tileSet;

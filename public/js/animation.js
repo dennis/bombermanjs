@@ -1,3 +1,5 @@
+"use strict";
+
 function Animation() {
 	this.tiles = [];
 	this.fps = 4;

@@ -1,3 +1,5 @@
+"use strict";
+
 function Game() {
 	this.logic_hooks = [];
 	this.render_hooks = [];
