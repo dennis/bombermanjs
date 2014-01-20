@@ -5,6 +5,17 @@ var socket = io.connect(document.location.origin);
 var level = null;
 var input = new InputManager();
 var message = document.getElementById('messages');
+var joinBtn = document.getElementById('join');
+var leaveBtn = document.getElementById('leave');
+
+joinBtn.onclick = function() {
+	socket.emit('join');
+};
+
+leaveBtn.onclick = function() {
+	socket.emit('leave');
+};
+
 input.attach();
 
 console.log("Setting up events");

@@ -27,3 +27,7 @@ canvas {
 	font-family: courier;
 	color: green;
 }
+
+button {
+	font-size: 10px;
+}
