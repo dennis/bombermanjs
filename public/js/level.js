@@ -1,12 +1,13 @@
 "use strict";
 
-function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId) {
+function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId, statusCanvasId) {
 	var mapWidth = levelMap.width*levelMap.tilewidth;
 	var mapHeight = levelMap.height*levelMap.tileheight;
 
 	this.tileSet = tileSet;
 	this.background = new Background(backgroundCanvasId, mapWidth, mapHeight, tileSet);
 	this.actors = new Actors(actorsCanvasId, mapWidth, mapHeight, tileSet);
+	this.statusbar = new Statusbar(statusCanvasId, mapWidth, mapHeight);
 	this.tileWidth = levelMap.tilewidth;
 	this.tileHeight = levelMap.tileheight;
 
@@ -34,6 +35,7 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId) {
 Level.prototype.render = function(interpolation, ticks) {
 	this.background.draw(this.tileSet);
 	this.actors.draw(this.tileSet, interpolation, ticks, this);
+	this.statusbar.draw();
 };
 
 Level.prototype.logic = function() {

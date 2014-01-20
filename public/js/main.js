@@ -17,7 +17,7 @@ socket.on('new-level', function (levelMap) {
 	tilesImg.onload = function() {
 		console.log("Graphics loaded: ", tilesImg);
 		var tileSet = new TileSet(levelMap.tilesets[0], tilesImg);
-		level = new Level(levelMap, tileSet, 'background', 'actors');
+		level = new Level(levelMap, tileSet, 'background', 'actors', 'statusbar');
 		socket.emit('new-level-done');
 	}
 });
