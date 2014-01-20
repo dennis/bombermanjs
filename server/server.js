@@ -23,8 +23,6 @@ var world = new World(__dirname + '/../levels/level.json',
 	},
 	// to single client
 	function(socket, name, payload) {
-		console.log("direct message", socket, name, payload);
-		console.log(socket);
 		socket.emit(name, payload);
 	}
 );

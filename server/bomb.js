@@ -7,8 +7,6 @@ function Bomb(player, x, y) {
 	this.x = x;
 	this.y = y;
 	this.age = 0;
-
-	console.log("Bomb.id", this.id);
 };
 
 Bomb.prototype.getId = function() {

@@ -43,7 +43,6 @@ MoveAction.prototype.execute = function(player, world) {
 	});
 
 	if(collision) {
-		console.log("Collision!");
 		return;
 	}
 

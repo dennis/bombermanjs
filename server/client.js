@@ -38,9 +38,9 @@ function Client(socket, world) {
 		}, 
 		'PRECONNECT'
 	);
-	this.state.bind(function(event, oldState, newState) {
-		console.log("State change: ", event, oldState, newState);
-	});
+	//this.state.bind(function(event, oldState, newState) {
+	//	console.log("State change: ", event, oldState, newState);
+	//});
 
 	//this.state = clone(ClientState);
 }
