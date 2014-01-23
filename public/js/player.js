@@ -1,72 +1,59 @@
 "use strict";
 
 function Player(name, kind, data) {
+	var initialPos = new Point(data.x, data.y);
+
 	this.name = name;
 	this.kind = kind;
-	this.state = new ActorState();
-	this.newState = new ActorState();
-	this.realX = null;
-	this.realY = null;
-	this.lastSeenWalking = 0;
+	this.lastPos = initialPos.clone();
+	this.pos = initialPos.clone();
+	this.realPos = initialPos.clone(); // where we visually are between lastPos and pos
 	this.animationState = {};
+	this.direction = null;
+	this.lastDirection = "down";
 
 	this.kind.resetAll(this.animationState, 0);
-
-	if(data.x) {
-		this.state.x = data.x;
-		this.state.y = data.y;
-		this.newState.x = data.x;
-		this.newState.y = data.y;
-		this.state.alive = true;
-	}
 };
+
 Player.prototype = new Actor();
+
 Player.prototype.draw = function(context, tileSet, interpolation, ticks) {
-	if(this.realX == null && this.realY == null) {
-		this.realX = this.state.x;
-		this.realY = this.state.y;
-		this.newState = this.state;
-	}
+	var direction = this.direction || this.lastDirection;
+	var diff = this.pos.sub(this.lastPos);
 
-	if(!this.newState.alive)
-		return;
-	
-	if(this.state.alive == this.newState.alive) {
+	if(this.direction == this.lastDirection) {
+		direction = 'walk-' + direction;
 
-		var distX = this.newState.x - this.state.x;
-		var distY = this.newState.y - this.state.y;
-
-		this.realX = this.newState.x - Math.floor(distX * interpolation);
-		this.realY = this.newState.y - Math.floor(distY * interpolation);
-
-		var direction = this.newState.direction;
-
-		if(distX == 0 && distY == 0) {
-			;
+		if(!this.pos.isEqualTo(this.realPos)) {
+			this.realPos.x = this.lastPos.x + Math.ceil(diff.x * interpolation);
+			this.realPos.y = this.lastPos.y + Math.ceil(diff.y * interpolation);
 		}
-		else {
-			this.lastSeenWalking = ticks;
-		}
-
-		if(ticks - this.lastSeenWalking < 250)
-			direction = 'walk-' + direction;
-	}
-	else {
-		this.realX = this.newState.x;
-		this.realY = this.newState.y;
-		direction = "down";
 	}
 
 	var tile = this.kind.get(this.animationState, direction, ticks);
 
-	tileSet.draw(context, this.realX, this.realY, tile);
-}
+	tileSet.draw(context, this.realPos.x, this.realPos.y, tile);
+};
 
-Player.prototype.logic = function() {
-	this.realX = this.state.x;
-	this.realY = this.state.y;
-	this.state.update(this.newState);
-}
+Player.prototype.logic = function(level) {
+	this._act(level);
+
+	if(this.direction) {
+		this.lastDirection = this.direction;
+	}
+};
+
+Player.prototype._act = function(level) {
+	var action;
+
+	if(this.direction) {
+		action = new MoveAction(this.direction);
+
+		action.execute(this, level);
+	}
+};
+
 Player.prototype.update = function(data) {
 	this.newState = data.state;
-}
+};
+

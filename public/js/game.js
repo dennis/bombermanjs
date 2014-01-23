@@ -1,65 +1,36 @@
 "use strict";
 
 function Game() {
-	this.logic_hooks = [];
-	this.render_hooks = [];
-	this.skipTicks = 1000 / Game.logic_rate,
-	this.lastGameTick = 0;
-	this.firstGameTick = 0;
+	this.input = new InputManager();
+	this.gameLoop = new GameLoop();
+	this.level = null;
+	this.actors = [];
 }
 
-Game.logic_rate = 20; // per second
+Game.prototype.parseLevel = function(levelJson) {
+	var self = this;
 
-Game.prototype.addLogic = function(logic) {
-	this.logic_hooks.push(logic);
-}
+	console.log("Loaded level1", levelJson);
 
-Game.prototype.addRender = function(render) {
-	this.render_hooks.push(render);
-}
+	// load asset
+	var tilesImg = new Image();
+	tilesImg.src = levelJson.tilesets[0].image;
+	tilesImg.onload = function() {
+		console.log("Graphics loaded: ", tilesImg);
 
-Game.prototype.render = function(interpolation, ticks) {
-	this.render_hooks.forEach(function(render) {
-		render(interpolation, ticks);
-	})
-}
+		var tileSet = new TileSet(levelJson.tilesets[0], tilesImg);
+		self.level = new Level(levelJson, tileSet, 'background', 'actors', 'statusbar');
 
-Game.prototype.logic = function() {
-	this.logic_hooks.forEach(function(logic) {
-		logic();
-	})
-}
+	}
+};
 
 Game.prototype.run = function() {
-	var now = (new Date()).getTime();
+	var self = this;
 
-	if(this.lastGameTick == 0) {
-		this.lastGameTick = now-this.skipTicks;
-		this.firstGameTick = now;
-	}
+	this.input.attach();
+	this.gameLoop.addRender(function(i,t) { if(self.level) self.level.render(i,t); });
+	this.gameLoop.addLogic(function() { if(self.level) self.level.handleInput(self.input); });
+	this.gameLoop.addLogic(function() { if(self.level) self.level.logic(); });
+	startRendering(this.gameLoop);
+};
 
-	while(now > this.lastGameTick) {
-		this.logic();
-		this.lastGameTick += this.skipTicks;
-	}
-
-	var interpolation = (this.lastGameTick-now)/this.skipTicks;
-
-	this.render(interpolation, now - this.firstGameTick);
-}
-
-function renderer() {
-	requestAnimFrame(renderer);
-	game.run(); 
-}
-
-window.requestAnimFrame = (function(){
-	return window.requestAnimationFrame ||
-	window.webkitRequestAnimationFrame ||
-	window.mozRequestAnimationFrame ||
-	window.oRequestAnimationFrame ||
-	window.msRequestAnimationFrame ||
-	function(/* function */ callback, /* DOMElement */ element){
-		window.setTimeout(callback, 1000 / 60);
-	};
-})();

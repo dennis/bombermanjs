@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="15" height="15" tilewidth="16" tileheight="16">
  <tileset firstgid="1" name="bomb_party_v4" tilewidth="16" tileheight="16">
-  <image source="../public/img/bomb_party_v4.png" width="240" height="320"/>
+  <image source="../img/bomb_party_v4.png" width="240" height="320"/>
   <tile id="199">
    <properties>
     <property name="subtype" value="walk-left"/>

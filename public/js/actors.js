@@ -31,10 +31,10 @@ Actors.prototype.draw = function(tileSet, interpolation, ticks, level) {
 	});
 }
 
-Actors.prototype.logic = function() {
+Actors.prototype.logic = function(level) {
 	var that = this;
 	this.actors.forEach(function(actor) {
-		actor.logic();
+		actor.logic(level);
 	});
 }
 
@@ -67,8 +67,11 @@ Actors.prototype.spawn = function(data) {
 	}
 
 	var actor = new actorConstructor(data.id, this.actorKind[data.actor], data);
+
 	this.actors.push(actor);
 	this.actorIdx[data.id] = this.actors.length-1;
+
+	return actor;
 };
 
 Actors.prototype.despawn = function(data) {

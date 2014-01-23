@@ -14,12 +14,14 @@ function InputManager() {
 
 	this.oldonkeydown = null;
 	this.oldonkeyup = null;
-}
+};
+
 InputManager.prototype.resetKeys = function() {
 	for(var code in this.KEY_CODES) {
 		this.KEY_STATUS[this.KEY_CODES[code]] = false;
 	}
-}
+};
+
 InputManager.prototype.onkeydown = function(e) {
 	var self = this;
 	return function(e) {
@@ -29,7 +31,8 @@ InputManager.prototype.onkeydown = function(e) {
 			self.KEY_STATUS[self.KEY_CODES[keyCode]] = true;
 		}
 	}
-}
+};
+
 InputManager.prototype.onkeyup = function(e) {
 	var self = this;
 	return function(e) {
@@ -39,14 +42,15 @@ InputManager.prototype.onkeyup = function(e) {
 			self.KEY_STATUS[self.KEY_CODES[keyCode]] = false;
 		}
 	}
-}
+};
+
 InputManager.prototype.attach = function() {
 	this.oldonkeydown = document.onkeydown;
 	this.oldonkeyup = document.onkeyup;
 
 	document.onkeydown = this.onkeydown();
 	document.onkeyup = this.onkeyup();
-}
+};
 
 InputManager.prototype.detach = function() {
 	document.onkeydown = this.oldonkeydown;
@@ -54,7 +58,7 @@ InputManager.prototype.detach = function() {
 
 	this.oldonkeyup = null;
 	this.oldonkeydown = null;
-}
+};
 
 InputManager.prototype.getKey = function() {
 	for(var code in this.KEY_CODES) {
@@ -63,5 +67,5 @@ InputManager.prototype.getKey = function() {
 			return this.KEY_CODES[code];
 		}
 	}
-}
+};
 

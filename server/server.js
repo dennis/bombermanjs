@@ -5,9 +5,11 @@ var express = require('express')
 	, io = require('socket.io').listen(server)
 	, fs = require('fs');
 
+/*
 var Client = require('./client.js')
 	, World = require('./world.js')
 	, Client = require('./client.js');
+*/
 
 server.listen(server_port);
 app.use(express.static(__dirname + '/../public'));
@@ -16,6 +18,7 @@ app.use(express.logger());
 console.log("Server running on port " + server_port);
 console.log("Serving " + __dirname + '/../public');
 
+/*
 var world = new World(__dirname + '/../levels/level.json', 
 	// broadcaster
 	function(name, payload) {
@@ -49,3 +52,4 @@ io.sockets.on('connection', function(socket) {
 		world.removeClient(client);
 	});
 });
+*/
