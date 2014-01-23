@@ -1,6 +1,6 @@
 "use strict";
 
-function Player(name, kind, data) {
+function Bomberman(name, kind, data) {
 	var initialPos = new Point(data.x, data.y);
 
 	this.name = name;
@@ -15,9 +15,9 @@ function Player(name, kind, data) {
 	this.kind.resetAll(this.animationState, 0);
 };
 
-Player.prototype = new Actor();
+Bomberman.prototype = new Actor();
 
-Player.prototype.draw = function(context, tileSet, interpolation, ticks) {
+Bomberman.prototype.draw = function(context, tileSet, interpolation, ticks) {
 	var direction = this.direction || this.lastDirection;
 	var diff = this.pos.sub(this.lastPos);
 
@@ -35,7 +35,7 @@ Player.prototype.draw = function(context, tileSet, interpolation, ticks) {
 	tileSet.draw(context, this.realPos.x, this.realPos.y, tile);
 };
 
-Player.prototype.logic = function(level) {
+Bomberman.prototype.logic = function(level) {
 	this.performActions(level);
 
 	if(this.direction) {
@@ -43,7 +43,7 @@ Player.prototype.logic = function(level) {
 	}
 };
 
-Player.prototype.update = function(data) {
+Bomberman.prototype.update = function(data) {
 	this.newState = data.state;
 };
 

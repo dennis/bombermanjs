@@ -1,7 +1,7 @@
 "use strict";
 
-function PlayerController(player, level) {
-	this.player = player;
+function PlayerController(actor, level) {
+	this.actor = actor;
 	this.level = level;
 }
 
@@ -10,7 +10,7 @@ PlayerController.prototype.handleInput = function(inputManager) {
 	var action = null;
 	Object.keys(Point.DIRECTIONS).forEach(function(direction) {
 		if(inputManager.KEY_STATUS[direction]) {
-			action = new MoveAction(self.player, direction);
+			action = new MoveAction(self.actor, direction);
 		}
 	});
 

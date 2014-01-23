@@ -54,7 +54,7 @@ Actors.prototype.spawn = function(data) {
 		case 'player1':
 		case 'player2':
 		case 'player3':
-			actorConstructor = Player;
+			actorConstructor = Bomberman;
 			break;
 		case 'bomb':
 			actorConstructor = Bomb;
