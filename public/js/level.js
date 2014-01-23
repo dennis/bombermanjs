@@ -13,7 +13,6 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId, statusCanv
 	this.tileWidth = levelMap.tilewidth;
 	this.tileHeight = levelMap.tileheight;
 	this.levelMap = levelMap;
-	this.player = null;
 
 	console.log("Loading map");
 
@@ -36,10 +35,7 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId, statusCanv
 	});
 
 	this._findPredefinedActors().forEach(function(predefinedActor) {
-		var actor = self.newActor(predefinedActor);
-		if(actor.getName() === "player0") {
-			self.player = actor;
-		}
+    	self.newActor(predefinedActor);
 	});
 };
 
@@ -98,12 +94,6 @@ Level.prototype.populateCollisionEngine = function(collisionEngine) {
 			}
 		}
 	}
-};
-
-Level.prototype.handleInput = function(inputManager) {
-	var key = inputManager.getKey();
-	if(Point.DIRECTIONS[key] || key == undefined)
-		this.player.direction = key;
 };
 
 Level.prototype.render = function(interpolation, ticks) {

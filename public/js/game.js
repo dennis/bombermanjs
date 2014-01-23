@@ -4,7 +4,7 @@ function Game() {
 	this.input = new InputManager();
 	this.gameLoop = new GameLoop();
 	this.level = null;
-	this.actors = [];
+	this.playerController = null;
 }
 
 Game.prototype.parseLevel = function(levelJson) {
@@ -20,7 +20,7 @@ Game.prototype.parseLevel = function(levelJson) {
 
 		var tileSet = new TileSet(levelJson.tilesets[0], tilesImg);
 		self.level = new Level(levelJson, tileSet, 'background', 'actors', 'statusbar');
-
+		self.playerController = new PlayerController(self.level.actors.getActor('player0'), self.level);
 	}
 };
 
@@ -28,9 +28,24 @@ Game.prototype.run = function() {
 	var self = this;
 
 	this.input.attach();
-	this.gameLoop.addRender(function(i,t) { if(self.level) self.level.render(i,t); });
-	this.gameLoop.addLogic(function() { if(self.level) self.level.handleInput(self.input); });
-	this.gameLoop.addLogic(function() { if(self.level) self.level.logic(); });
+
+	this.gameLoop.addRender(function(i,t) { 
+		if(self.level) {
+			self.level.render(i,t); 
+		}
+	});
+
+	this.gameLoop.addLogic(function() { 
+		if(self.level) {
+			self.playerController.handleInput(self.input); 
+		}
+	});
+	
+	this.gameLoop.addLogic(function() { 
+		if(self.level) {
+			self.level.logic();
+		}
+	});
 	startRendering(this.gameLoop);
 };
 

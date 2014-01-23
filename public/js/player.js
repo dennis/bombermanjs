@@ -36,20 +36,10 @@ Player.prototype.draw = function(context, tileSet, interpolation, ticks) {
 };
 
 Player.prototype.logic = function(level) {
-	this._act(level);
+	this.performActions(level);
 
 	if(this.direction) {
 		this.lastDirection = this.direction;
-	}
-};
-
-Player.prototype._act = function(level) {
-	var action;
-
-	if(this.direction) {
-		action = new MoveAction(this.direction);
-
-		action.execute(this, level);
 	}
 };
 

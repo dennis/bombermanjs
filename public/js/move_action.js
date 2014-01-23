@@ -1,11 +1,14 @@
-function MoveAction(direction) {
+function MoveAction(actor, direction) {
+	this.actor = actor;
 	this.direction = direction;
 }
 
-MoveAction.prototype.execute = function(actor, level) {
-	var x = actor.pos.x;
-	var y = actor.pos.y;
-	actor.lastPos = actor.pos.clone();
+MoveAction.prototype.execute = function(level) {
+	var x = this.actor.pos.x;
+	var y = this.actor.pos.y;
+
+	this.actor.lastPos = this.actor.pos.clone();
+	this.actor.direction = this.direction;
 
 	var step = 2;
 
@@ -46,6 +49,6 @@ MoveAction.prototype.execute = function(actor, level) {
 	}
 	*/
 
-	actor.pos.x = x;
-	actor.pos.y = y;
+	this.actor.pos.x = x;
+	this.actor.pos.y = y;
 };

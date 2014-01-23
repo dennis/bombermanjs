@@ -78,3 +78,7 @@ Actors.prototype.despawn = function(data) {
 	delete this.actors[this.actorIdx[data.id]];
 };
 
+Actors.prototype.getActor = function(actorName) {
+	return this.actors[this.actorIdx[actorName]];
+};
+
