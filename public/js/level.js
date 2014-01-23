@@ -1,6 +1,7 @@
 "use strict";
 
 // TODO Split canvas stuff into another class
+// FIXME This is a kicthensink! :(
 
 function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId, statusCanvasId) {
 	var mapWidth = levelMap.width*levelMap.tilewidth;
@@ -13,6 +14,7 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId, statusCanv
 	this.tileWidth = levelMap.tilewidth;
 	this.tileHeight = levelMap.tileheight;
 	this.levelMap = levelMap;
+	this.collisionEngine = new CollisionEngine(levelMap.width, levelMap.height);
 
 	console.log("Loading map");
 
@@ -37,6 +39,8 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId, statusCanv
 	this._findPredefinedActors().forEach(function(predefinedActor) {
     	self.newActor(predefinedActor);
 	});
+
+	this._populateCollisionEngine();
 };
 
 Level.prototype.getWidth = function() {
@@ -79,7 +83,7 @@ Level.prototype._findPredefinedActors = function() {
 	return actors;
 };
 
-Level.prototype.populateCollisionEngine = function(collisionEngine) {
+Level.prototype._populateCollisionEngine = function() {
 	for(var i = 0; i < this.levelMap.layers.length; i++) {
 		var layer = this.levelMap.layers[i];
 
@@ -89,7 +93,7 @@ Level.prototype.populateCollisionEngine = function(collisionEngine) {
 					var x = j % this.levelMap.width;
 					var y = (j-x) / this.levelMap.width;
 
-					collisionEngine.set(new Point(x, y));
+					this.collisionEngine.set(new Point(x, y));
 				}
 			}
 		}

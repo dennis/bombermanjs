@@ -34,11 +34,10 @@ MoveAction.prototype.execute = function(level) {
 	var highX = Math.ceil(x / level.getTileWidth());
 	var highY = Math.ceil(y / level.getTileHeight());
 
-	/*
 	var collision = false;
 	[lowX,highX].forEach(function(x) {
 		[lowY, highY].forEach(function(y) {
-			if(collisionEngine.isBlocked(new Point(x, y))) {
+			if(level.collisionEngine.isBlocked(new Point(x, y))) {
 				collision = true;
 			}
 		});
@@ -47,7 +46,6 @@ MoveAction.prototype.execute = function(level) {
 	if(collision) {
 		return;
 	}
-	*/
 
 	this.actor.pos.x = x;
 	this.actor.pos.y = y;
