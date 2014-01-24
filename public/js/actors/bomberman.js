@@ -11,6 +11,7 @@ function Bomberman(name, kind, data) {
 	this.animationState = {};
 	this.direction = null;
 	this.lastDirection = "down";
+	this.bombCount = 0;
 
 	this.kind.resetAll(this.animationState, 0);
 };
@@ -45,5 +46,17 @@ Bomberman.prototype.logic = function(level) {
 
 Bomberman.prototype.update = function(data) {
 	this.newState = data.state;
+};
+
+Bomberman.prototype.canDropBomb = function() {
+	return this.bombCount < 3;
+};
+
+Bomberman.prototype.addBomb = function() {
+	this.bombCount++;
+};
+
+Bomberman.prototype.removeBomb = function() {
+	this.bombCount--;
 };
 

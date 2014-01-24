@@ -30,3 +30,8 @@ Actor.prototype.logic = function() {
 Actor.prototype.draw = function(context, tileSet, interpolation, ticks) {
 };
 
+Actor.prototype.beforeAddActor = function() {
+};
+
+Actor.prototype.beforeRemoveActor = function() {
+}

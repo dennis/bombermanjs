@@ -1,11 +1,11 @@
 "use strict";
 
-function Bomb(name, kind, data) {
+function Bomb(kind, pos, owner) {
 	this.name = name;
 	this.kind = kind;
-	this.x = data.x;
-	this.y = data.y;
+	this.pos = pos;
 	this.animationState = undefined;
+	this.owner = owner;
 };
 
 Bomb.prototype = new Actor();
@@ -17,6 +17,14 @@ Bomb.prototype.draw = function(context, tileSet, interpolation, ticks) {
 	}
 	var tile = this.kind.get(this.animationState, undefined, ticks);
 
-	tileSet.draw(context, this.x, this.y, tile);
+	tileSet.draw(context, this.pos.x, this.pos.y, tile);
+};
+
+Bomb.prototype.beforeAddActor = function() {
+	this.owner.addBomb(this);
+};
+
+Bomb.prototype.beforeRemoveActor = function() {
+	this.owner.removeBomb(this);
 };
 

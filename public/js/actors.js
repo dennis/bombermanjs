@@ -46,7 +46,7 @@ Actors.prototype.update = function(data) {
 		console.error("Cannot find actor " +  data.actor);
 }
 
-Actors.prototype.spawn = function(data) {
+Actors.prototype.constructAndAddActor = function(data) {
 	var actorConstructor = null;
 
 	switch(data.actor) {
@@ -67,14 +67,22 @@ Actors.prototype.spawn = function(data) {
 	}
 
 	var actor = new actorConstructor(data.id, this.actorKind[data.actor], data);
-
-	this.actors.push(actor);
-	this.actorIdx[data.id] = this.actors.length-1;
+	
+	this.addActor(actor);
 
 	return actor;
 };
 
-Actors.prototype.despawn = function(data) {
+Actors.prototype.addActor = function(actor) {
+	if(actor.beforeAddActor)
+		actor.beforeAddActor();
+	this.actors.push(actor);
+	this.actorIdx[actor.id || actor.name] = this.actors.length-1;
+};
+
+Actors.prototype.removeActor = function(data) {
+	if(actor.beforeRemoveACtor)
+		actor.beforeRemoveActor();
 	delete this.actors[this.actorIdx[data.id]];
 };
 
