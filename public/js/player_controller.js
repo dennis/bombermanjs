@@ -20,7 +20,7 @@ PlayerController.prototype.handleInput = function(inputManager) {
 	if(action)
 		action.execute(this.level);
 
-	if(inputManager.KEY_STATUS['space']) {
+	if(inputManager.KEY_RELEASED['space']) {
 		(new SpawnBombAction(this.actor.pos, this.actor)).execute(this.level);
 	}
 
@@ -29,4 +29,6 @@ PlayerController.prototype.handleInput = function(inputManager) {
 	}
 
 	this.isMoving = movement;
+
+	inputManager.resetReleasedKeys();
 };

@@ -10,6 +10,7 @@ function InputManager() {
 	}
 
 	this.KEY_STATUS = {};
+	this.KEY_RELEASED = {};
 	this.resetKeys();
 
 	this.oldonkeydown = null;
@@ -19,6 +20,14 @@ function InputManager() {
 InputManager.prototype.resetKeys = function() {
 	for(var code in this.KEY_CODES) {
 		this.KEY_STATUS[this.KEY_CODES[code]] = false;
+	}
+
+	this.resetReleasedKeys();
+};
+
+InputManager.prototype.resetReleasedKeys = function() {
+	for(var code in this.KEY_CODES) {
+		this.KEY_RELEASED[this.KEY_CODES[code]] = false;
 	}
 };
 
@@ -40,6 +49,7 @@ InputManager.prototype.onkeyup = function(e) {
 		if(self.KEY_CODES[keyCode]) {
 			e.preventDefault();
 			self.KEY_STATUS[self.KEY_CODES[keyCode]] = false;
+			self.KEY_RELEASED[self.KEY_CODES[keyCode]] = true;
 		}
 	}
 };
