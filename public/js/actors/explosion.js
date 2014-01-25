@@ -10,6 +10,7 @@ function Explosion(actors, pos) {
 	this.animationState = undefined;
 	this.flames = null;
 	this.logicCount = 0;
+	this.lethalTiles = undefined;
 };
 
 Explosion.prototype = new Actor();
@@ -58,8 +59,62 @@ Explosion.prototype.draw = function(context, tileSet, interpolation, ticks, leve
 };
 
 Explosion.prototype.logic = function(level) {
+	var self = this;
+
 	this.logicCount++;
 
-	if(this.logicCount == GameLoop.logic_rate/2)
+	if(this.logicCount == GameLoop.logic_rate/2) {
 		level.actors.removeActor(this);
+		return;
+	}
+
+	if(this.lethalTiles == undefined) {
+		// build lethal tiles
+		this.lethalTiles = new Array(level.getWidth()*level.getHeight());
+
+		var tileX = this.pos.x/level.getTileWidth();
+		var tileY = this.pos.y/level.getTileHeight();
+		var totalX = level.getWidth()+1;
+		var totalY = level.getHeight()+1;
+		this.lethalTiles[tileY*level.getHeight()+tileX] = true;
+
+		// populating tiles
+		Object.keys(Point.DIRECTIONS).forEach(function(dir) {
+			var pos = new Point(tileX, tileY);
+			var vector = Point.DIRECTIONS[dir];
+			var step = 0;
+			
+			pos = pos.add(vector);
+			while(pos.x >= 0 && pos.x < totalX && pos.y >=0 && pos.y < totalY) {
+				if(level.collisionEngine.isBlocked(pos)) {
+					break;
+				}
+				else {
+					self.lethalTiles[pos.y*level.getHeight()+pos.x] = true;
+					pos = pos.add(vector);
+				}
+			}
+		});
+	}
+
+	level.actors.actors.forEach(function(otherActor) {
+		if(otherActor !== self) {
+			var lowX = Math.floor(otherActor.pos.x / level.getTileWidth());
+			var lowY = Math.floor(otherActor.pos.y / level.getTileHeight());
+			var highX = Math.ceil(otherActor.pos.x / level.getTileWidth());
+			var highY = Math.ceil(otherActor.pos.y / level.getTileHeight());
+
+			// snap actor to grid (if he is partially in a tile that is lethal, he might get to live after all)
+			var x = highX;
+			var y = highY;
+			if(Math.abs(otherActor.pos.x - lowX) < Math.abs(highX - otherActor.pos.x))
+				x = lowX;
+			if(Math.abs(otherActor.pos.y - lowY) < Math.abs(highY - otherActor.pos.y))
+					y = lowY;
+
+			if(self.lethalTiles[(y * level.getHeight())+x]) {
+				(new KillActorAction(otherActor, self)).execute(level);
+			}
+		}
+	});
 };
