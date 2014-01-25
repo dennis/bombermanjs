@@ -1,13 +1,25 @@
 "use strict";
 
-function Bomberman(name, kind, data) {
-	var initialPos = new Point(data.x, data.y);
+ActorFactory.register('player0', function(actors, pos) {
+	return new Bomberman(actors, pos, 'player0');
+});
+ActorFactory.register('player1', function(actors, pos) {
+	return new Bomberman(actors, pos, 'player1');
+});
+ActorFactory.register('player2', function(actors, pos) {
+	return new Bomberman(actors, pos, 'player2');
+});
+ActorFactory.register('player3', function(actors, pos) {
+	return new Bomberman(actors, pos, 'player3');
+});
 
-	this.name = name;
-	this.kind = kind;
+function Bomberman(actors, initialPos, actorKind) {
+	this.kind = actors.actorKind[actorKind];
+
 	this.lastPos = initialPos.clone();
 	this.pos = initialPos.clone();
 	this.realPos = initialPos.clone(); // where we visually are between lastPos and pos
+
 	this.animationState = {};
 	this.direction = null;
 	this.lastDirection = "down";

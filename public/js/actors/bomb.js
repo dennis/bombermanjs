@@ -1,8 +1,12 @@
 "use strict";
 
-function Bomb(kind, pos, owner) {
+ActorFactory.register('bomb', function(actors, pos) {
+	return new Bomb(actors, pos);
+});
+
+function Bomb(actors, pos, owner) {
 	this.name = name;
-	this.kind = kind;
+	this.kind = actors.actorKind['bomb'];
 	this.pos = pos;
 	this.animationState = undefined;
 	this.owner = owner;
@@ -27,7 +31,11 @@ Bomb.prototype.logic = function(level) {
 	if(GameLoop.logic_rate * 1.5 === this.logicCount) {
 		(new ExplodeAction(this)).execute(level);
 	}
-}
+};
+
+Bomb.prototype.setOwner = function(actor) {
+	this.owner = actor;
+};
 
 Bomb.prototype.beforeAddActor = function() {
 	this.owner.addBomb(this);

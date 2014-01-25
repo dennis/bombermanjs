@@ -37,7 +37,9 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId, statusCanv
 	});
 
 	this._findPredefinedActors().forEach(function(predefinedActor) {
-    	self.actors.constructAndAddActor(predefinedActor);
+		var actor = self.actors.factory.new(predefinedActor.actor, new Point(predefinedActor.x, predefinedActor.y));
+
+		self.actors.addActor(actor);
 	});
 
 	this._populateCollisionEngine();
@@ -110,24 +112,3 @@ Level.prototype.logic = function() {
 	this.actors.logic(this);
 };
 
-/*
-Level.prototype.actorUpdate = function(data) {
-	this.actors.update(data);
-};
-
-Level.prototype.newActor = function(data) {
-	return this.actors.constructAndAddActor(data);
-};
-
-Level.prototype.delActor = function(data) {
-	this.actors.despawn(data);
-};
-
-Level.prototype.getTileHeight = function() {
-	return this.tileHeight;
-};
-
-Level.prototype.getTileWidth = function() {
-	return this.tileWidth;
-};
-*/

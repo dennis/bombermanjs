@@ -1,13 +1,22 @@
 "use strict";
 
-function Explosion(name, kind, data) {
-	this.name = name;
-	this.kind = kind;
-	this.data = data;
+ActorFactory.register('explosion', function(actors, pos) {
+	return new Explosion(actors, pos);
+});
+
+function Explosion(actors, pos) {
+	this.kind = actors.actorKind['explosion'];
+	this.pos = pos;
 	this.animationState = undefined;
+	this.flames = null;
+	this.logicCount = 0;
 };
 
 Explosion.prototype = new Actor();
+
+Explosion.prototype.setLethalFlames = function(flames) {
+	this.flames = flames;
+};
 
 Explosion.prototype.draw = function(context, tileSet, interpolation, ticks, level) {
 	if(this.animationState == undefined) {
@@ -16,8 +25,8 @@ Explosion.prototype.draw = function(context, tileSet, interpolation, ticks, leve
 	}
 	var tile = this.kind.get(this.animationState, "center", ticks);
 
-	var tileX = this.data.x/level.getTileWidth();
-	var tileY = this.data.y/level.getTileHeight();
+	var tileX = this.pos.x/level.getTileWidth();
+	var tileY = this.pos.y/level.getTileHeight();
 
 	var self = this;
 	Object.keys(Point.DIRECTIONS).forEach(function(direction) {
@@ -27,10 +36,10 @@ Explosion.prototype.draw = function(context, tileSet, interpolation, ticks, leve
 
 		tile = self.kind.get(self.animationState, direction, ticks);
 
-		for(i = 0; i < self.data[direction]; i++) {
+		for(i = 0; i < self.flames[direction]; i++) {
 			pos = pos.add(vector);
 
-			if(i+1 == self.data[direction]) {
+			if(i+1 == self.flames[direction]) {
 				tile = self.kind.get(self.animationState, direction, ticks);
 			}
 			else if(vector.x != 0) {
@@ -45,6 +54,12 @@ Explosion.prototype.draw = function(context, tileSet, interpolation, ticks, leve
 	});
 
 	tile = this.kind.get(this.animationState, "center", ticks);
-	tileSet.draw(context, this.data.x, this.data.y, tile);
+	tileSet.draw(context, this.pos.x, this.pos.y, tile);
 };
 
+Explosion.prototype.logic = function(level) {
+	this.logicCount++;
+
+	if(this.logicCount == GameLoop.logic_rate/2)
+		level.actors.removeActor(this);
+};

@@ -4,6 +4,8 @@ function Actors(canvasId, mapWidth, mapHeight, tileSet) {
 	this.tileSet = tileSet;
 	this.actors = [];
 	this.actorKind = {};
+	this.factory = new ActorFactory(this);
+
 	this.init(canvasId, mapWidth, mapHeight);
 }
 
@@ -37,10 +39,10 @@ Actors.prototype.logic = function(level) {
 	});
 }
 
-Actors.prototype.constructAndAddActor = function(data) {
+Actors.prototype.constructAndAddActor = function(actor, pos) {
 	var actorConstructor = null;
 
-	switch(data.actor) {
+	switch(actor) {
 		case 'player0':
 		case 'player1':
 		case 'player2':
@@ -57,7 +59,8 @@ Actors.prototype.constructAndAddActor = function(data) {
 			throw new String(data.actor + " unsupported");
 	}
 
-	var actor = new actorConstructor(data.id, this.actorKind[data.actor], data);
+	//var actor = new actorConstructor(data.id, this.actorKind[data.actor], data);
+	var actor = new actorConstructor(this, pos, actor);
 	
 	this.addActor(actor);
 

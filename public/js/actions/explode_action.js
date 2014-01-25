@@ -33,8 +33,9 @@ ExplodeAction.prototype.execute = function(level) {
 		result[dir] = step;
 	});
 
-	this.explosion = new Explosion(this.bomb, result.up, result.right, result.down, result.left);
+	this.explosion = level.actors.factory.new('explosion', this.bomb.pos);
+	this.explosion.setLethalFlames(result);
 	level.actors.removeActor(this.bomb);
-	//level.addActor(this.explosion);
+	level.actors.addActor(this.explosion);
 };
 
