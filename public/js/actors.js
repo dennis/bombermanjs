@@ -3,7 +3,6 @@
 function Actors(canvasId, mapWidth, mapHeight, tileSet) {
 	this.tileSet = tileSet;
 	this.actors = [];
-	this.actorIdx = {};
 	this.actorKind = {};
 	this.init(canvasId, mapWidth, mapHeight);
 }
@@ -38,14 +37,6 @@ Actors.prototype.logic = function(level) {
 	});
 }
 
-Actors.prototype.update = function(data) {
-	var actor = this.actors[this.actorIdx[data.actor]];
-	if(actor)
-		actor.update(data);
-	else
-		console.error("Cannot find actor " +  data.actor);
-}
-
 Actors.prototype.constructAndAddActor = function(data) {
 	var actorConstructor = null;
 
@@ -77,16 +68,17 @@ Actors.prototype.addActor = function(actor) {
 	if(actor.beforeAddActor)
 		actor.beforeAddActor();
 	this.actors.push(actor);
-	this.actorIdx[actor.id || actor.name] = this.actors.length-1;
 };
 
-Actors.prototype.removeActor = function(data) {
-	if(actor.beforeRemoveACtor)
-		actor.beforeRemoveActor();
-	delete this.actors[this.actorIdx[data.id]];
+Actors.prototype.removeActor = function(target) {
+	if(target.beforeRemoveActor)
+		target.beforeRemoveActor();
+	this.actors = this.actors.filter(function(actor) {
+		return actor !== target;
+	});
 };
 
-Actors.prototype.getActor = function(actorName) {
-	return this.actors[this.actorIdx[actorName]];
+Actors.prototype.getPlayer = function(actorName) {
+	return this.actors[0]; // FIXME This will not work for all maps
 };
 

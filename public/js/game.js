@@ -20,7 +20,7 @@ Game.prototype.parseLevel = function(levelJson) {
 
 		var tileSet = new TileSet(levelJson.tilesets[0], tilesImg);
 		self.level = new Level(levelJson, tileSet, 'background', 'actors', 'statusbar');
-		self.playerController = new PlayerController(self.level.actors.getActor('player0'), self.level);
+		self.playerController = new PlayerController(self.level.actors.getPlayer(), self.level);
 	}
 };
 
