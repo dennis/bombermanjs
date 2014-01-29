@@ -3,7 +3,8 @@ function ExplodeAction(bomb) {
 	this.explosion = undefined;
 }
 
-ExplodeAction.prototype.execute = function(level) {
+ExplodeAction.prototype.execute = function(game) {
+	var level = game.level;
 	if(this.explosion != undefined)
 		return;
 	// calculate how many tiles the darting flame should be

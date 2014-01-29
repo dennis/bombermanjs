@@ -48,8 +48,8 @@ Bomberman.prototype.draw = function(context, tileSet, interpolation, ticks) {
 	tileSet.draw(context, this.realPos.x, this.realPos.y, tile);
 };
 
-Bomberman.prototype.logic = function(level) {
-	this.performActions(level);
+Bomberman.prototype.logic = function(game) {
+	this.performActions(game.level);
 
 	if(this.direction) {
 		this.lastDirection = this.direction;
@@ -72,3 +72,13 @@ Bomberman.prototype.removeBomb = function() {
 	this.bombCount--;
 };
 
+Bomberman.prototype.killed = function(game) {
+	var self = this;
+	this.alive = false;
+	game.level.actors.removeActor(this);
+
+	game.inSecondsDo(3, function() {
+		self.alive = true;
+		game.level.actors.addActor(self);
+	});
+};

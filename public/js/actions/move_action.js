@@ -3,7 +3,8 @@ function MoveAction(actor, direction) {
 	this.direction = direction;
 }
 
-MoveAction.prototype.execute = function(level) {
+MoveAction.prototype.execute = function(game) {
+	var level = game.level;
 	var x = this.actor.pos.x;
 	var y = this.actor.pos.y;
 

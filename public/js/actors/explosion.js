@@ -58,8 +58,9 @@ Explosion.prototype.draw = function(context, tileSet, interpolation, ticks, leve
 	tileSet.draw(context, this.pos.x, this.pos.y, tile);
 };
 
-Explosion.prototype.logic = function(level) {
+Explosion.prototype.logic = function(game) {
 	var self = this;
+	var level = game.level;
 
 	this.logicCount++;
 
@@ -101,19 +102,19 @@ Explosion.prototype.logic = function(level) {
 		if(otherActor !== self) {
 			var lowX = Math.floor(otherActor.pos.x / level.getTileWidth());
 			var lowY = Math.floor(otherActor.pos.y / level.getTileHeight());
-			var highX = Math.ceil(otherActor.pos.x / level.getTileWidth());
-			var highY = Math.ceil(otherActor.pos.y / level.getTileHeight());
+			var highX = Math.ceil(otherActor.pos.x+1 / level.getTileWidth());
+			var highY = Math.ceil(otherActor.pos.y+1 / level.getTileHeight());
 
 			// snap actor to grid (if he is partially in a tile that is lethal, he might get to live after all)
 			var x = highX;
 			var y = highY;
-			if(Math.abs(otherActor.pos.x - lowX) < Math.abs(highX - otherActor.pos.x))
+			if(Math.abs(otherActor.pos.x - lowX) > Math.abs(highX - otherActor.pos.x))
 				x = lowX;
-			if(Math.abs(otherActor.pos.y - lowY) < Math.abs(highY - otherActor.pos.y))
+			if(Math.abs(otherActor.pos.y - lowY) > Math.abs(highY - otherActor.pos.y))
 					y = lowY;
 
 			if(self.lethalTiles[(y * level.getHeight())+x]) {
-				(new KillActorAction(otherActor, self)).execute(level);
+				(new KillActorAction(otherActor, self)).execute(game);
 			}
 		}
 	});

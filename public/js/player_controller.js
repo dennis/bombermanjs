@@ -1,8 +1,8 @@
 "use strict";
 
-function PlayerController(actor, level) {
+function PlayerController(actor, game) {
 	this.actor = actor;
-	this.level = level;
+	this.game = game;
 	this.isMoving = false;
 }
 
@@ -10,6 +10,10 @@ PlayerController.prototype.handleInput = function(inputManager) {
 	var self = this;
 	var action = null;
 	var movement = false;
+
+	if(!this.actor.alive)
+		return;
+
 	Object.keys(Point.DIRECTIONS).forEach(function(direction) {
 		if(inputManager.KEY_STATUS[direction]) {
 			movement = true;
@@ -18,14 +22,14 @@ PlayerController.prototype.handleInput = function(inputManager) {
 	});
 
 	if(action)
-		action.execute(this.level);
+		action.execute(this.game);
 
 	if(inputManager.KEY_RELEASED['space']) {
-		(new SpawnBombAction(this.actor.pos, this.actor)).execute(this.level);
+		(new SpawnBombAction(this.actor.pos, this.actor)).execute(this.game);
 	}
 
 	if(movement == false && this.isMoving) {
-		(new StopAction(self.actor)).execute(this.level);
+		(new StopAction(self.actor)).execute(this.game);
 	}
 
 	this.isMoving = movement;

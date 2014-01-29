@@ -25,11 +25,11 @@ Bomb.prototype.draw = function(context, tileSet, interpolation, ticks) {
 	tileSet.draw(context, this.pos.x, this.pos.y, tile);
 };
 
-Bomb.prototype.logic = function(level) {
+Bomb.prototype.logic = function(game) {
 	this.logicCount++;
 
 	if(GameLoop.logic_rate * 1.5 === this.logicCount) {
-		(new ExplodeAction(this)).execute(level);
+		(new ExplodeAction(this)).execute(game);
 	}
 };
 
@@ -45,3 +45,6 @@ Bomb.prototype.beforeRemoveActor = function() {
 	this.owner.removeBomb(this);
 };
 
+Bomb.prototype.killed = function(game) {
+	(new ExplodeAction(this)).execute(game);
+};

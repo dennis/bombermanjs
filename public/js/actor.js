@@ -4,6 +4,7 @@ function Actor(name, kind) {
 	this.name = name;
 	this.kind = kind;
 	this.actions = [];
+		this.alive = true;
 }
 
 Actor.prototype.getName = function() {
@@ -35,3 +36,4 @@ Actor.prototype.beforeAddActor = function() {
 
 Actor.prototype.beforeRemoveActor = function() {
 }
+

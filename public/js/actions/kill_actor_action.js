@@ -3,10 +3,8 @@ function KillActorAction(victimActor, perpetratorActor) {
 	this.perpetrator = perpetratorActor;
 }
 
-KillActorAction.prototype.execute = function(level) {
-	console.log("Smoked", this.victim);
-	if(this.victim instanceof Bomb)
-		(new ExplodeAction(this.victim)).execute(level);
-	else
-		level.actors.removeActor(this.victim);
+KillActorAction.prototype.execute = function(game) {
+	if(this.victim.killed) {
+		this.victim.killed(game);
+	}
 };

@@ -10,7 +10,7 @@ function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId, statusCanv
 	this.tileSet = tileSet;
 	this.background = new Background(backgroundCanvasId, mapWidth, mapHeight, tileSet);
 	this.actors = new Actors(actorsCanvasId, mapWidth, mapHeight, tileSet);
-	this.statusbar = new Statusbar(statusCanvasId, mapWidth, mapHeight);
+	//this.statusbar = new Statusbar(statusCanvasId, mapWidth, mapHeight);
 	this.tileWidth = levelMap.tilewidth;
 	this.tileHeight = levelMap.tileheight;
 	this.levelMap = levelMap;
@@ -102,13 +102,13 @@ Level.prototype._populateCollisionEngine = function() {
 	}
 };
 
-Level.prototype.render = function(interpolation, ticks) {
+Level.prototype.render = function(game, interpolation, ticks) {
 	this.background.draw(this.tileSet);
 	this.actors.draw(this.tileSet, interpolation, ticks, this);
-	this.statusbar.draw();
+	//this.statusbar.draw();
 };
 
-Level.prototype.logic = function() {
-	this.actors.logic(this);
+Level.prototype.logic = function(game) {
+	this.actors.logic(game);
 };
 
