@@ -82,6 +82,10 @@ Actors.prototype.removeActor = function(target) {
 };
 
 Actors.prototype.getPlayer = function(actorName) {
-	return this.actors[0]; // FIXME This will not work for all maps
+	return this.getActorByIndex(0); // FIXME This will not work for all maps
+};
+
+Actors.prototype.getActorByIndex= function(idx) {
+	return this.actors[idx];
 };
 

@@ -5,6 +5,7 @@ function Game() {
 	this.gameLoop = new GameLoop();
 	this.level = null;
 	this.playerController = null;
+	this.sherryController = null;
 	this.ticksTriggers = [];
 	this.ticks = 0;
 }
@@ -23,6 +24,7 @@ Game.prototype.parseLevel = function(levelJson) {
 		var tileSet = new TileSet(levelJson.tilesets[0], tilesImg);
 		self.level = new Level(levelJson, tileSet, 'background', 'actors', 'statusbar');
 		self.playerController = new PlayerController(self.level.actors.getPlayer(), self);
+		self.sherryController = new SherryController(self.level.actors.getActorByIndex(1), self);
 	}
 };
 
@@ -51,7 +53,8 @@ Game.prototype.run = function() {
 
 	this.gameLoop.addLogic(function() { 
 		if(self.level) {
-			self.playerController.handleInput(self.input); 
+			self.playerController.execute(self.input); 
+			self.sherryController.execute(); 
 		}
 	});
 	

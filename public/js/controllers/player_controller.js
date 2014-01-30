@@ -6,7 +6,7 @@ function PlayerController(actor, game) {
 	this.isMoving = false;
 }
 
-PlayerController.prototype.handleInput = function(inputManager) {
+PlayerController.prototype.execute = function(inputManager) {
 	var self = this;
 	var action = null;
 	var movement = false;

@@ -45,9 +45,11 @@ MoveAction.prototype.execute = function(game) {
 	});
 
 	if(collision) {
-		return;
+		return false;
 	}
 
 	this.actor.pos.x = x;
 	this.actor.pos.y = y;
+
+	return true;
 };

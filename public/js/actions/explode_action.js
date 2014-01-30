@@ -1,5 +1,5 @@
-function ExplodeAction(bomb) {
-	this.bomb = bomb;
+function ExplodeAction(actor) {
+	this.actor = actor;
 	this.explosion = undefined;
 }
 
@@ -8,8 +8,8 @@ ExplodeAction.prototype.execute = function(game) {
 	if(this.explosion != undefined)
 		return;
 	// calculate how many tiles the darting flame should be
-	var tileX = this.bomb.pos.x/level.getTileWidth();
-	var tileY = this.bomb.pos.y/level.getTileHeight();
+	var tileX = this.actor.pos.x/level.getTileWidth();
+	var tileY = this.actor.pos.y/level.getTileHeight();
 	var totalX = level.getWidth()+1;
 	var totalY = level.getHeight()+1;
 
@@ -34,9 +34,9 @@ ExplodeAction.prototype.execute = function(game) {
 		result[dir] = step;
 	});
 
-	this.explosion = level.actors.factory.new('explosion', this.bomb.pos);
+	this.explosion = level.actors.factory.new('explosion', this.actor.pos);
 	this.explosion.setLethalFlames(result);
-	level.actors.removeActor(this.bomb);
+	level.actors.removeActor(this.actor);
 	level.actors.addActor(this.explosion);
 };
 
