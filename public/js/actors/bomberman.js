@@ -46,6 +46,12 @@ Bomberman.prototype.draw = function(context, tileSet, interpolation, ticks) {
 	var tile = this.kind.get(this.animationState, direction, ticks);
 
 	tileSet.draw(context, this.realPos.x, this.realPos.y, tile);
+
+	// show snapXYToTileXY
+	{
+		var level = window.game.level;
+		var tileXY = level.snapXYToTileXY(this.realPos, context);
+	}
 };
 
 Bomberman.prototype.logic = function(game) {

@@ -100,20 +100,9 @@ Explosion.prototype.logic = function(game) {
 
 	level.actors.actors.forEach(function(otherActor) {
 		if(otherActor !== self) {
-			var lowX = Math.floor(otherActor.pos.x / level.getTileWidth());
-			var lowY = Math.floor(otherActor.pos.y / level.getTileHeight());
-			var highX = Math.ceil(otherActor.pos.x+1 / level.getTileWidth());
-			var highY = Math.ceil(otherActor.pos.y+1 / level.getTileHeight());
+			var tileXY = level.snapXYToTileXY(otherActor.pos);
 
-			// snap actor to grid (if he is partially in a tile that is lethal, he might get to live after all)
-			var x = highX;
-			var y = highY;
-			if(Math.abs(otherActor.pos.x - lowX) > Math.abs(highX - otherActor.pos.x))
-				x = lowX;
-			if(Math.abs(otherActor.pos.y - lowY) > Math.abs(highY - otherActor.pos.y))
-					y = lowY;
-
-			if(self.lethalTiles[(y * level.getHeight())+x]) {
+			if(self.lethalTiles[(tileXY.y * level.getHeight())+tileXY.x]) {
 				(new KillActorAction(otherActor, self)).execute(game);
 			}
 		}

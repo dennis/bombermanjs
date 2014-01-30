@@ -112,3 +112,39 @@ Level.prototype.logic = function(game) {
 	this.actors.logic(game);
 };
 
+Level.prototype.snapXYToTileXY = function(pos, context) {
+	var self = this;
+	var halfTileWidth = Math.round((self.getTileWidth()/2));
+	var halfTileHeight = Math.round((self.getTileHeight()/2));
+	var sourcePos = new Point(pos.x + halfTileWidth, pos.y + halfTileHeight);
+
+	var lowX = Math.floor(pos.x / this.getTileWidth());
+	var lowY = Math.floor(pos.y / this.getTileHeight());
+	var highX = Math.ceil(pos.x / this.getTileWidth());
+	var highY = Math.ceil(pos.y / this.getTileHeight());
+
+	// default - we will fnid a better match
+	var snapPos = new Point(0, 0);
+	var distance = -1;
+
+	[lowX, highX].forEach(function(x) {
+		[lowY, highY].forEach(function(y) {
+			var midX = (x * self.getTileWidth())+halfTileWidth;
+			var midY = (y * self.getTileHeight())+halfTileHeight;
+
+			var dx = Math.abs(midX - sourcePos.x);
+			var dy = Math.abs(midY - sourcePos.y);
+
+			var d = Math.sqrt((dx*dx) + (dy*dy));
+
+			if(d < distance || distance == -1) {
+				snapPos.x = x;
+				snapPos.y = y;
+				distance = d;
+			}
+		});
+	});
+
+	return snapPos;
+};
+
