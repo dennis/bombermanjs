@@ -11,8 +11,6 @@
 		"url" : "https://github.com/dennis/bombermanjs.git"
 	},
 	"dependencies": {
-		"socket.io": ">= 0.9.16",
 		"express": "3.x",
-		"stately.js":  ">= 1.2.0"
 	}
 }
