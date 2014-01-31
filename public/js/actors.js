@@ -39,34 +39,6 @@ Actors.prototype.logic = function(level) {
 	});
 }
 
-Actors.prototype.constructAndAddActor = function(actor, pos) {
-	var actorConstructor = null;
-
-	switch(actor) {
-		case 'player0':
-		case 'player1':
-		case 'player2':
-		case 'player3':
-			actorConstructor = Bomberman;
-			break;
-		case 'bomb':
-			actorConstructor = Bomb;
-			break;
-		case 'explosion':
-			actorConstructor = Explosion;
-			break;
-		default:
-			throw new String(data.actor + " unsupported");
-	}
-
-	//var actor = new actorConstructor(data.id, this.actorKind[data.actor], data);
-	var actor = new actorConstructor(this, pos, actor);
-	
-	this.addActor(actor);
-
-	return actor;
-};
-
 Actors.prototype.addActor = function(actor) {
 	if(actor.beforeAddActor)
 		actor.beforeAddActor();
