@@ -20,7 +20,7 @@ function Bomberman(game, initialPos, spritePrefix) {
 	var self = this;
 
 	spriteNames.forEach(function(spriteName) {
-		self.sprites[spriteName] = game.spriteManager.get(spritePrefix + "-" + spriteName); // HACK
+		self.sprites[spriteName] = game.spriteManager.get(spritePrefix + "-" + spriteName);
 	});
 
 	this.lastPos = initialPos.clone();

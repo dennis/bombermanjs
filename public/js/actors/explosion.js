@@ -11,7 +11,7 @@ function Explosion(game, pos) {
 	var self = this;
 
 	spriteNames.forEach(function(spriteName) {
-		self.sprites[spriteName] = game.spriteManager.get("explosion-" + spriteName); // HACK
+		self.sprites[spriteName] = game.spriteManager.get("explosion-" + spriteName);
 	});
 	this.spriteState = new SpriteState();
 	this.pos = pos;
