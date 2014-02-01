@@ -16,7 +16,7 @@ SpriteBackground.prototype.draw = function(interpolation, ticks) {
 	var states = {};
 
 	this.spriteManager.getSpriteNames().forEach(function(spriteName) {
-		states[spriteName] = new SpriteState();
+		states[spriteName] = new SpriteState(ticks);
 		var xy = tileSet.toXY(pos);
 		pos++;
 		tileSet.draw(self.context, xy.x * tileSet.getTileWidth(), xy.y * tileSet.getTileHeight(), 

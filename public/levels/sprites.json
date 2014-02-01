@@ -32,15 +32,14 @@
 		"bomberman2-walk-left": {"tiles": [289, 290, 291], "fps": 4 },
 		"bomberman2-walk-right": {"tiles": [230, 231, 232], "fps": 4 },
 		"bomberman2-walk-up": {"tiles": [233, 234], "fps": 4 },
-
 		"bomberman3-down": {"tiles": [241] },
 		"bomberman3-left": {"tiles": [296] },
 		"bomberman3-right": {"tiles": [244] },
 		"bomberman3-up": {"tiles": [240] },
-
 		"bomberman3-walk-down": {"tiles": [242, 243], "fps": 4 },
 		"bomberman3-walk-left": {"tiles": [293, 294, 295], "fps": 4 },
 		"bomberman3-walk-right": {"tiles": [244, 245, 246], "fps": 4 },
-		"bomberman3-walk-up": {"tiles": [248, 249], "fps": 4 }
+		"bomberman3-walk-up": {"tiles": [248, 249], "fps": 4 },
+		"box": { "tiles": [204] }
 	}
 }
