@@ -1,5 +1,5 @@
-function ActorFactory(actors) {
-	this.actors = actors;
+function ActorFactory(game) {
+	this.game = game;
 	this.constructors = {};
 }
 
@@ -17,5 +17,5 @@ ActorFactory.prototype.new = function(name, pos) {
 		throw new Error("Unknown actor: " + name);
 	}
 
-	return new ActorFactory.actorConstructors[name](this.actors, pos);
+	return new ActorFactory.actorConstructors[name](this.game, pos);
 };

@@ -7,7 +7,7 @@ function SpriteManager(tileset, json) {
 	this.tileset = tileset;
 
 	Object.keys(json.sprites).forEach(function(spriteName) {
-		console.log("Found sprite: " + spriteName);
+		console.log("Found sprite: " + spriteName, json.sprites[spriteName]);
 
 		self.sprites[spriteName] = new Sprite(tileset, json.sprites[spriteName]);
 	});
@@ -18,6 +18,8 @@ SpriteManager.prototype.getTileSet = function() {
 };
 
 SpriteManager.prototype.get = function(spriteName) {
+	if(!this.sprites[spriteName])
+		throw new Error("Unknown requested sprite: " + spriteName);
 	return this.sprites[spriteName];
 };
 

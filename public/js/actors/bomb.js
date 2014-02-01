@@ -1,14 +1,14 @@
 "use strict";
 
-ActorFactory.register('bomb', function(actors, pos) {
-	return new Bomb(actors, pos);
+ActorFactory.register('bomb', function(game, pos) {
+	return new Bomb(game, pos);
 });
 
-function Bomb(actors, pos, owner) {
-	this.name = name;
-	this.kind = actors.actorKind['bomb'];
+function Bomb(game, pos, owner) {
+	this.game = game;
+	this.sprite = game.spriteManager.get('bomb');
 	this.pos = pos;
-	this.animationState = undefined;
+	this.spriteState = new SpriteState();
 	this.owner = owner;
 	this.logicCount = 0;
 };
@@ -16,11 +16,7 @@ function Bomb(actors, pos, owner) {
 Bomb.prototype = new Actor();
 
 Bomb.prototype.draw = function(context, tileSet, interpolation, ticks) {
-	if(this.animationState == undefined) {
-		this.animationState = {};
-		this.kind.resetAll(this.animationState, ticks);
-	}
-	var tile = this.kind.get(this.animationState, undefined, ticks);
+	var tile = this.sprite.get(this.spriteState, ticks);
 
 	tileSet.draw(context, this.pos.x, this.pos.y, tile);
 };

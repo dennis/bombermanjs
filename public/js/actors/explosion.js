@@ -1,13 +1,20 @@
 "use strict";
 
-ActorFactory.register('explosion', function(actors, pos) {
-	return new Explosion(actors, pos);
+ActorFactory.register('explosion', function(game, pos) {
+	return new Explosion(game, pos);
 });
 
-function Explosion(actors, pos) {
-	this.kind = actors.actorKind['explosion'];
+function Explosion(game, pos) {
+	var spriteNames = [ "up", "down", "right", "left", "horizontal", "vertical", "center"];
+	this.sprites = {};
+	this.game = game;
+	var self = this;
+
+	spriteNames.forEach(function(spriteName) {
+		self.sprites[spriteName] = game.spriteManager.get("explosion-" + spriteName); // HACK
+	});
+	this.spriteState = new SpriteState();
 	this.pos = pos;
-	this.animationState = undefined;
 	this.flames = null;
 	this.logicCount = 0;
 	this.lethalTiles = undefined;
@@ -20,11 +27,7 @@ Explosion.prototype.setLethalFlames = function(flames) {
 };
 
 Explosion.prototype.draw = function(context, tileSet, interpolation, ticks, level) {
-	if(this.animationState == undefined) {
-		this.animationState = {};
-		this.kind.resetAll(this.animationState, ticks);
-	}
-	var tile = this.kind.get(this.animationState, "center", ticks);
+	var tile = this.sprites["center"].get(this.spriteState, ticks);
 
 	var tileX = this.pos.x/level.getTileWidth();
 	var tileY = this.pos.y/level.getTileHeight();
@@ -35,32 +38,32 @@ Explosion.prototype.draw = function(context, tileSet, interpolation, ticks, leve
 		var i = 0;
 		var pos = new Point(tileX, tileY);
 
-		tile = self.kind.get(self.animationState, direction, ticks);
+		tile = self.sprites[direction].get(self.spriteState, ticks);
 
 		for(i = 0; i < self.flames[direction]; i++) {
 			pos = pos.add(vector);
 
 			if(i+1 == self.flames[direction]) {
-				tile = self.kind.get(self.animationState, direction, ticks);
+				tile = self.sprites[direction].get(self.spriteState, ticks);
 			}
 			else if(vector.x != 0) {
-				tile = self.kind.get(self.animationState, "horizontal", ticks);
+				tile = self.sprites['horizontal'].get(self.spriteState, ticks);
 			}
 			else {
-				tile = self.kind.get(self.animationState, "vertical", ticks);
+				tile = self.sprites['vertical'].get(self.spriteState, ticks);
 			}
 
 			tileSet.draw(context, pos.x*level.getTileWidth(), pos.y*level.getTileHeight(), tile);
 		}
 	});
 
-	tile = this.kind.get(this.animationState, "center", ticks);
+	tile = this.sprites['center'].get(this.spriteState, ticks);
 	tileSet.draw(context, this.pos.x, this.pos.y, tile);
 };
 
-Explosion.prototype.logic = function(game) {
+Explosion.prototype.logic = function() {
 	var self = this;
-	var level = game.level;
+	var level = this.game.level;
 
 	this.logicCount++;
 

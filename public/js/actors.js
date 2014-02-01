@@ -1,10 +1,10 @@
 "use strict";
 
 function Actors(canvasId, mapWidth, mapHeight, spriteManager) {
-	this.tileSet = spriteManager.getTileSet();
+	this.spriteManager = spriteManager;
 	this.actors = [];
 	this.actorKind = {};
-	this.factory = new ActorFactory(this);
+	this.factory = new ActorFactory(game); // FIXME HACK
 
 	this.init(canvasId, mapWidth, mapHeight);
 }
@@ -28,7 +28,7 @@ Actors.prototype.draw = function(interpolation, ticks, level) {
 	this.context.clearRect(0, 0, this.mapWidth, this.mapHeight);
 	var self = this;
 	this.actors.forEach(function(actor) {
-		actor.draw(self.context, self.tileSet, interpolation, ticks, level);
+		actor.draw(self.context, self.spriteManager.getTileSet(), interpolation, ticks, level);
 	});
 }
 
