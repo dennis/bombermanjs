@@ -5,7 +5,7 @@ function ActorFactory(game) {
 
 ActorFactory.actorConstructors = {};
 
-// Constructors of actors are expected to accept: kind and pos
+// Constructors of actors are expected to accept: name and position
 ActorFactory.register = function(name, constructor) {
 	ActorFactory.actorConstructors[name] = constructor;
 

@@ -1,15 +1,9 @@
 "use strict";
 
-function Actor(name, kind) {
-	this.name = name;
-	this.kind = kind;
+function Actor() {
+	this.alive = true;
 	this.actions = [];
-		this.alive = true;
 }
-
-Actor.prototype.getName = function() {
-	return this.name;
-};
 
 Actor.prototype.addAction = function(action) {
 	this.actions.push(action);

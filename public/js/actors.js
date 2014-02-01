@@ -3,26 +3,12 @@
 function Actors(canvasId, mapWidth, mapHeight, spriteManager) {
 	this.spriteManager = spriteManager;
 	this.actors = [];
-	this.actorKind = {};
 	this.factory = new ActorFactory(game); // FIXME HACK
 
 	this.init(canvasId, mapWidth, mapHeight);
 }
 
 Actors.prototype = new CanvasManager();
-
-Actors.prototype.populate = function(layer, levelMap) {
-	var self = this;
-	Object.keys(levelMap.tilesets[0].tileproperties).forEach(function(tileNum) {
-		var properties = levelMap.tilesets[0].tileproperties[tileNum];
-
-		if(!self.actorKind[properties.type]) {
-			self.actorKind[properties.type] = new ActorKind();
-		}
-	
-		self.actorKind[properties.type].addTileSubtype(tileNum, properties.subtype);
-	});
-}
 
 Actors.prototype.draw = function(interpolation, ticks, level) {
 	this.context.clearRect(0, 0, this.mapWidth, this.mapHeight);

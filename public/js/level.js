@@ -29,7 +29,6 @@ function Level(levelMap, spriteManager, backgroundCanvasId, actorsCanvasId, stat
 		}
 		else if(layer.properties.type == "spawn") {
 			console.log("Loaded layer #" + i + " " + layer.name + " (" + layer.properties.type + ")");
-			self.actors.populate(layer, levelMap);
 		}
 		else {
 			console.error("Ignored layer #" + i + " " + layer.name + " (" + layer.properties.type + ")");
