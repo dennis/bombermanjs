@@ -1,12 +1,14 @@
-function ExplodeAction(actor) {
+function ExplodeAction(actor, strength) {
 	this.actor = actor;
 	this.explosion = undefined;
+	this.strength = strength || 3;
 }
 
 ExplodeAction.prototype.execute = function(game) {
 	var level = game.level;
 	if(this.explosion != undefined)
 		return;
+
 	// calculate how many tiles the darting flame should be
 	var tileX = this.actor.pos.x/level.getTileWidth();
 	var tileY = this.actor.pos.y/level.getTileHeight();
@@ -23,6 +25,9 @@ ExplodeAction.prototype.execute = function(game) {
 		pos = pos.add(vector);
 		while(pos.x >= 0 && pos.x < totalX && pos.y >=0 && pos.y < totalY) {
 			if(level.collisionEngine.isBlocked(pos)) {
+				break;
+			}
+			else if(step == self.strength) {
 				break;
 			}
 			else {
