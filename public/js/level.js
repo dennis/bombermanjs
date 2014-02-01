@@ -3,13 +3,13 @@
 // TODO Split canvas stuff into another class
 // FIXME This is a kicthensink! :(
 
-function Level(levelMap, tileSet, backgroundCanvasId, actorsCanvasId, statusCanvasId) {
+function Level(levelMap, spriteManager, backgroundCanvasId, actorsCanvasId, statusCanvasId) {
 	var mapWidth = levelMap.width*levelMap.tilewidth;
 	var mapHeight = levelMap.height*levelMap.tileheight;
 
-	this.tileSet = tileSet;
-	this.background = new Background(backgroundCanvasId, mapWidth, mapHeight, tileSet);
-	this.actors = new Actors(actorsCanvasId, mapWidth, mapHeight, tileSet);
+	this.spriteManager = spriteManager;
+	this.background = new Background(backgroundCanvasId, mapWidth, mapHeight, spriteManager);
+	this.actors = new Actors(actorsCanvasId, mapWidth, mapHeight, spriteManager); 
 	//this.statusbar = new Statusbar(statusCanvasId, mapWidth, mapHeight);
 	this.tileWidth = levelMap.tilewidth;
 	this.tileHeight = levelMap.tileheight;
@@ -103,8 +103,8 @@ Level.prototype._populateCollisionEngine = function() {
 };
 
 Level.prototype.render = function(game, interpolation, ticks) {
-	this.background.draw(this.tileSet);
-	this.actors.draw(this.tileSet, interpolation, ticks, this);
+	this.background.draw();
+	this.actors.draw(interpolation, ticks, this);
 	//this.statusbar.draw();
 };
 

@@ -1,0 +1,32 @@
+{
+	"sprites": {
+		"bomb": {"tiles": [274, 275, 276, 277, 278, 279], "fps": 4 },
+		"explosion-center": {"tiles": [272] },
+		"explosion-down": {"tiles": [239] },
+		"explosion-horizontal": {"tiles": [271] },
+		"explosion-left": {"tiles": [270] }, 
+		"explosion-right": {"tiles": [273] },
+		"explosion-up": {"tiles": [209] },
+		"explosion-vertical": {"tiles": [224] },
+		"bomberman0-down": {"tiles": [211] },
+		"bomberman0-left": {"tiles": [288] },
+		"bomberman0-right": {"tiles": [214] },
+		"bomberman0-up": {"tiles": [210] },
+		"bomberman0-walk-down": {"tiles": [212, 213], "fps": 4 },
+		"bomberman0-walk-left": {"tiles": [285, 286, 287], "fps": 4 },
+		"bomberman0-walk-right": {"tiles": [215, 216, 217], "fps": 4 },
+		"bomberman0-walk-up": {"tiles": [218, 219], "fps": 4 },
+		"bomberman1-down": {"tiles": [256] },
+		"bomberman1-left": {"tiles": [202] },
+		"bomberman1-right": {"tiles": [259] },
+		"bomberman1-up": {"tiles": [255] },
+		"bomberman1-walk-down": {"tiles": [257, 258], "fps": 4 },
+		"bomberman1-walk-left": {"tiles": [199, 200, 201], "fps": 4 },
+		"bomberman1-walk-right": {"tiles": [260, 261, 262], "fps": 4 },
+		"bomberman1-walk-up": {"tiles": [263, 264], "fps": 4 },
+		"bomberman2-left": {"tiles": [292] },
+		"bomberman2-walk-left": {"tiles": [289, 290, 291], "fps": 4 },
+		"bomberman3-left": {"tiles": [296] },
+		"bomberman3-walk-left": {"tiles": [293, 294, 295], "fps": 4 }
+	}
+}

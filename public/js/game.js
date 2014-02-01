@@ -1,6 +1,7 @@
 "use strict";
 
 function Game() {
+	this.spriteManager = null;
 	this.input = new InputManager();
 	this.gameLoop = new GameLoop();
 	this.level = null;
@@ -15,17 +16,33 @@ Game.prototype.parseLevel = function(levelJson) {
 
 	console.log("Loaded level1", levelJson);
 
-	// load asset
-	var tilesImg = new Image();
-	tilesImg.src = levelJson.tilesets[0].image;
-	tilesImg.onload = function() {
-		console.log("Graphics loaded: ", tilesImg);
-
-		var tileSet = new TileSet(levelJson.tilesets[0], tilesImg);
-		self.level = new Level(levelJson, tileSet, 'background', 'actors', 'statusbar');
-		self.playerController = new PlayerController(self.level.actors.getPlayer(), self);
-		self.sherryController = new SherryController(self.level.actors.getActorByIndex(1), self);
+	if(levelJson.tilesets[1]) {
+		throw new Error("Cannot handle more than a single tileset");
 	}
+
+	// load assets
+	$.ajax('/levels/sprites.json')
+	.done(function(sprites) {
+		// sprites definitions
+		console.log("Loaded sprites");
+
+		// the image
+		var tilesImg = new Image();
+		tilesImg.src = levelJson.tilesets[0].image;
+		tilesImg.onload = function() {
+			console.log("Graphics loaded: ", tilesImg);
+
+			var tileSet = new TileSet(levelJson.tilesets[0], tilesImg);
+			self.spriteManager = new SpriteManager(tileSet, sprites);
+
+			self.level = new Level(levelJson, self.spriteManager, 'background', 'actors', 'statusbar');
+			self.playerController = new PlayerController(self.level.actors.getPlayer(), self);
+			self.sherryController = new SherryController(self.level.actors.getActorByIndex(1), self);
+		}
+	})
+	.fail(function() {
+		console.error("Failed loading sprites");
+	});
 };
 
 Game.prototype.run = function() {

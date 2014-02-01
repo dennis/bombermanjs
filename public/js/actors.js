@@ -1,7 +1,7 @@
 "use strict";
 
-function Actors(canvasId, mapWidth, mapHeight, tileSet) {
-	this.tileSet = tileSet;
+function Actors(canvasId, mapWidth, mapHeight, spriteManager) {
+	this.tileSet = spriteManager.getTileSet();
 	this.actors = [];
 	this.actorKind = {};
 	this.factory = new ActorFactory(this);
@@ -24,16 +24,15 @@ Actors.prototype.populate = function(layer, levelMap) {
 	});
 }
 
-Actors.prototype.draw = function(tileSet, interpolation, ticks, level) {
+Actors.prototype.draw = function(interpolation, ticks, level) {
 	this.context.clearRect(0, 0, this.mapWidth, this.mapHeight);
-	var that = this;
+	var self = this;
 	this.actors.forEach(function(actor) {
-		actor.draw(that.context, tileSet, interpolation, ticks, level);
+		actor.draw(self.context, self.tileSet, interpolation, ticks, level);
 	});
 }
 
 Actors.prototype.logic = function(level) {
-	var that = this;
 	this.actors.forEach(function(actor) {
 		actor.logic(level);
 	});

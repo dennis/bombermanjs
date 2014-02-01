@@ -1,17 +1,19 @@
 "use strict";
 
-function Background(canvasId, mapWidth, mapHeight, tileSet) {
+function Background(canvasId, mapWidth, mapHeight, spriteManager) {
 	this.layers = [];
-	this.tileSet = tileSet;
+	this.tileSet = spriteManager.getTileSet();
 	this.dirty = false;
 
 	this.init(canvasId, mapWidth, mapHeight);
 }
 Background.prototype = new CanvasManager();
+
 Background.prototype.populate = function(layer) {
 	this.layers.push(layer);
 	this.dirty = true;
-}
+};
+
 Background.prototype.draw = function() {
 	if(!this.dirty) {
 		return;
@@ -26,4 +28,4 @@ Background.prototype.draw = function() {
 	}
 
 	this.dirty = false;
-}
+};
