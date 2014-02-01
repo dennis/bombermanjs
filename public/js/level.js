@@ -9,6 +9,7 @@ function Level(levelMap, spriteManager, backgroundCanvasId, actorsCanvasId, stat
 
 	this.spriteManager = spriteManager;
 	this.background = new Background(backgroundCanvasId, mapWidth, mapHeight, spriteManager);
+	//this.spriteBackground = new SpriteBackground(backgroundCanvasId, mapWidth, mapHeight, spriteManager);
 	this.actors = new Actors(actorsCanvasId, mapWidth, mapHeight, spriteManager); 
 	//this.statusbar = new Statusbar(statusCanvasId, mapWidth, mapHeight);
 	this.tileWidth = levelMap.tilewidth;
@@ -103,7 +104,8 @@ Level.prototype._populateCollisionEngine = function() {
 
 Level.prototype.render = function(game, interpolation, ticks) {
 	this.background.draw();
-	this.actors.draw(interpolation, ticks, this);
+	//this.spriteBackground.draw(interpolation, ticks);
+	this.actors.draw(interpolation, ticks);
 	//this.statusbar.draw();
 };
 

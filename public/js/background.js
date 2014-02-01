@@ -7,6 +7,7 @@ function Background(canvasId, mapWidth, mapHeight, spriteManager) {
 
 	this.init(canvasId, mapWidth, mapHeight);
 }
+
 Background.prototype = new CanvasManager();
 
 Background.prototype.populate = function(layer) {

@@ -26,7 +26,8 @@ Explosion.prototype.setLethalFlames = function(flames) {
 	this.flames = flames;
 };
 
-Explosion.prototype.draw = function(context, tileSet, interpolation, ticks, level) {
+Explosion.prototype.draw = function(context, tileSet, interpolation, ticks) {
+	var level = this.game.level;
 	var tile = this.sprites["center"].get(this.spriteState, ticks);
 
 	var tileX = this.pos.x/level.getTileWidth();
