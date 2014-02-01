@@ -1,5 +1,5 @@
 "use strict";
 
-function SpriteState() {
-	this.start = 0;
+function SpriteState(start) {
+	this.start = start;
 }

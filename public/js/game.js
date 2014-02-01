@@ -92,3 +92,8 @@ Game.prototype.inTicksDo = function(ticks, action) {
 Game.prototype.inSecondsDo = function(seconds, action) {
 	this.inTicksDo(seconds * GameLoop.logic_rate, action);
 };
+
+Game.prototype.getTick = function() {
+	return this.ticks;
+};
+

@@ -13,7 +13,7 @@ function Explosion(game, pos) {
 	spriteNames.forEach(function(spriteName) {
 		self.sprites[spriteName] = game.spriteManager.get("explosion-" + spriteName);
 	});
-	this.spriteState = new SpriteState();
+	this.spriteState = new SpriteState(game.getTick());
 	this.pos = pos;
 	this.flames = null;
 	this.logicCount = 0;

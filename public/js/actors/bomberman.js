@@ -27,7 +27,7 @@ function Bomberman(game, initialPos, spritePrefix) {
 	this.pos = initialPos.clone();
 	this.realPos = initialPos.clone(); // where we visually are between lastPos and pos
 
-	this.spriteState = new SpriteState();
+	this.spriteState = new SpriteState(game.getTick());
 	this.direction = null;
 	this.lastDirection = "down";
 	this.bombCount = 0;

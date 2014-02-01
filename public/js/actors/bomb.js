@@ -8,7 +8,7 @@ function Bomb(game, pos, owner) {
 	this.game = game;
 	this.sprite = game.spriteManager.get('bomb');
 	this.pos = pos;
-	this.spriteState = new SpriteState();
+	this.spriteState;
 	this.owner = owner;
 	this.logicCount = 0;
 };
@@ -16,6 +16,8 @@ function Bomb(game, pos, owner) {
 Bomb.prototype = new Actor();
 
 Bomb.prototype.draw = function(context, tileSet, interpolation, ticks) {
+	if(!this.spriteState)
+		this.spriteState = new SpriteState(ticks);
 	var tile = this.sprite.get(this.spriteState, ticks);
 
 	tileSet.draw(context, this.pos.x, this.pos.y, tile);

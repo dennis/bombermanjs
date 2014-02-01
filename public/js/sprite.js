@@ -9,7 +9,7 @@ function Sprite(tileset, json) {
 Sprite.prototype.get = function(state, ticks) {
 	var frame = 0;
 	if(this.fps)
-		frame = parseInt(((ticks - state.start)*this.fps)/1000) % this.tiles.length;
+		frame = parseInt((ticks - state.start)/(1/this.fps*1000)) % this.tiles.length;
 	return this.tiles[frame];
 };
 
