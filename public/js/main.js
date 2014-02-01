@@ -2,10 +2,11 @@
 
 var game = new Game();
 
-// main
-$.ajax('/levels/level.json', {
-	success: function(data) {
-		game.parseLevel(data);
-		game.run();
-	}
+$.ajax('/levels/level.json')
+.done(function(data){
+	game.parseLevel(data);
+	game.run();
+})
+.fail(function() {
+	console.error("Failed loading level");
 });
