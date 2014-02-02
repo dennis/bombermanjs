@@ -76,7 +76,7 @@ Level.prototype._findPredefinedActors = function() {
 					x = x * this.getTileWidth();
 					y = y * this.getTileHeight();
 
-					actors.push({actor: type, id: type, x: x, y: x});
+					actors.push({actor: type, id: type, x: x, y: y});
 				}
 			}
 		}
