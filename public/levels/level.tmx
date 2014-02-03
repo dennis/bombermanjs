@@ -23,7 +23,7 @@
    <property name="type" value="background"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAzvKwMBwlEJ8DIrprXcUj+LhgAFqq6k3hAMAAA==
+   H4sIAAAAAAAAAzvKwMBwlEJ8DIopNYfemBI3H2Mgzt/EyBNrFiG95JgzVONuOGEA4qG2yoQDAAA=
   </data>
  </layer>
  <layer name="blocking" width="15" height="15">
@@ -39,7 +39,7 @@
    <property name="type" value="spawn"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NgoAxcBuKzUEwOoETvKBgFAw4YKTcCAL6gA5qEAwAA
+   H4sIAAAAAAAAA2NgoAxcBuKzUEwOoETvKBgF9AYYaZWRcjMB1xXpIYQDAAA=
   </data>
  </layer>
 </map>
