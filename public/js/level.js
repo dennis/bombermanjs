@@ -11,7 +11,7 @@ function Level(levelMap, spriteManager, backgroundCanvasId, actorsCanvasId, stat
 	this.background = new Background(backgroundCanvasId, mapWidth, mapHeight, spriteManager);
 	//this.spriteBackground = new SpriteBackground(backgroundCanvasId, mapWidth, mapHeight, spriteManager);
 	this.actors = new Actors(actorsCanvasId, mapWidth, mapHeight, spriteManager); 
-	//this.statusbar = new Statusbar(statusCanvasId, mapWidth, mapHeight);
+	this.statusbar = new Statusbar(statusCanvasId, mapWidth, mapHeight, spriteManager);
 	this.tileWidth = levelMap.tilewidth;
 	this.tileHeight = levelMap.tileheight;
 	this.levelMap = levelMap;
@@ -108,7 +108,7 @@ Level.prototype.render = function(game, interpolation, ticks) {
 	this.background.draw();
 	//this.spriteBackground.draw(interpolation, ticks);
 	this.actors.draw(interpolation, ticks);
-	//this.statusbar.draw();
+	this.statusbar.draw();
 };
 
 Level.prototype.logic = function(game) {

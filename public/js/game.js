@@ -9,6 +9,7 @@ function Game() {
 	this.sherryController = null;
 	this.ticksTriggers = [];
 	this.ticks = 0;
+	this.bombCount = 5;
 }
 
 Game.prototype.parseLevel = function(levelJson) {
@@ -39,6 +40,7 @@ Game.prototype.parseLevel = function(levelJson) {
 			self.level.initialize();
 			self.playerController = new PlayerController(self.level.actors.getPlayer(0), self);
 			self.sherryController = new SherryController(self.level.actors.getPlayer(1), self);
+			self.updateStatusbar();
 		}
 	})
 	.fail(function() {
@@ -98,3 +100,15 @@ Game.prototype.getTick = function() {
 	return this.ticks;
 };
 
+Game.prototype.canDropBomb = function() {
+	return this.bombCount > 0;
+};
+
+Game.prototype.dropBomb = function() {
+	this.bombCount--;
+	this.updateStatusbar();
+};
+
+Game.prototype.updateStatusbar = function() {
+	game.level.statusbar.update({bombCount: this.bombCount});
+};

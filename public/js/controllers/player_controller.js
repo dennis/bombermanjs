@@ -25,7 +25,10 @@ PlayerController.prototype.execute = function(inputManager) {
 		action.execute(this.game);
 
 	if(inputManager.KEY_RELEASED['space']) {
-		(new SpawnBombAction(this.actor.pos, this.actor)).execute(this.game);
+		if(this.game.canDropBomb()) {
+			(new SpawnBombAction(this.actor.pos, this.actor)).execute(this.game);
+			this.game.dropBomb();
+		}
 	}
 
 	if(movement == false && this.isMoving) {
