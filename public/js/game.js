@@ -10,6 +10,7 @@ function Game() {
 	this.ticksTriggers = [];
 	this.ticks = 0;
 	this.bombCount = 5;
+	this.lives = 3;
 }
 
 Game.prototype.parseLevel = function(levelJson) {
@@ -109,6 +110,21 @@ Game.prototype.dropBomb = function() {
 	this.updateStatusbar();
 };
 
-Game.prototype.updateStatusbar = function() {
-	game.level.statusbar.update({bombCount: this.bombCount});
+Game.prototype.actorDied = function(actor) {
+	console.log("Actor died");
+
+	var self = this;
+
+	this.inSecondsDo(3, function() {
+		actor.alive = true;
+		self.level.actors.addActor(actor);
+		self.lives--;
+
+		self.updateStatusbar();
+	});
 };
+
+Game.prototype.updateStatusbar = function() {
+	game.level.statusbar.update({bombCount: this.bombCount, lives: this.lives});
+};
+

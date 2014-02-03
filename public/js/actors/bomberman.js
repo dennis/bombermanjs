@@ -84,9 +84,5 @@ Bomberman.prototype.killed = function() {
 	var self = this;
 	this.alive = false;
 	this.game.level.actors.removeActor(this);
-
-	this.game.inSecondsDo(3, function() {
-		self.alive = true;
-		self.game.level.actors.addActor(self);
-	});
+	this.game.actorDied(this);
 };
