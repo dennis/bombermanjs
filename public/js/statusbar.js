@@ -29,7 +29,7 @@ Statusbar.prototype.draw = function() {
 	this.context.font = "12px verdana";
 	this.context.textAlign = 'left';
 	this.context.fillStyle = '#fff';
-	this.context.fillText( "bombermanjs", 0, this.mapHeight-2 );
+	this.context.fillText( "bombermanjs", 0, this.mapHeight-6 );
 
 	this.context.font = "10px verdana";
 	this.context.textAlign = 'left';

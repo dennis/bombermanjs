@@ -119,6 +119,7 @@ Game.prototype.actorDied = function(actor) {
 		actor.alive = true;
 		self.level.actors.addActor(actor);
 		self.lives--;
+		self.bombCount = 5;
 
 		self.updateStatusbar();
 	});
