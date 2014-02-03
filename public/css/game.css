@@ -19,14 +19,6 @@ canvas {
 #statusbar {
 	z-index: 0;
 }
-#messages {
-	height: 2em;
-	overflow: hidden;
-	margin: 1em;
-	font-size: x-small;
-	font-family: courier;
-	color: green;
-}
 
 button {
 	font-size: 10px;

@@ -3,7 +3,8 @@
 function CanvasManager() {
 	this.mapWidth = 0;
 	this.mapHeight = 0;
-};
+}
+
 CanvasManager.prototype.init = function(canvasId, mapWidth, mapHeight) {
 	this.canvas = document.getElementById(canvasId);
 
@@ -16,4 +17,5 @@ CanvasManager.prototype.init = function(canvasId, mapWidth, mapHeight) {
 	else {
 		throw new "No canvas support for element " + canvasId;
 	}
-}
+};
+
