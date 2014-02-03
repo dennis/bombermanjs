@@ -18,10 +18,12 @@ function Level(levelMap, spriteManager, backgroundCanvasId, actorsCanvasId, stat
 	this.collisionEngine = new CollisionEngine(levelMap.width, levelMap.height);
 
 	console.log("Loading map");
+}
 
+Level.prototype.initialize = function() {
 	var self = this;
 
-	levelMap.layers.filter(function(layer) {
+	this.levelMap.layers.filter(function(layer) {
 		return (layer.type == "tilelayer" && layer.visible && layer.properties);
 	}).forEach(function(layer, i) {
 		if(layer.properties.type == "background" || layer.properties.type == "blocking") {

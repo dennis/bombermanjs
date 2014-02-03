@@ -24,7 +24,13 @@ ExplodeAction.prototype.execute = function(game) {
 		
 		pos = pos.add(vector);
 		while(pos.x >= 0 && pos.x < totalX && pos.y >=0 && pos.y < totalY) {
-			if(level.collisionEngine.isBlocked(pos)) {
+			var collision = level.collisionEngine.get(pos);
+
+			if(collision && typeof collision === "boolean") {
+				break;
+			}
+			// its an object - ask if its blocking for us
+			else if(collision && typeof collision !== "boolean" && collision.isBlocking(game, this)) {
 				break;
 			}
 			else if(step == self.strength) {

@@ -36,8 +36,9 @@ Game.prototype.parseLevel = function(levelJson) {
 			self.spriteManager = new SpriteManager(tileSet, sprites);
 
 			self.level = new Level(levelJson, self.spriteManager, 'background', 'actors', 'statusbar');
-			self.playerController = new PlayerController(self.level.actors.getPlayer(), self);
-			self.sherryController = new SherryController(self.level.actors.getActorByIndex(1), self);
+			self.level.initialize();
+			self.playerController = new PlayerController(self.level.actors.getPlayer(0), self);
+			self.sherryController = new SherryController(self.level.actors.getPlayer(1), self);
 		}
 	})
 	.fail(function() {

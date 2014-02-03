@@ -23,7 +23,7 @@
    <property name="type" value="background"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAAzvKwMBwlEJ8ForprXcUj+LhgAGqT0xphAMAAA==
+   H4sIAAAAAAAAAzvKwMBwlEJ8DIrprXcUj+LhgAFqq6k3hAMAAA==
   </data>
  </layer>
  <layer name="blocking" width="15" height="15">
@@ -34,12 +34,12 @@
    H4sIAAAAAAAAA+NiZGDgogCTA6ipV5KAOcjyg8XN1NJ7HogvkKn3HhDfJ1MvITBS45dcDADoSZB2hAMAAA==
   </data>
  </layer>
- <layer name="players start" width="15" height="15">
+ <layer name="actor start" width="15" height="15">
   <properties>
    <property name="type" value="spawn"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NgoAxcplD/KBgFQxowUm4EAOxaQTCEAwAA
+   H4sIAAAAAAAAA2NgoAxcBuKzUEwOoETvKBgFAw4YKTcCAL6gA5qEAwAA
   </data>
  </layer>
 </map>

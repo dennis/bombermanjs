@@ -17,7 +17,7 @@ Actor.prototype.performActions = function(level) {
 	});
 
 	this.actions = [];
-}
+};
 
 Actor.prototype.logic = function() {
 };
@@ -25,9 +25,17 @@ Actor.prototype.logic = function() {
 Actor.prototype.draw = function(context, tileSet, interpolation, ticks) {
 };
 
+// Called before actor is added to the game
 Actor.prototype.beforeAddActor = function() {
 };
 
+// Called before actor is removed from the game
 Actor.prototype.beforeRemoveActor = function() {
-}
+};
 
+// Called by CollisionEngine if it have been used as a value for CollisionDetection
+Actor.prototype.isBlocking = function(otherActor) {
+	console.log(this, "is blocking for ", otherActor);
+
+	return false;
+};

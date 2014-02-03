@@ -38,8 +38,18 @@ Actors.prototype.removeActor = function(target) {
 	});
 };
 
-Actors.prototype.getPlayer = function(actorName) {
-	return this.getActorByIndex(0); // FIXME This will not work for all maps
+Actors.prototype.getPlayer = function(playerNo) {
+	var result = undefined;
+	var currentCount = 0;
+	this.actors.forEach(function(actor) {
+		if(actor instanceof Bomberman) {
+			if(currentCount == playerNo)
+				result = actor;
+
+			currentCount++;
+		}
+	});
+	return result;
 };
 
 Actors.prototype.getActorByIndex= function(idx) {
