@@ -14,7 +14,7 @@ SpawnBombAction.prototype.execute = function(game) {
 	bombPos.x *= level.getTileWidth();
 	bombPos.y *= level.getTileHeight();
 		
-	var bomb = level.actors.factory.new('bomb', bombPos);
+	var bomb = game.factory.new('bomb', bombPos);
 	bomb.setOwner(this.actor);
 	level.actors.addActor(bomb);
 };

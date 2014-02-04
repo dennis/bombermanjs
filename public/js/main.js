@@ -1,17 +1,18 @@
 "use strict";
 
-var game = new Game();
-
-$.ajax('/levels/level.json')
-.done(function(data){
+var assetLoader = new AssetLoader(function(assetLoader) {
+	console.log("Done loading assets");
 	try {
-		game.parseLevel(data);
+		var game = new Game(assetLoader);
+		game.initialize();
 		game.run();
 	}
 	catch(error) {
 		console.error(error.message);
 	}
-})
-.fail(function() {
+}, function(assetLoader) {
 	console.error("Failed loading level");
 });
+assetLoader.load('level', '/levels/level.json', 'json');
+assetLoader.load('sprites', '/levels/sprites.json', 'json');
+assetLoader.execute();

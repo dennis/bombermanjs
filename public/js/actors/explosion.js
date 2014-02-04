@@ -107,7 +107,7 @@ Explosion.prototype.logic = function() {
 			var tileXY = level.snapXYToTileXY(otherActor.pos);
 
 			if(self.lethalTiles[(tileXY.y * level.getHeight())+tileXY.x]) {
-				(new KillActorAction(otherActor, self)).execute(game);
+				(new KillActorAction(otherActor, self)).execute(self.game);
 			}
 		}
 	});

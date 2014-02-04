@@ -1,9 +1,11 @@
 "use strict";
 
-function Game() {
+function Game(assetLoader) {
+	this.assetLoader = assetLoader;
 	this.spriteManager = null;
 	this.input = new InputManager();
 	this.gameLoop = new GameLoop();
+	this.factory = new ActorFactory(this);
 	this.level = null;
 	this.playerController = null;
 	this.sherryController = null;
@@ -13,8 +15,10 @@ function Game() {
 	this.lives = 3;
 }
 
-Game.prototype.parseLevel = function(levelJson) {
+Game.prototype.initialize = function() {
 	var self = this;
+	var sprites = this.assetLoader.get('sprites');
+	var levelJson = this.assetLoader.get('level');
 
 	console.log("Loaded level1", levelJson);
 
@@ -22,31 +26,24 @@ Game.prototype.parseLevel = function(levelJson) {
 		throw new Error("Cannot handle more than a single tileset");
 	}
 
-	// load assets
-	$.ajax('/levels/sprites.json')
-	.done(function(sprites) {
-		// sprites definitions
-		console.log("Loaded sprites");
+	// sprites definitions
+	console.log("Loaded sprites");
 
-		// the image
-		var tilesImg = new Image();
-		tilesImg.src = levelJson.tilesets[0].image;
-		tilesImg.onload = function() {
-			console.log("Graphics loaded: ", tilesImg);
+	// the image
+	var tilesImg = new Image();
+	tilesImg.src = levelJson.tilesets[0].image;
+	tilesImg.onload = function() {
+		console.log("Graphics loaded: ", tilesImg);
 
-			var tileSet = new TileSet(levelJson.tilesets[0], tilesImg);
-			self.spriteManager = new SpriteManager(tileSet, sprites);
+		var tileSet = new TileSet(levelJson.tilesets[0], tilesImg);
+		self.spriteManager = new SpriteManager(tileSet, sprites);
 
-			self.level = new Level(levelJson, self.spriteManager, 'background', 'actors', 'statusbar');
-			self.level.initialize();
-			self.playerController = new PlayerController(self.level.actors.getPlayer(0), self);
-			self.sherryController = new SherryController(self.level.actors.getPlayer(1), self);
-			self.updateStatusbar();
-		}
-	})
-	.fail(function() {
-		console.error("Failed loading sprites");
-	});
+		self.level = new Level(levelJson, self.spriteManager, 'background', 'actors', 'statusbar');
+		self.level.initialize(self);
+		self.playerController = new PlayerController(self.level.actors.getPlayer(0), self);
+		self.sherryController = new SherryController(self.level.actors.getPlayer(1), self);
+		self.updateStatusbar();
+	}
 };
 
 Game.prototype.run = function() {
@@ -126,6 +123,6 @@ Game.prototype.actorDied = function(actor) {
 };
 
 Game.prototype.updateStatusbar = function() {
-	game.level.statusbar.update({bombCount: this.bombCount, lives: this.lives});
+	this.level.statusbar.update({bombCount: this.bombCount, lives: this.lives});
 };
 

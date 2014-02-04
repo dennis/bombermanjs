@@ -20,7 +20,7 @@ function Level(levelMap, spriteManager, backgroundCanvasId, actorsCanvasId, stat
 	console.log("Loading map");
 }
 
-Level.prototype.initialize = function() {
+Level.prototype.initialize = function(game) {
 	var self = this;
 
 	this.levelMap.layers.filter(function(layer) {
@@ -39,7 +39,7 @@ Level.prototype.initialize = function() {
 	});
 
 	this._findPredefinedActors().forEach(function(predefinedActor) {
-		var actor = self.actors.factory.new(predefinedActor.actor, new Point(predefinedActor.x, predefinedActor.y));
+		var actor = game.factory.new(predefinedActor.actor, new Point(predefinedActor.x, predefinedActor.y));
 
 		self.actors.addActor(actor);
 	});

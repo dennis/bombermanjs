@@ -16,7 +16,7 @@ Box.prototype = new Actor();
 
 Box.prototype.beforeAddActor = function() {
 	// As the collision engine only works in tiles, box needs to be placed 100% matching a tile
-	this.tilesetXY = new Point(this.pos.x/game.level.getTileWidth(), this.pos.y/game.level.getTileHeight());
+	this.tilesetXY = new Point(this.pos.x/this.game.level.getTileWidth(), this.pos.y/this.game.level.getTileHeight());
 
 	this.game.level.collisionEngine.set(this.tilesetXY, this);
 };

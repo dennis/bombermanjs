@@ -1,9 +1,9 @@
 "use strict";
 
-function Actors(canvasId, mapWidth, mapHeight, spriteManager) {
+function Actors(canvasId, mapWidth, mapHeight, spriteManager, factory) {
 	this.spriteManager = spriteManager;
 	this.actors = [];
-	this.factory = new ActorFactory(game); // FIXME HACK
+	this.factory = factory;
 
 	this.init(canvasId, mapWidth, mapHeight);
 }
