@@ -21,10 +21,10 @@ var assetLoader = new AssetLoader(function(assetLoader) {
 }, function(assetLoader) {
 	console.error("Failed loading level");
 });
-assetLoader.load('level', '/levels/level.json', 'json');
-assetLoader.load('sprites', '/levels/sprites.json', 'json');
-assetLoader.load('snd-step', '/sfx/step.mp3', 'arraybuffer');
-assetLoader.load('snd-explosion', '/sfx/explosion.mp3', 'arraybuffer');
-assetLoader.load('snd-spawn', '/sfx/spawn.mp3', 'arraybuffer');
-assetLoader.load('snd-gameover', '/sfx/gameover.mp3', 'arraybuffer');
+assetLoader.load('level', 'levels/level.json', 'json');
+assetLoader.load('sprites', 'levels/sprites.json', 'json');
+assetLoader.load('snd-step', 'sfx/step.mp3', 'arraybuffer');
+assetLoader.load('snd-explosion', 'sfx/explosion.mp3', 'arraybuffer');
+assetLoader.load('snd-spawn', 'sfx/spawn.mp3', 'arraybuffer');
+assetLoader.load('snd-gameover', 'sfx/gameover.mp3', 'arraybuffer');
 assetLoader.execute();
