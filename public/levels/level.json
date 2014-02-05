@@ -54,7 +54,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "image":"..\/img\/bomb_party_v4.png",
+         "image":"img\/bomb_party_v4.png",
          "imageheight":320,
          "imagewidth":240,
          "margin":0,
