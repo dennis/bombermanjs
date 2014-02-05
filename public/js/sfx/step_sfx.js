@@ -1,6 +1,6 @@
 "use strict";
 
-ActorFactory.register('stepsfx', function(game) {
+Factory.register('stepsfx', function(game) {
 	return new StepSfx(game.soundManager);
 });
 

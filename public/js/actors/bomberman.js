@@ -1,15 +1,15 @@
 "use strict";
 
-ActorFactory.register('player0', function(game, pos) {
+Factory.register('player0', function(game, pos) {
 	return new Bomberman(game, pos, 'bomberman0');
 });
-ActorFactory.register('player1', function(game, pos) {
+Factory.register('player1', function(game, pos) {
 	return new Bomberman(game, pos, 'bomberman1');
 });
-ActorFactory.register('player2', function(game, pos) {
+Factory.register('player2', function(game, pos) {
 	return new Bomberman(game, pos, 'bomberman2');
 });
-ActorFactory.register('player3', function(game, pos) {
+Factory.register('player3', function(game, pos) {
 	return new Bomberman(game, pos, 'bomberman3');
 });
 

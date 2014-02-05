@@ -1,10 +1,10 @@
 "use strict";
 
-ActorFactory.register('spawnsfx', function(game) {
+Factory.register('spawnsfx', function(game) {
 	return new CommonSfx(game.soundManager, 'snd-spawn');
 });
 
-ActorFactory.register('gameoversfx', function(game) {
+Factory.register('gameoversfx', function(game) {
 	return new CommonSfx(game.soundManager, 'snd-gameover');
 });
 

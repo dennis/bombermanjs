@@ -6,7 +6,7 @@ function Game(assetLoader, soundManager) {
 	this.soundManager = soundManager;
 	this.input = new InputManager();
 	this.gameLoop = new GameLoop();
-	this.factory = new ActorFactory(this);
+	this.factory = new Factory(this);
 	this.level = null;
 	this.playerController = null;
 	this.sherryController = null;

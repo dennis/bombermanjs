@@ -1,6 +1,6 @@
 "use strict";
 
-ActorFactory.register('explosionsfx', function(game) {
+Factory.register('explosionsfx', function(game) {
 	return new ExplosionSfx(game.soundManager);
 });
 

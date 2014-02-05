@@ -1,6 +1,6 @@
 "use strict";
 
-ActorFactory.register('box', function(game, pos) {
+Factory.register('box', function(game, pos) {
 	return new Box(game, pos);
 });
 
