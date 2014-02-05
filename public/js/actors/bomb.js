@@ -7,6 +7,7 @@ ActorFactory.register('bomb', function(game, pos) {
 function Bomb(game, pos, owner) {
 	this.game = game;
 	this.sprite = game.spriteManager.get('bomb');
+	this.explosionSfx = game.factory.new('explosionsfx');
 	this.pos = pos;
 	this.spriteState;
 	this.owner = owner;
@@ -41,6 +42,7 @@ Bomb.prototype.beforeAddActor = function() {
 
 Bomb.prototype.beforeRemoveActor = function() {
 	this.owner.removeBomb(this);
+	this.explosionSfx.start();
 };
 
 Bomb.prototype.killed = function(game) {

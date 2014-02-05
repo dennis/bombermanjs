@@ -1,11 +1,19 @@
 bombermanjs
 ===========
 
-Et lille Hello-World projekt, for at få lært javascript bedre at kende. Og så stifte bekendskab med NodeJS, Canvas og Socket.io. Det er spilbart, men ikke sjovt. Det er buggy og stadig ikke sjovt. 
+A small hello world project as a testcase for learning more about javascript.
+Originally written using NodeJS/Socket.io which is now removed to avoid dealing
+with all sort of network related (game) issues. The game works, but is no fun.
 
-[Video af herligheden](http://www.youtube.com/watch?v=f_5Fn9efd1I)
+[First Preview](http://www.youtube.com/watch?v=f_5Fn9efd1I)
+
+Credits
+=======
+Code: @dennis
+Graphics: Original Bomb Party sprite sheet by Matt Hackett of Lost Decade Games, expanded by Cem Kalyoncu and /usr/share. Found at [opengameart](http://opengameart.org/content/bomb-party-the-complete-set). Added a few tiles (mirrored bomberman animation) to avoid doing that runetime.
+Sfx: [Step](http://freesound.org/people/RandomationPictures/sounds/138476/), [Explosion](http://freesound.org/people/sarge4267/sounds/102733/)
 
 History
 =======
-v0.1 : Fungerende multiplayer spil. 
+v0.1 : Functional "game"
 

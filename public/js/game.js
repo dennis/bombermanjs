@@ -1,8 +1,9 @@
 "use strict";
 
-function Game(assetLoader) {
+function Game(assetLoader, soundManager) {
 	this.assetLoader = assetLoader;
 	this.spriteManager = null;
+	this.soundManager = soundManager;
 	this.input = new InputManager();
 	this.gameLoop = new GameLoop();
 	this.factory = new ActorFactory(this);
@@ -112,14 +113,16 @@ Game.prototype.actorDied = function(actor) {
 
 	var self = this;
 
-	this.inSecondsDo(3, function() {
-		actor.alive = true;
-		self.level.actors.addActor(actor);
-		self.lives--;
-		self.bombCount = 5;
+	if(this == self.level.actors.getPlayer(0)) {
+		this.inSecondsDo(3, function() {
+			actor.alive = true;
+			self.level.actors.addActor(actor);
+			self.lives--;
+			self.bombCount = 5;
 
-		self.updateStatusbar();
-	});
+			self.updateStatusbar();
+		});
+	}
 };
 
 Game.prototype.updateStatusbar = function() {

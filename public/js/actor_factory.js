@@ -12,10 +12,14 @@ ActorFactory.register = function(name, constructor) {
 	console.log('Registered actor', name);
 };
 
-ActorFactory.prototype.new = function(name, pos) {
+// FIXME: Don't know how. 
+ActorFactory.prototype.new = function(name, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9) {
+	if(arguments.length > 10)
+		throw new Error("Factory cannot support this many arguments");
+
 	if(!ActorFactory.actorConstructors[name]) {
 		throw new Error("Unknown actor: " + name);
 	}
 
-	return new ActorFactory.actorConstructors[name](this.game, pos);
+	return new ActorFactory.actorConstructors[name](this.game, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
 };

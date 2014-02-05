@@ -31,6 +31,8 @@ function Bomberman(game, initialPos, spritePrefix) {
 	this.direction = null;
 	this.lastDirection = "down";
 	this.bombCount = 0;
+
+	this.stepSfx = game.factory.new('stepsfx');
 };
 
 Bomberman.prototype = new Actor();
@@ -47,6 +49,11 @@ Bomberman.prototype.draw = function(context, tileSet, interpolation, ticks) {
 			this.realPos.x = this.lastPos.x + Math.ceil(diff.x * interpolation);
 			this.realPos.y = this.lastPos.y + Math.ceil(diff.y * interpolation);
 		}
+
+		this.stepSfx.start();
+	}
+	else {
+		this.stepSfx.stop();
 	}
 
 	if(!this.sprites[direction])
@@ -80,8 +87,12 @@ Bomberman.prototype.removeBomb = function() {
 	this.bombCount--;
 };
 
+Bomberman.prototype.beforeRemoveActor = function() {
+	this.stepSfx.stop();
+}
+
 Bomberman.prototype.killed = function() {
-	var self = this;
+	this.stepSfx.stop();
 	this.alive = false;
 	this.game.level.actors.removeActor(this);
 	this.game.actorDied(this);

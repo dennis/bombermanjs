@@ -4,6 +4,7 @@ function SherryController(actor, game) {
 	this.actor = actor;
 	this.game = game;
 	this.stop = false;
+	this.explosionSfx = game.factory.new('explosionsfx');
 }
 
 SherryController.prototype.execute = function() {
@@ -21,6 +22,7 @@ SherryController.prototype.execute = function() {
 
 	if(!action.execute(this.game)) {
 		(new ExplodeAction(self.actor)).execute(this.game);
+		this.explosionSfx.start();
 		this.stop = true;
 	}
 };

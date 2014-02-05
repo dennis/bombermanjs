@@ -15,19 +15,26 @@ AssetLoader.prototype.load = function(name, url, type) {
 
 AssetLoader.prototype.execute = function() {
 	var self = this;
-	var needsLoading = Object.keys(this.assets).length;
+	var needsLoading = 0;
 	var allOk = true;
 
-	Object.keys(this.assets).forEach(function(asset) {
+	Object.keys(this.assets).forEach(function(assetName) {
+		var asset = self.assets[assetName];
+		if(asset.response === undefined)
+			needsLoading++;
+	});;
+
+	Object.keys(this.assets).forEach(function(assetName) {
+		var asset = self.assets[assetName];
 		var request = new XMLHttpRequest();
-		request.open('GET', self.assets[asset].url, true);
-		request.responseType = self.assets[asset].type;
+		request.open('GET', asset.url, true);
+		request.responseType = asset.type;
 		request.onload = function() {
 			if(request.status === 200) {
 				needsLoading--;
 
-				self.assets[asset].response = request.response;
-				console.log("asset loader '" + asset + "' loaded ok");
+				asset.response = request.response;
+				console.log("asset loader '" + assetName + "' loaded ok");
 
 				if(needsLoading == 0 && allOk)
 					self._success();
@@ -57,4 +64,8 @@ AssetLoader.prototype._success = function() {
 
 AssetLoader.prototype._error = function() {
 	this.error(this);
+};
+
+AssetLoader.prototype.getNames = function() {
+	return Object.keys(this.assets);
 };
