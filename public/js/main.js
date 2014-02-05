@@ -25,4 +25,6 @@ assetLoader.load('level', '/levels/level.json', 'json');
 assetLoader.load('sprites', '/levels/sprites.json', 'json');
 assetLoader.load('snd-step', '/sfx/step.mp3', 'arraybuffer');
 assetLoader.load('snd-explosion', '/sfx/explosion.mp3', 'arraybuffer');
+assetLoader.load('snd-spawn', '/sfx/spawn.mp3', 'arraybuffer');
+assetLoader.load('snd-gameover', '/sfx/gameover.mp3', 'arraybuffer');
 assetLoader.execute();

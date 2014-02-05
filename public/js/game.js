@@ -109,11 +109,15 @@ Game.prototype.dropBomb = function() {
 };
 
 Game.prototype.actorDied = function(actor) {
-	console.log("Actor died");
+	console.log("Actor died", actor);
 
 	var self = this;
 
-	if(this == self.level.actors.getPlayer(0)) {
+	if(self.lives == 0) {
+		var sfx = game.factory.new('gameoversfx');
+		sfx.start();
+	}
+	else {
 		this.inSecondsDo(3, function() {
 			actor.alive = true;
 			self.level.actors.addActor(actor);

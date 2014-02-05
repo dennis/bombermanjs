@@ -33,6 +33,7 @@ function Bomberman(game, initialPos, spritePrefix) {
 	this.bombCount = 0;
 
 	this.stepSfx = game.factory.new('stepsfx');
+	this.spawnSfx = game.factory.new('spawnsfx');
 };
 
 Bomberman.prototype = new Actor();
@@ -87,9 +88,13 @@ Bomberman.prototype.removeBomb = function() {
 	this.bombCount--;
 };
 
+Bomberman.prototype.beforeAddActor = function() {
+	this.spawnSfx.start();
+};
+
 Bomberman.prototype.beforeRemoveActor = function() {
 	this.stepSfx.stop();
-}
+};
 
 Bomberman.prototype.killed = function() {
 	this.stepSfx.stop();
